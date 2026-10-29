@@ -1,0 +1,127 @@
+{
+  "guidance": "Heavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.",
+  "mobility": "15 min gentle mobility only: 3 min easy walking, 2 min ankle circles and ankle rocks, 3 min gentle hip rotations, 3 min cat-cow and upper-back rotations, 4 min relaxed calf/hip-flexor stretches (20-30 s per side). Stay within a comfortable range; no loaded strength, heavy leg work or deep stretching.",
+  "routines": [
+    {
+      "group": "heavy",
+      "title": "Heavy 1: runner foundations",
+      "exercises": [
+        "Warm-up: 5 min easy walking or marching, then 8 bodyweight squats and 8 unloaded hip hinges.",
+        "Single-leg calf raises: 2 sets x 12 reps per side. Hold a support; rise smoothly and lower for 3 seconds. Rest 30 s between sides and 60 s between sets.",
+        "Supported split squats: 2 sets x 8 reps per side. Bodyweight first, adding light dumbbells only with steady form. Rest 30 s between sides and 75 s between sets. Alternative: 2 x 8 step-ups per side onto a low, stable step; do not do both.",
+        "Glute bridges: 2 sets x 12 reps, pause 2 seconds at the top. Bodyweight or one securely held light weight. Rest 60 s between sets.",
+        "Romanian deadlifts: 2 sets x 10 reps with two light dumbbells or one comfortable kettlebell. Hinge at the hips, soften knees, lower for 3 seconds. Rest 90 s between sets.",
+        "Rest 60-90 s when changing exercises. Finish with 2-3 min easy walking. Allow about 30-40 min; reduce to one set if it compromises Thursday running."
+      ]
+    },
+    {
+      "group": "light",
+      "title": "Light 1: core control and hip mobility",
+      "exercises": [
+        "Warm-up: 2 min relaxed walking or marching.",
+        "Dead bug: 2 sets x 6 slow reps per side, bodyweight; exhale as you extend. Rest 30 s between sets.",
+        "Bird dog: 2 sets x 6 reps per side, holding each rep for 3 seconds. Keep hips level. Rest 30 s between sets.",
+        "Side-lying clamshells: 2 sets x 10 reps per side, bodyweight, no band or weights. Rest 15 s between sides and 30 s between sets.",
+        "Mobility: 6 ankle rocks per side, 6 gentle cat-cow reps, then comfortable hip-flexor and calf stretches, 20 s per side, one round.",
+        "Rest 30 s when changing exercises. About 15-20 min total. No heavy leg work, loaded squats, deadlifts or work to fatigue. If also doing Pilates, do one set or mobility only rather than doubling the workload."
+      ]
+    },
+    {
+      "group": "heavy",
+      "title": "Heavy 2: step-up and hinge control",
+      "exercises": [
+        "Warm-up: 5 min walking, then 8 ankle rocks and 8 unloaded hip hinges.",
+        "Low step-ups: 2 sets x 8 reps per side on a stable step. Step down slowly; bodyweight or light dumbbells. Rest 30 s between sides and 75 s between sets.",
+        "Kickstand Romanian deadlifts: 2 sets x 8 reps per side with light dumbbells; back toes support balance. Rest 30 s between sides and 90 s between sets.",
+        "Glute bridges: 2 sets x 10 reps with a 3-second hold at the top. Rest 60 s between sets.",
+        "Supported single-leg calf raises: 2 sets x 10 reps per side, 3-second lowering. Rest 30 s between sides and 60 s between sets.",
+        "Rest 60-90 s between exercises. Cool down with 2 min walking. About 30-40 min."
+      ]
+    },
+    {
+      "group": "light",
+      "title": "Light 2: side-body stability and ankles",
+      "exercises": [
+        "Warm-up: 2 min easy marching.",
+        "Side plank from knees: 2 sets x 15 s per side; breathe normally. Rest 15 s between sides and 30 s between sets.",
+        "Heel slides lying on your back: 2 sets x 6 reps per side, keeping trunk still. Rest 30 s between sets.",
+        "Side-lying leg raises: 2 sets x 8 reps per side, small comfortable range. Rest 15 s between sides and 30 s between sets.",
+        "Ankle rocks: 2 sets x 8 reps per side. Rest 20 s between sets. Finish with calf and hip-flexor stretches, 20 s per side.",
+        "Bodyweight only; rest 30 s between exercises. About 15-20 min. No heavy leg work. With Pilates, use one set or mobility only."
+      ]
+    },
+    {
+      "group": "heavy",
+      "title": "Heavy 3: split squat and bridge strength",
+      "exercises": [
+        "Warm-up: 5 min walking, 8 bodyweight squats and 8 unloaded hinges.",
+        "Supported split squats: 2 sets x 8 reps per side; lower for 3 seconds, bodyweight or light dumbbells. Rest 30 s between sides and 75 s between sets.",
+        "Romanian deadlifts: 2 sets x 8 reps with two dumbbells; pause briefly at a comfortable bottom position. Rest 90 s between sets.",
+        "Staggered-stance bridges: 2 sets x 10 reps per side, both feet on the floor. Rest 30 s between sides and 60 s between sets.",
+        "Supported single-leg calf raises: 2 sets x 12 reps per side, pause 1 second at the top. Rest 30 s between sides and 60 s between sets.",
+        "Rest 60-90 s between exercises. Cool down with 2 min walking. About 30-40 min."
+      ]
+    },
+    {
+      "group": "light",
+      "title": "Light 3: recovery mobility flow",
+      "exercises": [
+        "Warm-up: 3 min easy walking.",
+        "Cat-cow: 2 sets x 6 gentle reps. Rest 20 s between sets.",
+        "Open-book upper-back rotations: 2 sets x 6 reps per side, comfortable range. Rest 15 s between sides and 20 s between sets.",
+        "Seated hip rotations: 2 sets x 6 reps per side, use hands for support. Rest 20 s between sets.",
+        "Ankle circles: 2 sets x 8 each direction per ankle. Rest 15 s between sets. Finish with gentle calf and hip-flexor stretches, 20 s per side.",
+        "Move slowly, never force a stretch. Rest 20-30 s between exercises. About 15 min. No heavy leg work. With Pilates, use one round only."
+      ]
+    },
+    {
+      "group": "heavy",
+      "title": "Heavy 4: controlled squat and posterior chain",
+      "exercises": [
+        "Warm-up: 5 min walking, 8 bodyweight sit-to-stands and 8 unloaded hinges.",
+        "Goblet squat to a stable chair: 2 sets x 10 reps, light dumbbell or kettlebell held close; touch the chair without dropping onto it. Rest 75 s between sets.",
+        "Supported split squats: 2 sets x 6 reps per side, bodyweight or light dumbbells. Rest 30 s between sides and 75 s between sets.",
+        "Romanian deadlifts: 2 sets x 10 reps, 3-second lowering. Rest 90 s between sets.",
+        "Glute bridges: 2 sets x 12 reps, pause 2 seconds. Rest 60 s between sets.",
+        "Supported single-leg calf raises: 2 sets x 10 reps per side. Rest 30 s between sides and 60 s between sets.",
+        "Rest 60-90 s between exercises. Cool down with 2 min walking. About 35-40 min; use one set if recovery suffers."
+      ]
+    },
+    {
+      "group": "light",
+      "title": "Light 4: gentle trunk and hip activation",
+      "exercises": [
+        "Warm-up: 2 min relaxed walking.",
+        "Dead-bug heel taps: 2 sets x 6 reps per side, slow and controlled. Rest 30 s between sets.",
+        "Quadruped arm reaches: 2 sets x 6 reps per side, keeping your back still. Rest 30 s between sets.",
+        "Bodyweight clamshells: 2 sets x 8 reps per side, no band. Rest 15 s between sides and 30 s between sets.",
+        "Standing hip circles holding a support: 2 sets x 5 each direction per side. Rest 20 s between sets. Finish with 6 ankle rocks per side.",
+        "Rest 30 s between exercises. About 15 min, easy effort. No heavy leg work. With Pilates, use one set or mobility only."
+      ]
+    },
+    {
+      "group": "heavy",
+      "title": "Heavy 5: low-step single-leg stability",
+      "exercises": [
+        "Warm-up: 5 min walking, 8 unloaded hinges and 8 ankle rocks per side.",
+        "Low step-ups: 2 sets x 6 reps per side with a 3-second controlled step-down. Use a stable step and support if needed. Rest 30 s between sides and 75 s between sets.",
+        "Supported kickstand Romanian deadlifts: 2 sets x 10 reps per side, light weight in the free hand. Rest 30 s between sides and 90 s between sets.",
+        "Glute bridges: 2 sets x 10 reps, pause 3 seconds at the top. Rest 60 s between sets.",
+        "Supported single-leg calf raises: 2 sets x 12 reps per side, smooth movement. Rest 30 s between sides and 60 s between sets.",
+        "Rest 60-90 s between exercises. Cool down with 2 min walking. About 30-40 min."
+      ]
+    },
+    {
+      "group": "light",
+      "title": "Light 5: pre-long-run reset",
+      "exercises": [
+        "Warm-up: 3 min relaxed walking.",
+        "Standing supported balance: 2 sets x 20 s per side, no weights. Rest 15 s between sides and 20 s between sets.",
+        "Bird dog: 2 sets x 5 reps per side with a 2-second hold. Rest 30 s between sets.",
+        "Supine pelvic tilts: 2 sets x 8 gentle reps. Rest 20 s between sets.",
+        "Mobility: 6 ankle rocks per side, 6 cat-cow reps, then gentle calf and hip-flexor stretches for 20 s per side, one round.",
+        "Rest 20-30 s between exercises. About 15 min. Finish fresher than you started. No heavy leg work. With Pilates, use one set or mobility only."
+      ]
+    }
+  ]
+}
