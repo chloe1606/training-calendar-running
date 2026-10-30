@@ -4,6 +4,17 @@ import { weeklyMileage } from './insights';
 import { inUnits, weekKey } from './model';
 
 describe('planned and completed mileage', () => {
+  it('identifies race weeks and updates them when a race is rescheduled', () => {
+    const plan = createDefaultPlan();
+    const rows = weeklyMileage(plan);
+    expect(rows.filter(row => row.races.length).map(row => row.week)).toEqual(['2027-03-08', '2027-04-12']);
+    const half = plan.workouts.find(workout => workout.type === 'race' && workout.date === '2027-03-14')!;
+    expect(rows.find(row => row.week === '2027-03-08')?.races[0].distance).toBe(13.1);
+    half.date = '2027-03-07';
+    const moved = weeklyMileage(plan);
+    expect(moved.find(row => row.week === '2027-03-08')?.races).toEqual([]);
+    expect(moved.find(row => row.week === '2027-03-01')?.races[0].date).toBe('2027-03-07');
+  });
   it('lists long-run distances in selected units, excluding races and retaining multiple sessions', () => {
     const plan = createDefaultPlan();
     expect(weeklyMileage(plan)[0].longRuns).toEqual([10]);

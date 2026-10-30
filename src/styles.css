@@ -190,6 +190,10 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
 .insights-table table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 16px; }
 .insights-table th, .insights-table td { text-align: left; padding: 12px 9px; border-bottom: 1px solid var(--line); }
 .insights-table [aria-current="true"] { background: var(--olive-light); }
+.insights-table .race-week-row { background: var(--race-bg); }
+.insights-table .race-week-row > th { box-shadow: inset 3px 0 var(--race-fg); }
+.insights-table .race-week-row[aria-current="true"] { outline: 2px solid var(--olive); outline-offset: -2px; }
+.race-week-label { display: block; margin-top: 5px; font-size: 11px; font-weight: 600; }
 .insights-table button { color: var(--olive); text-align: left; }
 .calendar-checks { display: grid; gap: 16px; margin-top: 24px; }
 .calendar-checks > a { justify-self: start; }

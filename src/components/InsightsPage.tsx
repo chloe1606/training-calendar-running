@@ -37,9 +37,9 @@ export function InsightsPage({ plan, selectedWeek, onSelect, onCalendar, onUnits
       <div className="board-scroll"><table>
         <caption className="sr-only">Planned and completed running distance in {plan.settings.units}. Select a week to inspect its chart and warnings.</caption>
         <thead><tr><th scope="col">Week of</th><th scope="col">Planned ({plan.settings.units})</th><th scope="col">Completed ({plan.settings.units})</th><th scope="col">Long run ({plan.settings.units})</th><th scope="col">Status</th></tr></thead>
-        <tbody>{rows.map(row => <tr key={row.week} aria-current={row.week === selectedWeek ? 'true' : undefined}>
+        <tbody>{rows.map(row => <tr key={row.week} className={row.races.length ? 'race-week-row' : undefined} aria-current={row.week === selectedWeek ? 'true' : undefined}>
           <th scope="row"><button onClick={() => onSelect(row.week)} aria-label={`Inspect week of ${row.week}`}>{format(parseISO(row.week), 'd MMM yyyy')}</button></th>
-          <td>{formatDistance(row.value)}</td><td>{formatDistance(row.completed)}</td><td>{row.longRuns.length ? row.longRuns.map(formatDistance).join(', ') : '—'}</td><td>{row.status}</td>
+          <td>{formatDistance(row.value)}</td><td>{formatDistance(row.completed)}</td><td>{row.longRuns.length ? row.longRuns.map(formatDistance).join(', ') : '—'}</td><td>{row.status}{row.races.map(race => <span className="race-week-label" key={race.id}>Race · {format(parseISO(race.date), 'd MMM')} · {formatDistance(race.distance)} {plan.settings.units}</span>)}</td>
         </tr>)}</tbody>
       </table></div>
     </section>
