@@ -9,7 +9,7 @@ import { addMonths, differenceInCalendarDays, format, parseISO, startOfMonth } f
 import {
   AlertCircle, ArrowUpRight, CalendarDays, ChartNoAxesCombined, Check, ChevronLeft, ChevronRight,
   CircleHelp, Download, Flag, Footprints, Leaf, Menu, Moon, Plus, Redo2,
-  RotateCcw, Settings2, ShieldCheck, Sun, Target, Undo2, Upload, X, MoveRight,
+  RotateCcw, Settings2, ShieldCheck, Sun, Target, Undo2, Upload, X, MoveRight, Dumbbell,
 } from 'lucide-react';
 import { usePlanner, validatePlan } from './store';
 import {
@@ -23,6 +23,7 @@ import { WeekBoard } from './components/WeekBoard';
 import { MonthOverview } from './components/MonthOverview';
 import { CardContent } from './components/WorkoutCard';
 import { RuleWarnings } from './components/RuleWarnings';
+import { StrengthPage } from './components/StrengthPage';
 import { SettingsPanel } from './components/SettingsPanel';
 import { AddWorkout } from './components/AddWorkout';
 import { Modal } from './components/Modal';
@@ -94,6 +95,12 @@ export default function App() {
   const [pendingImport, setPendingImport] = useState<ReturnType<typeof validatePlan> | null>(null);
   const [notice, setNotice] = useState('');
   const [mobileNav, setMobileNav] = useState(false);
+  const [page, setPage] = useState<'calendar' | 'strength'>(() => window.location.hash === '#strength' ? 'strength' : 'calendar');
+  useEffect(() => {
+    const onHashChange = () => setPage(window.location.hash === '#strength' ? 'strength' : 'calendar');
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
   const inputRef = useRef<HTMLInputElement>(null);
   const keyboardDate = useRef<string | null>(null);
   const keyboardCoordinates = useMemo(() => calendarCoordinates(keyboardDate), []);
@@ -157,14 +164,15 @@ export default function App() {
   }
   const toggleUnits = (units: Settings['units']) => change(p => ({ ...p, settings: { ...p.settings, units } }));
   return <div className="app-shell">
-    <a className="skip-link" href="#main">Skip to calendar</a>
+    <a className="skip-link" href="#main">Skip to {page === 'strength' ? 'strength workouts' : 'calendar'}</a>
     <aside className={`sidebar ${mobileNav ? 'mobile-open' : ''}`}>
-      <a href="#" className="brand" aria-label="Marathon Planner home"><span className="brand-mark"><Footprints size={22} strokeWidth={2.1} /></span><span>marathon<span className="brand-secondary">planner<span className="brand-period">.</span></span></span></a>
+      <a href="#calendar" className="brand" aria-label="Marathon Planner home" onClick={() => { setPage('calendar'); setMobileNav(false); }}><span className="brand-mark"><Footprints size={22} strokeWidth={2.1} /></span><span>marathon<span className="brand-secondary">planner<span className="brand-period">.</span></span></span></a>
       <button className="mobile-close icon-button" onClick={() => setMobileNav(false)} aria-label="Close navigation"><X size={20} /></button>
       <div className="sidebar-label">YOUR WORKSPACE</div>
       <nav aria-label="Main navigation">
-        <button className="nav-item active" onClick={() => { document.getElementById('calendar')?.scrollIntoView({ behavior: 'smooth' }); setMobileNav(false); }}><CalendarDays size={18} />Training calendar<span className="nav-active-dot" /></button>
-        <button className="nav-item" onClick={() => { document.getElementById('mileage')?.scrollIntoView({ behavior: 'smooth' }); setMobileNav(false); }}><ChartNoAxesCombined size={18} />Plan insights</button>
+        <a href="#calendar" className={`nav-item ${page === 'calendar' ? 'active' : ''}`} aria-current={page === 'calendar' ? 'page' : undefined} onClick={() => { setPage('calendar'); setMobileNav(false); }}><CalendarDays size={18} />Training calendar{page === 'calendar' && <span className="nav-active-dot" />}</a>
+        <a href="#mileage" className="nav-item" onClick={() => { setPage('calendar'); setMobileNav(false); }}><ChartNoAxesCombined size={18} />Plan insights</a>
+        <a href="#strength" className={`nav-item ${page === 'strength' ? 'active' : ''}`} aria-current={page === 'strength' ? 'page' : undefined} onClick={() => { setPage('strength'); setMobileNav(false); }}><Dumbbell size={18} />Strength workouts{page === 'strength' && <span className="nav-active-dot" />}</a>
         <button className="nav-item" onClick={() => { setModal('settings'); setMobileNav(false); }}><Settings2 size={18} />Settings</button>
       </nav>
       <div className="sidebar-plan"><span className="sidebar-label">THE CURRENT CHAPTER</span><span className="chapter-icon"><Leaf size={19} /></span><strong>Building the foundation</strong><p>Easy miles today.<br />A stronger runner tomorrow.</p><div className="chapter-progress"><span /></div><div className="chapter-caption"><span>Base phase</span><span>Until 13 Dec</span></div></div>
@@ -175,11 +183,13 @@ export default function App() {
     </aside>
     {mobileNav && <button className="nav-backdrop" onClick={() => setMobileNav(false)} aria-label="Close mobile navigation" />}
     <main id="main">
-      <header className="topbar"><div><button className="mobile-menu icon-button" onClick={() => setMobileNav(true)} aria-label="Open navigation"><Menu size={21} /></button><span className="breadcrumb">My workspace <ChevronRight size={12} /><strong>Training calendar</strong></span></div>
+      <header className="topbar"><div><button className="mobile-menu icon-button" onClick={() => setMobileNav(true)} aria-label="Open navigation"><Menu size={21} /></button><span className="breadcrumb">My workspace <ChevronRight size={12} /><strong>{page === 'strength' ? 'Strength workouts' : 'Training calendar'}</strong></span></div>
         <div className="topbar-actions"><span className="saved-label"><span className={error ? 'error-dot' : 'online-dot'} />{error ? 'Not saved' : 'Saved on this device'}</span><button className="icon-button theme-toggle" aria-label={`Switch to ${plan.settings.darkMode ? 'light' : 'dark'} mode`} onClick={() => change(p => ({ ...p, settings: { ...p.settings, darkMode: !p.settings.darkMode } }))}>{plan.settings.darkMode ? <Sun size={18} /> : <Moon size={18} />}</button><span className="avatar small-avatar">C</span></div>
       </header>
       <div className="main-content">
         {error && <div className="error-banner" role="alert">{error}<button onClick={retrySave}>Retry saving</button></div>}
+        <div hidden={page !== 'strength'} id="strength"><StrengthPage workouts={weeklyWorkouts} weeks={weeks} selectedWeek={week} onWeekChange={navigate} /></div>
+        {page === 'calendar' && <div>
         <div className="page-heading"><div><span className="eyebrow muted-eyebrow">CONSISTENCY OVER PERFECTION</span><h1>Your training, in stride<span>.</span></h1><p>A plan with purpose. The flexibility to make it yours.</p></div>
           <div className="heading-actions"><button className="secondary-button" onClick={() => setModal('export')}><Download size={16} />Export plan</button><button className="primary-button" onClick={() => setModal('add')}><Plus size={17} />Add workout</button></div>
         </div>
@@ -219,6 +229,7 @@ export default function App() {
         </DndContext>
         <div className="below-board"><Suspense fallback={<section className="mileage-panel" aria-busy="true">Loading mileage chart…</section>}><MileageChart plan={plan} selectedWeek={week} onSelect={navigate} /></Suspense><RuleWarnings warnings={selectedWarnings} onNavigate={navigate} /></div>
         <footer className="page-footer"><span><Leaf size={14} />Progress isn't always a straight line. Keep going.</span><div><button disabled={!past.length} onClick={undo} title="Undo (Cmd/Ctrl+Z)" aria-label="Undo last change"><Undo2 size={15} />Undo</button><button disabled={!future.length} onClick={redo} title="Redo (Cmd/Ctrl+Shift+Z)" aria-label="Redo last change"><Redo2 size={15} />Redo</button><i /><button onClick={() => setModal('reset')}><RotateCcw size={14} />Reset to default plan</button></div></footer>
+        </div>}
       </div>
     </main>
     <input ref={inputRef} className="sr-only" type="file" accept=".json,application/json" aria-label="Import plan JSON" onChange={async event => {
