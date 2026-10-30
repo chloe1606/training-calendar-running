@@ -33,6 +33,7 @@ const MOVE_DIFFICULTIES: Record<string, MoveDifficulty> = {
   suitcase: 'Medium', farmer: 'Medium', 'db-row': 'Medium', 'floor-press': 'Medium',
   'overhead-press': 'Medium', 'lateral-raise': 'Easy', 'reverse-fly': 'Medium', biceps: 'Easy',
   triceps: 'Medium', 'band-pull': 'Easy', 'band-rotation': 'Easy', 'wall-push': 'Easy',
+  'kneeling-step-drive': 'Hard',
 };
 export function moveDifficulty(move: MoveGuide): MoveDifficulty {
   const difficulty = MOVE_DIFFICULTIES[move.id];
@@ -47,6 +48,7 @@ const BODY_AREAS: Record<string, BodyArea[]> = {
   calf: ['Calves', 'Feet & ankles'],
   split: ['Legs', 'Glutes'],
   step: ['Legs', 'Glutes'],
+  'kneeling-step-drive': ['Legs', 'Glutes', 'Hips', 'Core'],
   bridge: ['Glutes', 'Hamstrings'],
   rdl: ['Hamstrings', 'Glutes', 'Back'],
   kickstand: ['Hamstrings', 'Glutes'],
@@ -239,6 +241,19 @@ export const MOVE_GUIDES: MoveGuide[] = [
   { id: 'band-pull', name: 'Band pull-apart', match: /band pull-apart/i, equipment: 'Light long resistance band', prescription: '1-2 sets of 8-12 reps; rest 45 s.', cue: 'Hold a light band in front at chest height with soft elbows. Gently separate hands without shrugging or arching; return slowly. Inspect the band first and keep it below face height.', labels: ['Light tension in front', 'Pull hands apart'], poses: [{ ...stand, arms: 'M80 40L66 48L61 52M80 40L94 48L99 52', equipment: 'M61 52H99' }, { ...stand, arms: 'M80 40L52 45L25 50M80 40L108 45L135 50', equipment: 'M25 50H135' }] },
   { id: 'band-rotation', name: 'Band shoulder external rotation', match: /band shoulder external rotation/i, equipment: 'Light long resistance band', prescription: '1-2 sets of 8-12 reps; rest 45 s.', cue: 'Hold a light band between hands, elbows bent and tucked at your sides. Rotate forearms out a small distance without moving elbows or flaring ribs; return slowly.', labels: ['Elbows tucked', 'Rotate forearms out'], poses: [{ ...stand, arms: 'M80 40L65 58L72 66M80 40L95 58L88 66', equipment: 'M72 66H88' }, { ...stand, arms: 'M80 40L65 58L44 61M80 40L95 58L116 61', equipment: 'M44 61H116' }] },
   { id: 'wall-push', name: 'Wall push-up', match: /wall push-up/i, equipment: 'Solid wall', prescription: '1-2 sets of 8-12 reps; rest 60 s.', cue: 'Place hands on a solid wall around chest height and step back slightly. Keep body in a straight line as you bend elbows, then push away; avoid shrugging and start close to the wall.', labels: ['Body long, hands on wall', 'Bend elbows, then press'], poses: [{ ...stand, head: [93, 22], body: 'M90 33L73 74', arms: 'M87 42L113 48L145 48', legs: 'M73 74L65 94L57 116M73 74L82 94L75 116', equipment: 'M145 5V120' }, { ...stand, head: [116, 22], body: 'M110 33L88 74', arms: 'M105 42L125 67L145 48', legs: 'M88 74L72 94L57 116M88 74L90 94L75 116', equipment: 'M145 5V120' }] },
+  {
+  id: 'kneeling-step-drive',
+  name: 'Half-kneeling to step-up with knee drive',
+  match: /half-kneeling to step-up with (?:a )?knee drive/i,
+  equipment: 'Bodyweight, low stable step, stable support and kneeling mat',
+  prescription: '1-2 sets of 4-6 reps per side; rest 30 s between sides and 75 s between sets.',
+  cue: 'Start half-kneeling with the front foot planted on a low, non-slip step and the opposite knee on a mat behind it. Press through the foot on the step to rise, driving the kneeling knee forward and up to a comfortable height. Keep the standing knee tracking over the toes and hips level. Slowly lower the lifted knee back onto the mat, keeping the front foot on the step throughout. Complete one side before switching; use stable support and bodyweight only. Choose a low height that allows a controlled, pain-free rise and return; use an ordinary supported step-up instead if kneeling is uncomfortable.',
+  labels: ['Front foot on step, rear knee on mat', 'Rise and drive rear knee up'],
+  poses: [
+    { head: [80, 31], body: 'M80 42L80 78', arms: 'M80 51L66 66L61 83M80 51L96 65L102 81', legs: 'M80 78L108 78L108 99M80 78L58 113L34 113', equipment: 'M22 119H72M92 116V99H129V116' },
+    { head: [108, 14], body: 'M108 25L108 65', arms: 'M108 34L89 48L83 35M108 34L126 49L140 60', legs: 'M108 65L108 82L108 99M108 65L135 60L146 82', equipment: 'M22 119H72M92 116V99H129V116' },
+  ],
+  },
 ];
 
 export function guidesForNotes(notes: string): MoveGuide[] {

@@ -7,6 +7,15 @@ import { StrengthPage, ExerciseDiagram, EquipmentLabels, WorkoutFlow } from './c
 import { strengthNotes } from './strength';
 
 describe('illustrated strength guide', () => {
+  it('starts the half-kneeling knee drive with a foot already on the step', () => {
+    const move = MOVE_GUIDES.find(move => move.id === 'kneeling-step-drive')!;
+    expect(move.cue).toContain('front foot planted on a low, non-slip step');
+    expect(move.cue).toContain('keeping the front foot on the step throughout');
+    expect(move.labels).toEqual(['Front foot on step, rear knee on mat', 'Rise and drive rear knee up']);
+    expect(move.poses[0].equipment).toBe(move.poses[1].equipment);
+    expect(move.poses[0].legs).toContain('L108 99');
+    expect(move.poses[1].legs).toContain('L108 99');
+  });
   it('summarises prescribed exercises once with sets, reps and alternatives', () => {
     const summary = strengthSummary(routines.routines[0].exercises.join('\n\n'));
     expect(summary).toHaveLength(4);
@@ -28,14 +37,14 @@ describe('illustrated strength guide', () => {
     expect(html).toContain('Warm-up:');
     expect(html).toContain('Cool-down:');
   });
-  it('rates all 60 standard movements with explicit difficulty levels', () => {
+  it('rates all 61 standard movements with explicit difficulty levels', () => {
     for (const move of MOVE_GUIDES) expect(['Easy', 'Medium', 'Hard']).toContain(moveDifficulty(move));
     expect(new Set(MOVE_GUIDES.map(moveDifficulty)).size).toBe(3);
     expect(moveDifficulty(MOVE_GUIDES.find(move => move.id === 'walk')!)).toBe('Easy');
     expect(moveDifficulty(MOVE_GUIDES.find(move => move.id === 'plank')!)).toBe('Medium');
     expect(moveDifficulty(MOVE_GUIDES.find(move => move.id === 'single-rdl')!)).toBe('Hard');
   });
-  it('assigns distinct body-area labels to all 60 movements', () => {
+  it('assigns distinct body-area labels to all 61 movements', () => {
     for (const move of MOVE_GUIDES) {
       expect(bodyAreas(move).length).toBeGreaterThan(0);
       expect(new Set(bodyAreas(move)).size).toBe(bodyAreas(move).length);
@@ -141,7 +150,7 @@ describe('illustrated strength guide', () => {
     expect(equipmentTags(MOVE_GUIDES.find(move => move.id === 'band-pull')!)).toEqual([{ kind: 'band', label: 'Resistance band' }]);
   });
   it('covers every prescribed movement line across all ten routines and mobility', () => {
-    expect(MOVE_GUIDES).toHaveLength(60);
+    expect(MOVE_GUIDES).toHaveLength(61);
     expect(new Set(MOVE_GUIDES.map(m => m.id)).size).toBe(MOVE_GUIDES.length);
     expect(routines.routines).toHaveLength(10);
     for (const routine of routines.routines) {
@@ -153,10 +162,10 @@ describe('illustrated strength guide', () => {
     expect(mobility).toEqual(expect.arrayContaining(['walk', 'ankle-circle', 'ankle-rock', 'seated-hip', 'cat', 'open-book', 'calf-stretch', 'hip-stretch']));
     expect(guidesForNotes('Custom exercise, ask your coach')).toEqual([]);
   });
-  it('adds 31 distinct equipment-appropriate options with explicit starting doses', () => {
+  it('adds 32 distinct equipment-appropriate options with explicit starting doses', () => {
     const additions = MOVE_GUIDES.slice(29);
-    expect(additions).toHaveLength(31);
-    expect(new Set(MOVE_GUIDES.map(move => move.name)).size).toBe(60);
+    expect(additions).toHaveLength(32);
+    expect(new Set(MOVE_GUIDES.map(move => move.name)).size).toBe(61);
     for (const move of additions) {
       expect(move.equipment).toBeTruthy();
       expect(move.prescription).toMatch(/set|carr/);
@@ -177,7 +186,7 @@ describe('illustrated strength guide', () => {
       expect(html).toContain('<figcaption>');
     }
   });
-  it('offers optional progressions without expanding the 60-move library or prescribing extra workload', () => {
+  it('offers optional progressions without expanding the movement library or prescribing extra workload', () => {
     expect(Object.keys(MOVE_PROGRESSIONS)).toHaveLength(12);
     for (const [id, progression] of Object.entries(MOVE_PROGRESSIONS)) {
       const move = MOVE_GUIDES.find(item => item.id === id);
@@ -189,7 +198,7 @@ describe('illustrated strength guide', () => {
     }
     expect(MOVE_PROGRESSIONS.plank.title).toBe('Side plank from feet');
     expect(MOVE_PROGRESSIONS.plank.pose).toBeDefined();
-    expect(MOVE_GUIDES).toHaveLength(60);
+    expect(MOVE_GUIDES).toHaveLength(61);
   });
   it('renders a dedicated page without requiring scheduled sessions', () => {
     const html = renderToStaticMarkup(createElement(StrengthPage, { workouts: [], weeks: ['2026-10-26'], selectedWeek: '2026-10-26', onWeekChange: () => undefined }));

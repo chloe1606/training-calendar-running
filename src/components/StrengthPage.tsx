@@ -200,7 +200,7 @@ export function StrengthPage({ workouts, weeks, selectedWeek, onWeekChange }: {
         <summary>Summary notes</summary>
         {strengthSummary(notes).length ? <ul>{strengthSummary(notes).map((text, index) => <li key={index}>{text}</li>)}</ul> : <p>No exercise sets or reps specified for this workout.</p>}
       </details>}
-      {library && <p className="field-help">A menu of alternatives, not a 60-exercise workout. Introduce one unfamiliar move at a time, use bodyweight or the lightest band/weight first, and leave 2-3 reps in reserve. Inspect bands for damage; no door anchors are needed for these moves. Use a low, non-slip step and stable support.</p>}
+      {library && <p className="field-help">A menu of alternatives, not a {MOVE_GUIDES.length}-exercise workout. Introduce one unfamiliar move at a time, use bodyweight or the lightest band/weight first, and leave 2-3 reps in reserve. Inspect bands for damage; no door anchors are needed for these moves. Use a low, non-slip step and stable support.</p>}
       <div className="move-library">{moves.map((move, index) => <details className="move-guide" key={move.id} open={index === 0} ref={element => { if (element) movementRefs.current.set(move.id, element); else movementRefs.current.delete(move.id); }}>
         <summary tabIndex={0}>{move.name}<span className={`move-difficulty difficulty-${moveDifficulty(move).toLowerCase()}`} aria-label={`Difficulty: ${moveDifficulty(move)}`}>{moveDifficulty(move)}</span><EquipmentLabels move={move} /><span className="body-area-tags" aria-label="Body areas">{bodyAreas(move).map(area => <span className="body-area-tag" key={area}>{area}</span>)}</span></summary><ExerciseDiagram move={move} />
       </details>)}</div>
