@@ -77,12 +77,15 @@ function WeekDropTarget({ direction, active, selectedWeek, navigate, period }: {
 }
 function GoalBanner({ settings }: { settings: Settings }) {
   const days = differenceInCalendarDays(parseISO(settings.raceDate), new Date());
+  const remainingDays = Math.max(0, days);
+  const weeksToGo = Math.floor(remainingDays / 7);
+  const extraDays = remainingDays % 7;
   const parts = settings.goalTime.split(':').map(Number);
   const goalMinutes = parts[0] * 60 + parts[1] + parts[2] / 60;
   return <section className="goal-banner">
     <div className="goal-copy"><span className="eyebrow"><span className="live-dot" />THE ROAD TO 26.2</span><h2>Big goals.<br />One week at a time.</h2><p>Show up. Find your rhythm. Trust the process.</p></div>
     <svg className="route-art" viewBox="0 0 360 150" fill="none" aria-hidden="true"><path d="M5 132C80 144 42 23 120 47S161 133 209 82 245 14 332 30" stroke="currentColor" strokeWidth="2" strokeDasharray="5 6" /><circle cx="120" cy="47" r="7" fill="var(--hero)" stroke="currentColor" strokeWidth="2" /><circle cx="209" cy="82" r="7" fill="var(--hero)" stroke="currentColor" strokeWidth="2" /><circle cx="332" cy="30" r="13" fill="currentColor" /><path d="m326 30 4 4 8-8" stroke="var(--hero)" strokeWidth="2" /><text x="102" y="25">BASE</text><text x="190" y="112">BUILD</text><text x="302" y="65">RACE DAY</text></svg>
-    <div className="goal-details"><div className="race-countdown"><span>{Math.max(0, days)}</span><div>days to go<small>{format(parseISO(settings.raceDate), 'EEEE d MMM yyyy')}</small></div><Flag size={24} /></div>
+    <div className="goal-details"><div className="race-countdown"><span>{remainingDays}</span><div>days to go<small>{weeksToGo} {weeksToGo === 1 ? 'week' : 'weeks'}{extraDays > 0 ? ` + ${extraDays} ${extraDays === 1 ? 'day' : 'days'}` : ''} to go</small><small>{format(parseISO(settings.raceDate), 'EEEE d MMM yyyy')}</small></div><Flag size={24} /></div>
       <div className="goal-metrics"><span><small>GOAL TIME</small><strong>{settings.goalTime}</strong></span><i /><span><small>TARGET PACE</small><strong>{formatPace(goalMinutes / inUnits(26.2, settings.units))}<em> /{settings.units}</em></strong></span></div></div>
   </section>;
 }

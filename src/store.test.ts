@@ -1,5 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createDefaultPlan } from './seed';
+import baseline from './default-plan.json';
+import { thresholdSession } from './threshold';
 
 let store: typeof import('./store');
 const storage = new Map<string, string>();
@@ -15,6 +17,15 @@ beforeEach(() => {
   store.usePlanner.setState({ plan: createDefaultPlan(), past: [], future: [], error: null });
 });
 describe('import validation', () => {
+  it('refines baseline thresholds on import and persists an idempotent round trip', () => {
+    const plan = store.validatePlan(structuredClone(baseline));
+    expect(plan.workouts.filter(workout => thresholdSession(workout))).toHaveLength(11);
+    store.usePlanner.getState().change(() => store.validatePlan(JSON.parse(JSON.stringify(plan))));
+    expect(store.usePlanner.getState().error).toBeNull();
+    const saved = [...storage.values()].map(text => JSON.parse(text)).find(value => value.workouts);
+    expect(saved).toEqual(plan);
+    expect(store.validatePlan(saved)).toEqual(plan);
+  });
   it('upgrades quality variety once, round-trips edits and rejects invalid styles', () => {
     const legacy = createDefaultPlan();
     delete legacy.qualityVarietyVersion;

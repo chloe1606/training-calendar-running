@@ -5,6 +5,7 @@ import { scheduleStrength } from './strength';
 import { createDefaultPlan } from './seed';
 import { addMarathonFinishes } from './finishes';
 import { addQualityVariety } from './quality';
+import { refineThresholdPlan } from './threshold';
 
 const STORAGE_KEY = 'marathon-planner-v1';
 const validDate = (v: unknown): v is string => typeof v === 'string'
@@ -69,7 +70,7 @@ export function validatePlan(value: unknown): Plan {
     plan.settings.defaultDays.strength = 1;
     plan.workouts = scheduleStrength(plan, plan.settings.strengthDays, true);
   }
-  return addQualityVariety(addMarathonFinishes(plan));
+  return refineThresholdPlan(addQualityVariety(addMarathonFinishes(plan)));
 }
 
 function load(): { plan: Plan; error: string | null } {

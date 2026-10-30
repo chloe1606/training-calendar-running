@@ -60,7 +60,7 @@ describe('validated v2 app default', () => {
         expect(plan.workouts.some(x => x.date === dayOffset(w.date, 1) && isHard(x))).toBe(false);
         if (w.date === dayOffset(monday, 1)) {
           expect(mainSetMiles(w)).toBeGreaterThan(0);
-          expect(w.notes).toContain('Cool-down: 1 mi easy');
+          expect(w.notes).toMatch(/Cool-down: 1(?:\.00)? mi easy/);
           expect(w.hrCapBpm).toBeUndefined();
         }
       }

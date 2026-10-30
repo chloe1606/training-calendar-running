@@ -1,6 +1,7 @@
 import { durationMinutes, formatPace, inUnits, paceInUnits, type Plan, type Settings, type Workout } from './model';
 import { hrRangeLabel } from './zones';
 import { formatDistance } from './distance';
+import { thresholdDetails, thresholdSession } from './threshold';
 
 export const QUALITY_SESSIONS = [
   { date: '2026-12-17', style: 'hills', reps: 6 },
@@ -9,6 +10,8 @@ export const QUALITY_SESSIONS = [
 ] as const;
 export const ORIGINAL_QUALITY_NOTES = 'Total distance includes easy warm-up and cool-down. Quality portion only at the listed pace.';
 export function mainSetMiles(w: Workout): number | null {
+  const threshold = thresholdSession(w);
+  if (threshold) return threshold.workMiles;
   const match = w.notes.match(/Main-set quality miles: (\d+(?:\.\d+)?)/);
   return match ? Number(match[1]) : null;
 }
@@ -53,6 +56,7 @@ export function progressionStages(w: Workout, settings: Settings) {
 }
 
 export function qualityDetails(w: Workout, settings: Settings): string[] {
+  if (thresholdSession(w)) return thresholdDetails(w, settings);
   const pace = (min: number, max: number) => `${formatPace(paceInUnits(min, settings.units))}–${formatPace(paceInUnits(max, settings.units))}/${settings.units}`;
   if (!w.qualityStyle) {
     const main = mainSetMiles(w);
@@ -71,6 +75,15 @@ export function qualityDetails(w: Workout, settings: Settings): string[] {
 }
 
 export function qualityDuration(w: Workout, settings: Settings) {
+  const threshold = thresholdSession(w);
+  if (threshold?.fits) {
+    const workMinutes = threshold.reps * threshold.minutes;
+    const easyMiles = w.distanceMiles - threshold.workMiles;
+    return {
+      min: workMinutes + easyMiles * threshold.easyPace,
+      max: workMinutes + easyMiles * threshold.easyPace,
+    };
+  }
   if (w.qualityStyle === 'progression') return progressionStages(w, settings).reduce((sum, stage) => {
     const duration = durationMinutes(stage.distanceMiles, stage.pace);
     return { min: sum.min + duration.min, max: sum.max + duration.max };

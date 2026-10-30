@@ -216,6 +216,7 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
 .day-warning { margin-left: auto; color: #ba965f; display: flex; }
 .day-workouts { display: flex; flex-direction: column; gap: 8px; }
 .workout-card { --card-bg: var(--easy-bg); --card-fg: var(--easy-fg); --card-line: var(--easy-line); background: var(--card-bg); color: var(--card-fg); border: 1px solid var(--card-line); border-radius: 6px; position: relative; padding: 10px 9px 9px; transition: box-shadow .15s; }
+.threshold-breakdown { display: grid; gap: 6px; margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--card-line); font-size: 11px; line-height: 1.6; overflow-wrap: anywhere; }
 .type-easy { --card-bg: var(--easy-bg); --card-fg: var(--easy-fg); --card-line: var(--easy-line); }
 .type-long { --card-bg: var(--long-bg); --card-fg: var(--long-fg); --card-line: var(--long-line); }
 .type-threshold, .type-strides { --card-bg: var(--threshold-bg); --card-fg: var(--threshold-fg); --card-line: var(--threshold-line); }

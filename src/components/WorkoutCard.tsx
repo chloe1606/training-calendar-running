@@ -11,6 +11,7 @@ import {
 import { hrRangeLabel, paceZoneLabel, runTargets } from '../zones';
 import { usePlanner } from '../store';
 import { formatDistance } from '../distance';
+import { thresholdSummary, thresholdSession, thresholdNotes } from '../threshold';
 import { mainSetMiles, qualityDetails, qualityDuration, qualityNotes } from '../quality';
 
 export function WorkoutIcon({ workout, size = 16 }: { workout: Workout; size?: number }) {
@@ -37,18 +38,20 @@ function LongRunPaceSplit({ workout: w, settings }: { workout: Workout; settings
 export function CardContent({ workout: w, settings, compact = false }: { workout: Workout; settings: Settings; compact?: boolean }) {
   const duration = w.qualityStyle || mainSetMiles(w) !== null ? qualityDuration(w, settings) : workoutDuration(w);
   const targets = runTargets(w, settings);
+  const threshold = thresholdSession(w);
   return <>
     <span className="workout-name"><WorkoutIcon workout={w} /><span>{workoutLabel(w)}</span></span>
     {isRun(w) ? <>
       <span className="workout-distance">{formatDistance(inUnits(w.distanceMiles, settings.units))}<small>{settings.units}</small></span>
       <LongRunPaceSplit workout={w} settings={settings} />
       <>
-        {!w.marathonFinish && <span className="workout-pace">{w.qualityStyle === 'hills' ? 'Flat-equivalent reference: ' : w.qualityStyle === 'progression' ? 'Threshold portion: ' : (mainSetMiles(w) ?? 0) > 0 ? 'Work portion: ' : ''}{formatPace(paceInUnits(w.paceMinPerMile.min, settings.units))}{w.paceMinPerMile.max !== w.paceMinPerMile.min && `–${formatPace(paceInUnits(w.paceMinPerMile.max, settings.units))}`} /{settings.units}</span>}
+        {!w.marathonFinish && !threshold && <span className="workout-pace">{w.qualityStyle === 'hills' ? 'Flat-equivalent reference: ' : w.qualityStyle === 'progression' ? 'Threshold portion: ' : (mainSetMiles(w) ?? 0) > 0 ? 'Work portion: ' : ''}{formatPace(paceInUnits(w.paceMinPerMile.min, settings.units))}{w.paceMinPerMile.max !== w.paceMinPerMile.min && `–${formatPace(paceInUnits(w.paceMinPerMile.max, settings.units))}`} /{settings.units}</span>}
         {targets && <span className="zone-badges"><span>Pace {targets.paceZone}</span><span>HR Z{targets.hrZone}</span></span>}
         {targets && <span className="workout-meta"><Heart size={12} />{targets.hrRange}</span>}
         {w.qualityStyle && <span className="workout-meta">Quality session · hard day</span>}
         {w.marathonFinish && <span className="workout-meta">MP finish · hard day</span>}
       </>
+      {threshold && <span className="threshold-breakdown" aria-label="Threshold session breakdown">{thresholdSummary(w, settings).map((text, index) => <span key={index}>{text}</span>)}</span>}
       {!compact && <>
         <span className="workout-meta"><Timer size={12} />{w.qualityStyle === 'hills' ? 'Rough moving-time estimate: ' : ''}{formatDuration(duration.min)}{Math.round(duration.max) !== Math.round(duration.min) && `–${formatDuration(duration.max)}`}</span>
         {w.hrCapBpm && <span className="workout-meta" title="Additional heart-rate ceiling. Follow the lower limit if the target zone is lower.">{w.marathonFinish ? 'Easy cap' : 'Cap'}: under {w.hrCapBpm} bpm</span>}
@@ -145,6 +148,16 @@ function WorkoutEditor({ workout: w, settings, close }: { workout: Workout; sett
     if (low === null || high === null || high < low || low * factor < 0.1 || high * factor > 120 || miles < 0 || miles > 200 || !Number.isFinite(miles)) {
       setError('Use a valid distance and ordered paces (m:ss).'); return;
     }
+    const paceMinPerMile = {
+      min: min === formatPace(paceInUnits(w.paceMinPerMile.min, settings.units)) ? w.paceMinPerMile.min : low * factor,
+      max: max === formatPace(paceInUnits(w.paceMinPerMile.max, settings.units)) ? w.paceMinPerMile.max : high * factor,
+    };
+    const proposed: Workout = { ...w, type, notes, distanceMiles: miles, paceMinPerMile,
+      qualityStyle: qualityStyle === 'hills' || qualityStyle === 'progression' ? qualityStyle : undefined };
+    const proposedSession = thresholdSession(proposed);
+    if (proposedSession && !proposedSession.fits) {
+      setError('Total distance is too short for the threshold reps, recoveries, warm-up and cool-down. Increase distance or reduce the reps in notes.'); return;
+    }
     if (hr && (!Number.isInteger(Number(hr)) || Number(hr) < 60 || Number(hr) > 220)) {
       setError('Heart-rate cap must be 60–220 bpm.'); return;
     }
@@ -161,11 +174,10 @@ function WorkoutEditor({ workout: w, settings, close }: { workout: Workout; sett
     change(p => ({ ...p, workouts: p.workouts.map(item => item.id === w.id ? {
       ...item, type, marathonFinish, qualityStyle: type === 'threshold' && (qualityStyle === 'hills' || qualityStyle === 'progression') ? qualityStyle : undefined,
       distanceMiles: ['crossTraining', 'rest'].includes(type) ? 0 : miles,
-      paceMinPerMile: {
-        min: min === formatPace(paceInUnits(w.paceMinPerMile.min, settings.units)) ? w.paceMinPerMile.min : low * factor,
-        max: max === formatPace(paceInUnits(w.paceMinPerMile.max, settings.units)) ? w.paceMinPerMile.max : high * factor,
-      },
-      hrCapBpm: hr ? Number(hr) : undefined, hrZone: hrZone || undefined, notes, activity: type === 'crossTraining' ? activity : undefined,
+      paceMinPerMile,
+      hrCapBpm: hr ? Number(hr) : undefined, hrZone: hrZone || undefined,
+      notes: proposedSession?.fits && notes === w.notes ? thresholdNotes(proposed, settings) : notes,
+      activity: type === 'crossTraining' ? activity : undefined,
     } : item) }));
     close();
   }}>
@@ -182,7 +194,7 @@ function WorkoutEditor({ workout: w, settings, close }: { workout: Workout; sett
     {type === 'threshold' && <label>Quality session style<select value={qualityStyle} onChange={e => {
       const style = e.target.value === 'hills' || e.target.value === 'progression' ? e.target.value : undefined;
       setQualityStyle(style ?? '');
-      if ([qualityNotes(undefined), qualityNotes('hills'), qualityNotes('hills', 8), qualityNotes('progression')].includes(notes)) setNotes(qualityNotes(style));
+      if ((thresholdSession(w) && notes === w.notes) || [qualityNotes(undefined), qualityNotes('hills'), qualityNotes('hills', 8), qualityNotes('progression')].includes(notes)) setNotes(qualityNotes(style));
     }}>
       <option value="">Threshold</option><option value="hills">Hill repeats</option><option value="progression">Progression run</option>
     </select></label>}
