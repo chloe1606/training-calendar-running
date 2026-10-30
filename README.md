@@ -48,10 +48,15 @@ Current training decisions (supersede the original mileage/main-set prescription
 
 ## Use
 
+- Numeric distances display to three significant figures (for example 3.00 mi, 25.0 mi, 42.2 km); paces remain minutes:seconds. Formatting does not round stored distances, calculations or JSON backups. Saving an unchanged displayed distance preserves its original precision.
+
 - Click a card to edit it inline; click the circle to complete it.
 - Hover over a card's info icon for session instructions, notes and pace/HR breakdowns without expanding the card. Keyboard focus or tapping the icon also opens the tooltip; Escape, tapping outside or moving away dismisses it. Notes remain editable on the card and are included in exports.
 - Long runs with fast finishes show both portions directly on week/month cards (for example, first 12 mi easy at 9:00–9:45/mi, last 6 mi at MP at 7:50–8:10/mi). The info tooltip repeats the numeric split with the separate HR targets; it is not necessary to infer the finish pace from notes.
-- Drag a card by its grip. Drop on a day in Week or Month view, or on a previous/next navigation arrow to move it to the same weekday in another week.
+- Drag a card by its grip. Drop on a day in Week, Agenda or Month view, or on a previous/next navigation arrow to move it to the same weekday in another week.
+- **Agenda** lists the selected Monday–Sunday week vertically, with full dates and the same editing, completion, add, warning and drag controls as the week board. It is the default when opening the app at phone widths (760px or less); Week, Agenda and Month remain selectable on every screen.
+- The Insights weekly comparison includes a **Long run** column in mi/km: full planned distances for long-run sessions, including faster finishes. Multiple long runs are listed individually; weeks without one show a dash. Race distances remain in weekly totals rather than this column.
+- **Plan insights** has its own page (`#insights`; old `#mileage` links still work), with planned and completed mileage series, selected-week totals, a weekly comparison table and planning warnings. The calendar also shows completed weekly mileage. Completed means the distance on running workouts marked complete, not separately logged actual distance; cross-training is excluded. Empty future weeks have no completed chart point and are labelled Upcoming, not missed. Chart/table selectors inspect a week without leaving Insights; **View selected week in calendar** opens that week. Both series follow the mi/km setting.
 - Keyboard: focus the grip, press Space/Enter, use left/right for days and up/down for weeks, then Space/Enter to drop or Escape to cancel. Touch: hold the grip briefly before dragging.
 - Change weeks with the arrows or calendar selector. The chart selector includes exact weekly totals and week-on-week percentage changes.
 - Settings controls race details and the HR/pace training-zone boundaries. Workout-specific target paces are edited on calendar cards, not in Settings; saving Settings preserves existing run paces. Moving the race date moves the marathon card, not the whole skeleton.

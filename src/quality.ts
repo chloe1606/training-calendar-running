@@ -1,5 +1,6 @@
 import { durationMinutes, formatPace, inUnits, paceInUnits, type Plan, type Settings, type Workout } from './model';
 import { hrRangeLabel } from './zones';
+import { formatDistance } from './distance';
 
 export const QUALITY_SESSIONS = [
   { date: '2026-12-17', style: 'hills', reps: 6 },
@@ -57,7 +58,7 @@ export function qualityDetails(w: Workout, settings: Settings): string[] {
     const main = mainSetMiles(w);
     if (main === null || !['threshold', 'marathonPace'].includes(w.type)) return [];
     return [
-      `Easy warm-up, recoveries and cool-down: ${Number(inUnits(w.distanceMiles - main, settings.units).toFixed(2))} ${settings.units} at ${pace(settings.paceZones.easy.min, settings.paceZones.easy.max)}, HR Z${settings.trainingZones.hrTargets.easy}: ${hrRangeLabel(settings.trainingZones.hrTargets.easy, settings.trainingZones.hrBoundaries)}.`,
+      `Easy warm-up, recoveries and cool-down: ${formatDistance(inUnits(w.distanceMiles - main, settings.units))} ${settings.units} at ${pace(settings.paceZones.easy.min, settings.paceZones.easy.max)}, HR Z${settings.trainingZones.hrTargets.easy}: ${hrRangeLabel(settings.trainingZones.hrTargets.easy, settings.trainingZones.hrBoundaries)}.`,
     ];
   }
   if (w.type !== 'threshold') return [];
@@ -66,7 +67,7 @@ export function qualityDetails(w: Workout, settings: Settings): string[] {
     `Warm-up, downhill recoveries and cool-down: easy, ${pace(settings.paceZones.easy.min, settings.paceZones.easy.max)}, HR Z${settings.trainingZones.hrTargets.easy}: ${hrRangeLabel(settings.trainingZones.hrTargets.easy, settings.trainingZones.hrBoundaries)}.`,
   ];
   return progressionStages(w, settings).map(s =>
-    `${s.label}: ${Number(inUnits(s.distanceMiles, settings.units).toFixed(2))} ${settings.units} at ${pace(s.pace.min, s.pace.max)}, HR Z${s.hr}: ${hrRangeLabel(s.hr, settings.trainingZones.hrBoundaries)}`);
+    `${s.label}: ${formatDistance(inUnits(s.distanceMiles, settings.units))} ${settings.units} at ${pace(s.pace.min, s.pace.max)}, HR Z${s.hr}: ${hrRangeLabel(s.hr, settings.trainingZones.hrBoundaries)}`);
 }
 
 export function qualityDuration(w: Workout, settings: Settings) {

@@ -10,6 +10,7 @@ import {
 } from '../model';
 import { hrRangeLabel, paceZoneLabel, runTargets } from '../zones';
 import { usePlanner } from '../store';
+import { formatDistance } from '../distance';
 import { mainSetMiles, qualityDetails, qualityDuration, qualityNotes } from '../quality';
 
 export function WorkoutIcon({ workout, size = 16 }: { workout: Workout; size?: number }) {
@@ -26,7 +27,7 @@ function LongRunPaceSplit({ workout: w, settings }: { workout: Workout; settings
     const slow = formatPace(paceInUnits(range.max, settings.units));
     return `${fast}${fast === slow ? '' : `–${slow}`}/${settings.units}`;
   };
-  const distance = (miles: number) => `${Number(inUnits(miles, settings.units).toFixed(1))} ${settings.units}`;
+  const distance = (miles: number) => `${formatDistance(inUnits(miles, settings.units))} ${settings.units}`;
   return <span className="long-run-split">
     <span>First {distance(w.distanceMiles - w.marathonFinish.distanceMiles)} easy: <strong>{pace(w.paceMinPerMile)}</strong></span>
     <span>Last {distance(w.marathonFinish.distanceMiles)} at MP: <strong>{pace(w.marathonFinish.paceMinPerMile)}</strong></span>
@@ -39,7 +40,7 @@ export function CardContent({ workout: w, settings, compact = false }: { workout
   return <>
     <span className="workout-name"><WorkoutIcon workout={w} /><span>{workoutLabel(w)}</span></span>
     {isRun(w) ? <>
-      <span className="workout-distance">{Number(inUnits(w.distanceMiles, settings.units).toFixed(1))}<small>{settings.units}</small></span>
+      <span className="workout-distance">{formatDistance(inUnits(w.distanceMiles, settings.units))}<small>{settings.units}</small></span>
       <LongRunPaceSplit workout={w} settings={settings} />
       <>
         {!w.marathonFinish && <span className="workout-pace">{w.qualityStyle === 'hills' ? 'Flat-equivalent reference: ' : w.qualityStyle === 'progression' ? 'Threshold portion: ' : (mainSetMiles(w) ?? 0) > 0 ? 'Work portion: ' : ''}{formatPace(paceInUnits(w.paceMinPerMile.min, settings.units))}{w.paceMinPerMile.max !== w.paceMinPerMile.min && `–${formatPace(paceInUnits(w.paceMinPerMile.max, settings.units))}`} /{settings.units}</span>}
@@ -108,7 +109,7 @@ function SessionExplanation({ workout: w, settings }: { workout: Workout; settin
       }}>
       <strong>{workoutLabel(w)}</strong>
       {qualityDetails(w, settings).map(detail => <p key={detail}>{detail}</p>)}
-      {qualityMiles !== null && <p>Main-set quality: {Number(inUnits(qualityMiles, settings.units).toFixed(2))} {settings.units}.</p>}
+      {qualityMiles !== null && <p>Main-set quality: {formatDistance(inUnits(qualityMiles, settings.units))} {settings.units}.</p>}
       {w.marathonFinish && <>
         <p><strong>Long run with marathon-pace finish</strong></p>
         <LongRunPaceSplit workout={w} settings={settings} />
@@ -125,20 +126,20 @@ function WorkoutEditor({ workout: w, settings, close }: { workout: Workout; sett
   const change = usePlanner(s => s.change);
   const [type, setType] = useState(w.type);
   const [activity, setActivity] = useState(w.activity ?? 'swim');
-  const [distance, setDistance] = useState(inUnits(w.distanceMiles, settings.units).toFixed(2));
+  const [distance, setDistance] = useState(formatDistance(inUnits(w.distanceMiles, settings.units)));
   const [min, setMin] = useState(formatPace(paceInUnits(w.paceMinPerMile.min, settings.units)));
   const [max, setMax] = useState(formatPace(paceInUnits(w.paceMinPerMile.max, settings.units)));
   const [notes, setNotes] = useState(w.notes);
   const [hr, setHr] = useState(w.hrCapBpm?.toString() ?? '');
   const [hrZone, setHrZone] = useState<HRZone | ''>(w.hrZone ?? '');
   const [qualityStyle, setQualityStyle] = useState(w.qualityStyle ?? '');
-  const [finishDistance, setFinishDistance] = useState(w.marathonFinish ? inUnits(w.marathonFinish.distanceMiles, settings.units).toFixed(2) : '');
+  const [finishDistance, setFinishDistance] = useState(w.marathonFinish ? formatDistance(inUnits(w.marathonFinish.distanceMiles, settings.units)) : '');
   const [finishPace, setFinishPace] = useState(formatPace(paceInUnits(w.marathonFinish?.paceMinPerMile.min ?? settings.paceZones.marathonPace.min, settings.units)));
   const [error, setError] = useState('');
   return <form className="workout-editor" onSubmit={event => {
     event.preventDefault();
     const low = parsePace(min), high = parsePace(max);
-    const miles = distance === inUnits(w.distanceMiles, settings.units).toFixed(2)
+    const miles = distance === formatDistance(inUnits(w.distanceMiles, settings.units))
       ? w.distanceMiles : fromUnits(Number(distance), settings.units);
     const factor = settings.units === 'km' ? 1.609344 : 1;
     if (low === null || high === null || high < low || low * factor < 0.1 || high * factor > 120 || miles < 0 || miles > 200 || !Number.isFinite(miles)) {
@@ -149,7 +150,7 @@ function WorkoutEditor({ workout: w, settings, close }: { workout: Workout; sett
     }
     let marathonFinish: Workout['marathonFinish'];
     if (type === 'long' && finishDistance.trim()) {
-      const finishMiles = w.marathonFinish && finishDistance === inUnits(w.marathonFinish.distanceMiles, settings.units).toFixed(2)
+      const finishMiles = w.marathonFinish && finishDistance === formatDistance(inUnits(w.marathonFinish.distanceMiles, settings.units))
         ? w.marathonFinish.distanceMiles : fromUnits(Number(finishDistance), settings.units);
       const pace = parsePace(finishPace);
       if (!Number.isFinite(finishMiles) || finishMiles <= 0 || finishMiles > miles || pace === null || pace * factor < 0.1 || pace * factor > 120) {
@@ -187,7 +188,7 @@ function WorkoutEditor({ workout: w, settings, close }: { workout: Workout; sett
     </select></label>}
     {type === 'crossTraining' && <label>Activity<select value={activity} onChange={e => setActivity(e.target.value as typeof activity)}>{ACTIVITIES.map(a => <option key={a}>{a}</option>)}</select></label>}
     {!['crossTraining', 'rest'].includes(type) && <>
-      <label>Distance ({settings.units})<input autoFocus type="number" step="0.01" min="0" required value={distance} onChange={e => setDistance(e.target.value)} /></label>
+      <label>Distance ({settings.units})<input autoFocus type="number" step="any" min="0" required value={distance} onChange={e => setDistance(e.target.value)} /></label>
       <div className="field-pair"><label>Fast pace<input aria-label={`Fast pace per ${settings.units}`} required value={min} onChange={e => setMin(e.target.value)} /></label><label>Slow pace<input aria-label={`Slow pace per ${settings.units}`} required value={max} onChange={e => setMax(e.target.value)} /></label></div>
       <label>HR cap (optional)<input type="number" min="60" max="220" value={hr} onChange={e => setHr(e.target.value)} /></label>
       <label>Target HR zone<select value={hrZone} onChange={e => setHrZone(e.target.value ? Number(e.target.value) as HRZone : '')}><option value="">Use workout-type default</option>{[1, 2, 3, 4, 5].map(z => <option key={z} value={z}>Z{z}</option>)}</select></label>

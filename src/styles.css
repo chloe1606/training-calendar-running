@@ -180,9 +180,29 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
 .jump-week select { width: 100%; height: 100%; position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 .jump-week:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
 .board-scroll { overflow-x: auto; }
+.insights-page { --completed-mileage: #287348; }
+.dark .insights-page { --completed-mileage: #a4dfb6; }
+.insights-page h1 { display: flex; align-items: center; gap: 9px; }
+.insights-help { color: var(--subtle); line-height: 1.7; font-size: 12px; }
+.chart-keys { display: flex; flex-wrap: wrap; gap: 10px; }
+.completed-key i { background: var(--completed-mileage); }
+.insights-table { margin-top: 24px; }
+.insights-table table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 16px; }
+.insights-table th, .insights-table td { text-align: left; padding: 12px 9px; border-bottom: 1px solid var(--line); }
+.insights-table [aria-current="true"] { background: var(--olive-light); }
+.insights-table button { color: var(--olive); text-align: left; }
+.calendar-checks { display: grid; gap: 16px; margin-top: 24px; }
+.calendar-checks > a { justify-self: start; }
 .week-board { display: grid; grid-template-columns: repeat(7, minmax(126px, 1fr)); min-width: 890px; min-height: 325px; border-top: 1px solid var(--line); }
 .day-column { display: flex; flex-direction: column; border-right: 1px solid var(--line); padding: 0 8px; min-width: 0; transition: background-color .15s; }
 .day-column:last-child { border-right: 0; }
+.week-board.agenda-board { grid-template-columns: minmax(0, 1fr); min-width: 0; min-height: 0; }
+.agenda-board .day-column { border-right: 0; border-bottom: 1px solid var(--line); padding: 0 16px 14px; }
+.agenda-board .day-column:last-child { border-bottom: 0; }
+.agenda-board .day-header { height: 48px; }
+.agenda-board .day-name { font-size: 11px; }
+.agenda-board .day-total { margin-top: 8px; }
+.agenda-board .day-workouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); }
 .today-column { background: var(--today); }
 .day-header { display: flex; align-items: center; gap: 6px; height: 58px; flex-shrink: 0; padding: 0 4px; position: relative; }
 .day-name { text-transform: uppercase; font-size: 8px; font-weight: 500; color: var(--muted); letter-spacing: .5px; }
@@ -608,6 +628,14 @@ textarea { width: 100%; resize: vertical; }
   .chart-footer { font-size: 8px; }
   .page-footer { padding-bottom: 12px; }
   .modal { padding: 20px; }
+  .calendar-top { flex-wrap: wrap; gap: 12px; }
+  .calendar-top-actions { flex-wrap: wrap; }
+  .calendar-top button, .calendar-navigation button, .calendar-navigation .jump-week { min-height: 44px; }
+  .calendar-navigation .week-nav-button, .calendar-navigation .jump-week { min-width: 44px; }
+  .agenda-board .add-workout { min-height: 44px; }
+  .insights-table th, .insights-table td { padding: 10px 6px; font-size: 11px; }
+  .insights-table button, .insights-page select, .insights-page .unit-toggle button { min-height: 44px; }
+  .insights-page .chart-heading { flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }

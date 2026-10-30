@@ -27,8 +27,11 @@ import { StrengthPage } from './components/StrengthPage';
 import { SettingsPanel } from './components/SettingsPanel';
 import { AddWorkout } from './components/AddWorkout';
 import { Modal } from './components/Modal';
+import { formatDistance } from './distance';
 
-const MileageChart = lazy(() => import('./components/MileageChart').then(module => ({ default: module.MileageChart })));
+const InsightsPage = lazy(() => import('./components/InsightsPage').then(module => ({ default: module.InsightsPage })));
+type Page = 'calendar' | 'strength' | 'insights';
+const pageFromHash = (): Page => window.location.hash === '#strength' ? 'strength' : ['#insights', '#mileage'].includes(window.location.hash) ? 'insights' : 'calendar';
 const collisionDetection: CollisionDetection = args => {
   if (!args.pointerCoordinates) {
     return closestCenter({
@@ -88,16 +91,18 @@ export default function App() {
   const { plan, change, past, future, undo, redo, error, retrySave } = usePlanner();
   const [week, setWeek] = useState(() => weekKey(new Date()));
   const [month, setMonth] = useState(() => dateKey(startOfMonth(new Date())));
-  const [view, setView] = useState<'week' | 'month'>('week');
+  const [view, setView] = useState<'week' | 'month' | 'agenda'>(() => window.matchMedia('(max-width: 760px)').matches ? 'agenda' : 'week');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [modal, setModal] = useState<'settings' | 'export' | 'reset' | 'help' | 'import' | 'add' | null>(null);
   const [pendingImport, setPendingImport] = useState<ReturnType<typeof validatePlan> | null>(null);
   const [notice, setNotice] = useState('');
   const [mobileNav, setMobileNav] = useState(false);
-  const [page, setPage] = useState<'calendar' | 'strength'>(() => window.location.hash === '#strength' ? 'strength' : 'calendar');
+  const [page, setPage] = useState<Page>(pageFromHash);
   useEffect(() => {
-    const onHashChange = () => setPage(window.location.hash === '#strength' ? 'strength' : 'calendar');
+    const onHashChange = () => {
+      if (['', '#calendar', '#strength', '#insights', '#mileage'].includes(window.location.hash)) setPage(pageFromHash());
+    };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
@@ -114,6 +119,7 @@ export default function App() {
   warnings.forEach(w => w.dates.forEach(date => warningDates.set(date, (warningDates.get(date) ?? 0) + 1)));
   const weeklyWorkouts = plan.workouts.filter(w => weekKey(w.date) === week);
   const stats = weekStats(weeklyWorkouts);
+  const completedMiles = weekStats(weeklyWorkouts.filter(workout => workout.completed)).miles;
   const weeks = useMemo(() => allWeeks(plan), [plan]);
   const phase = phaseForWeek(week, plan.settings.raceDate);
   const completedRuns = weeklyWorkouts.filter(w => w.completed).length;
@@ -164,14 +170,14 @@ export default function App() {
   }
   const toggleUnits = (units: Settings['units']) => change(p => ({ ...p, settings: { ...p.settings, units } }));
   return <div className="app-shell">
-    <a className="skip-link" href="#main">Skip to {page === 'strength' ? 'strength workouts' : 'calendar'}</a>
+    <a className="skip-link" href="#main">Skip to {page === 'strength' ? 'strength workouts' : page === 'insights' ? 'plan insights' : 'calendar'}</a>
     <aside className={`sidebar ${mobileNav ? 'mobile-open' : ''}`}>
       <a href="#calendar" className="brand" aria-label="Marathon Planner home" onClick={() => { setPage('calendar'); setMobileNav(false); }}><span className="brand-mark"><Footprints size={22} strokeWidth={2.1} /></span><span>marathon<span className="brand-secondary">planner<span className="brand-period">.</span></span></span></a>
       <button className="mobile-close icon-button" onClick={() => setMobileNav(false)} aria-label="Close navigation"><X size={20} /></button>
       <div className="sidebar-label">YOUR WORKSPACE</div>
       <nav aria-label="Main navigation">
         <a href="#calendar" className={`nav-item ${page === 'calendar' ? 'active' : ''}`} aria-current={page === 'calendar' ? 'page' : undefined} onClick={() => { setPage('calendar'); setMobileNav(false); }}><CalendarDays size={18} />Training calendar{page === 'calendar' && <span className="nav-active-dot" />}</a>
-        <a href="#mileage" className="nav-item" onClick={() => { setPage('calendar'); setMobileNav(false); }}><ChartNoAxesCombined size={18} />Plan insights</a>
+        <a href="#insights" className={`nav-item ${page === 'insights' ? 'active' : ''}`} aria-current={page === 'insights' ? 'page' : undefined} onClick={() => { setPage('insights'); setMobileNav(false); }}><ChartNoAxesCombined size={18} />Plan insights{page === 'insights' && <span className="nav-active-dot" />}</a>
         <a href="#strength" className={`nav-item ${page === 'strength' ? 'active' : ''}`} aria-current={page === 'strength' ? 'page' : undefined} onClick={() => { setPage('strength'); setMobileNav(false); }}><Dumbbell size={18} />Strength workouts{page === 'strength' && <span className="nav-active-dot" />}</a>
         <button className="nav-item" onClick={() => { setModal('settings'); setMobileNav(false); }}><Settings2 size={18} />Settings</button>
       </nav>
@@ -183,19 +189,20 @@ export default function App() {
     </aside>
     {mobileNav && <button className="nav-backdrop" onClick={() => setMobileNav(false)} aria-label="Close mobile navigation" />}
     <main id="main">
-      <header className="topbar"><div><button className="mobile-menu icon-button" onClick={() => setMobileNav(true)} aria-label="Open navigation"><Menu size={21} /></button><span className="breadcrumb">My workspace <ChevronRight size={12} /><strong>{page === 'strength' ? 'Strength workouts' : 'Training calendar'}</strong></span></div>
+      <header className="topbar"><div><button className="mobile-menu icon-button" onClick={() => setMobileNav(true)} aria-label="Open navigation"><Menu size={21} /></button><span className="breadcrumb">My workspace <ChevronRight size={12} /><strong>{page === 'strength' ? 'Strength workouts' : page === 'insights' ? 'Plan insights' : 'Training calendar'}</strong></span></div>
         <div className="topbar-actions"><span className="saved-label"><span className={error ? 'error-dot' : 'online-dot'} />{error ? 'Not saved' : 'Saved on this device'}</span><button className="icon-button theme-toggle" aria-label={`Switch to ${plan.settings.darkMode ? 'light' : 'dark'} mode`} onClick={() => change(p => ({ ...p, settings: { ...p.settings, darkMode: !p.settings.darkMode } }))}>{plan.settings.darkMode ? <Sun size={18} /> : <Moon size={18} />}</button><span className="avatar small-avatar">C</span></div>
       </header>
       <div className="main-content">
         {error && <div className="error-banner" role="alert">{error}<button onClick={retrySave}>Retry saving</button></div>}
         <div hidden={page !== 'strength'} id="strength"><StrengthPage workouts={weeklyWorkouts} weeks={weeks} selectedWeek={week} onWeekChange={navigate} /></div>
+        {page === 'insights' && <Suspense fallback={<p role="status">Loading plan insights…</p>}><InsightsPage plan={plan} selectedWeek={week} onSelect={navigate} onUnitsChange={toggleUnits} onCalendar={date => { navigate(date); setPage('calendar'); window.location.hash = 'calendar'; }} /></Suspense>}
         {page === 'calendar' && <div>
         <div className="page-heading"><div><span className="eyebrow muted-eyebrow">CONSISTENCY OVER PERFECTION</span><h1>Your training, in stride<span>.</span></h1><p>A plan with purpose. The flexibility to make it yours.</p></div>
           <div className="heading-actions"><button className="secondary-button" onClick={() => setModal('export')}><Download size={16} />Export plan</button><button className="primary-button" onClick={() => setModal('add')}><Plus size={17} />Add workout</button></div>
         </div>
         <GoalBanner settings={plan.settings} />
         <div className="stats-row">
-          <section className="stat-card"><span className="stat-icon olive"><Footprints size={20} /></span><div><span className="stat-label">Planned this week</span><div className="stat-value">{Number(inUnits(stats.miles, plan.settings.units).toFixed(1))}<small>{plan.settings.units}</small></div></div><span className="stat-detail">{mileageChange === null ? <><Leaf size={12} />A fresh start</> : <>{mileageChange > 0 ? '+' : ''}{mileageChange}% vs last week</>}</span></section>
+          <section className="stat-card"><span className="stat-icon olive"><Footprints size={20} /></span><div><span className="stat-label">Planned this week</span><div className="stat-value">{formatDistance(inUnits(stats.miles, plan.settings.units))}<small>{plan.settings.units}</small></div></div><span className="stat-detail">{formatDistance(inUnits(completedMiles, plan.settings.units))} {plan.settings.units} completed{mileageChange !== null && ` · ${mileageChange > 0 ? '+' : ''}${mileageChange}% planned vs last week`}</span></section>
           <section className="stat-card"><span className="stat-icon blue"><CalendarDays size={20} /></span><div><span className="stat-label">Run days</span><div className="stat-value">{stats.runDays}<small>/ 7 days</small></div></div><span className="stat-detail">{completedRuns} of {weeklyWorkouts.length} sessions done</span></section>
           <section className="stat-card"><span className="stat-icon peach"><Target size={20} /></span><div><span className="stat-label">Hard days</span><div className="stat-value">{stats.hardDays}<small>/ 2 suggested</small></div></div><span className={`stat-detail ${stats.hardDays > 2 ? 'text-amber' : ''}`}>{stats.hardDays > 2 ? 'Make room for recovery' : 'Balance is the goal'}</span></section>
         </div>
@@ -212,22 +219,22 @@ export default function App() {
           <section className="calendar-panel" id="calendar">
             <header className="calendar-top"><div><h2>Training calendar</h2><span className="calendar-hint">A little structure. A lot of possibility.</span></div>
               <div className="calendar-top-actions"><div className="unit-toggle" aria-label="Distance units">{(['mi', 'km'] as const).map(unit => <button key={unit} aria-pressed={plan.settings.units === unit} className={plan.settings.units === unit ? 'selected' : ''} onClick={() => toggleUnits(unit)}>{unit}</button>)}</div>
-                <div className="view-toggle">{(['week', 'month'] as const).map(v => <button key={v} className={view === v ? 'selected' : ''} aria-pressed={view === v} onClick={() => { setView(v); setEditingId(null); }}>{v === 'week' ? 'Week' : 'Month'}</button>)}</div>
+                <div className="view-toggle" aria-label="Calendar view">{(['week', 'agenda', 'month'] as const).map(v => <button key={v} className={view === v ? 'selected' : ''} aria-pressed={view === v} onClick={() => { setView(v); setEditingId(null); }}>{v === 'week' ? 'Week' : v === 'agenda' ? 'Agenda' : 'Month'}</button>)}</div>
               </div></header>
-            <div className="calendar-toolbar"><div className="week-heading"><h3>{view === 'week' ? `${format(parseISO(week), 'd MMM')} – ${format(parseISO(dayOffset(week, 6)), 'd MMM yyyy')}` : format(parseISO(month), 'MMMM yyyy')}</h3><span className={`phase-pill phase-${phase.toLowerCase()}`}><Leaf size={12} />{phase}</span><span className="week-number">{phase === 'Base' ? 'Foundation' : `Plan week ${planWeekNumber(week)}`}</span></div>
+            <div className="calendar-toolbar"><div className="week-heading"><h3>{view !== 'month' ? `${format(parseISO(week), 'd MMM')} – ${format(parseISO(dayOffset(week, 6)), 'd MMM yyyy')}` : format(parseISO(month), 'MMMM yyyy')}</h3><span className={`phase-pill phase-${phase.toLowerCase()}`}><Leaf size={12} />{phase}</span><span className="week-number">{phase === 'Base' ? 'Foundation' : `Plan week ${planWeekNumber(week)}`}</span></div>
               <div className="calendar-navigation"><button className="today-button" onClick={() => navigate(dateKey(new Date()))}>Today</button>
-                <WeekDropTarget direction={-1} active={active} selectedWeek={week} period={view} navigate={() => navigate(view === 'week' ? dayOffset(week, -7) : dateKey(addMonths(parseISO(month), -1)))} />
-                <WeekDropTarget direction={1} active={active} selectedWeek={week} period={view} navigate={() => navigate(view === 'week' ? dayOffset(week, 7) : dateKey(addMonths(parseISO(month), 1)))} />
+                <WeekDropTarget direction={-1} active={active} selectedWeek={week} period={view === 'month' ? 'month' : 'week'} navigate={() => navigate(view !== 'month' ? dayOffset(week, -7) : dateKey(addMonths(parseISO(month), -1)))} />
+                <WeekDropTarget direction={1} active={active} selectedWeek={week} period={view === 'month' ? 'month' : 'week'} navigate={() => navigate(view !== 'month' ? dayOffset(week, 7) : dateKey(addMonths(parseISO(month), 1)))} />
                 <label className="jump-week"><CalendarDays size={15} /><select aria-label="Jump to week" value={week} onChange={e => navigate(e.target.value)}>{!weeks.includes(week) && <option value={week}>{format(parseISO(week), 'd MMM yyyy')}</option>}{weeks.map(w => <option key={w} value={w}>{format(parseISO(w), 'd MMM yyyy')}</option>)}</select></label>
               </div></div>
             {active && <div className="drag-tip">Moving {workoutLabel(active).toLowerCase()} <MoveRight size={14} /> Drop on any day, or on a navigation arrow to move one week.</div>}
-            {view === 'week' ? <WeekBoard week={week} workouts={plan.workouts} settings={plan.settings} warningDates={warningDates} editingId={editingId} setEditingId={setEditingId} onAdd={addWorkout} />
+            {view !== 'month' ? <WeekBoard agenda={view === 'agenda'} week={week} workouts={plan.workouts} settings={plan.settings} warningDates={warningDates} editingId={editingId} setEditingId={setEditingId} onAdd={addWorkout} />
               : <MonthOverview month={month} workouts={plan.workouts} settings={plan.settings} warningDates={warningDates} editingId={editingId} setEditingId={setEditingId} onAdd={addWorkout} />}
             <footer className="calendar-footer"><div className="legend">{(['easy', 'long', 'threshold', 'marathonPace', 'parkrun', 'crossTraining', 'rest', 'race'] as const).map(t => <span key={t}><i className={`type-dot type-${t}`} />{LABELS[t]}</span>)}</div><span className="drag-caption">Drag to rearrange. Click to make it yours.</span></footer>
           </section>
           <DragOverlay dropAnimation={null}>{active && <div className={`workout-card drag-overlay type-${active.type}`}><CardContent workout={active} settings={plan.settings} /></div>}</DragOverlay>
         </DndContext>
-        <div className="below-board"><Suspense fallback={<section className="mileage-panel" aria-busy="true">Loading mileage chart…</section>}><MileageChart plan={plan} selectedWeek={week} onSelect={navigate} /></Suspense><RuleWarnings warnings={selectedWarnings} onNavigate={navigate} /></div>
+        <div className="calendar-checks"><a href="#insights" className="secondary-button" onClick={() => setPage('insights')}><ChartNoAxesCombined size={16} />Explore planned vs completed mileage</a><RuleWarnings warnings={selectedWarnings} onNavigate={navigate} /></div>
         <footer className="page-footer"><span><Leaf size={14} />Progress isn't always a straight line. Keep going.</span><div><button disabled={!past.length} onClick={undo} title="Undo (Cmd/Ctrl+Z)" aria-label="Undo last change"><Undo2 size={15} />Undo</button><button disabled={!future.length} onClick={redo} title="Redo (Cmd/Ctrl+Shift+Z)" aria-label="Redo last change"><Redo2 size={15} />Redo</button><i /><button onClick={() => setModal('reset')}><RotateCcw size={14} />Reset to default plan</button></div></footer>
         </div>}
       </div>

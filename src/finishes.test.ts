@@ -29,7 +29,7 @@ describe('marathon-pace long-run finishes', () => {
     expect(rules).toContain('consecutive-hard');
     expect(rules).toContain('before-long');
     const ics = exportICS({ ...plan, workouts: [run] }).replace(/\r\n /g, '');
-    expect(ics).toContain('last 6 mi at 7:50–8:10/mi');
+    expect(ics).toContain('last 6.00 mi at 7:50–8:10/mi');
     expect(ics).toContain('Finish HR: 147–160 bpm');
   });
   it('does not reapply removed finishes or alter completed, moved, deleted or resized workouts', () => {
