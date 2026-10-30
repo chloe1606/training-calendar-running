@@ -38,8 +38,8 @@ describe('live warning rules', () => {
     expect(has('before-long', [easyParkrun, workout('2026-11-08', 'long', 10)])).toBe(false);
     const rebound = [workout('2026-11-02', 'easy', 27.5), workout('2026-11-09', 'easy', 25), workout('2026-11-16', 'easy', 30)];
     expect(has('mileage-jump', rebound)).toBe(false);
-    expect(has('long-share', [workout('2027-03-21', 'long', 20), workout('2027-03-16', 'easy', 26)])).toBe(false);
-    expect(has('long-share', [workout('2027-03-21', 'long', 20), workout('2027-03-16', 'easy', 25.9)])).toBe(true);
+    expect(has('long-share', [workout('2027-03-21', 'long', 20), workout('2027-03-16', 'easy', 25)])).toBe(false);
+    expect(has('long-share', [workout('2027-03-21', 'long', 20), workout('2027-03-16', 'easy', 24.9)])).toBe(true);
     expect(has('long-share', [workout('2027-02-28', 'long', 16), workout('2027-02-23', 'easy', 22)])).toBe(false);
   });
   it('warns only when mileage rises MORE than 10%', () => {

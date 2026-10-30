@@ -3,7 +3,7 @@ import { dayOffset, isHard, isRun, weekKey, weekStats, type Workout } from './mo
 
 export type Rule = 'hard-days' | 'consecutive-hard' | 'before-long' | 'badminton' | 'mileage-jump' | 'long-share' | 'rest-day';
 export interface Warning { id: string; rule: Rule; title: string; message: string; dates: string[]; week: string }
-const CUTBACK_WEEKS = new Set(['2026-11-09', '2027-01-18', '2027-02-22', '2027-03-08']);
+const CUTBACK_WEEKS = new Set(['2026-11-09', '2026-11-30', '2026-12-28', '2027-01-18', '2027-02-22']);
 export function getWarnings(workouts: Workout[]): Warning[] {
   const warnings: Warning[] = [];
   const weeks = new Map<string, Workout[]>();
@@ -34,7 +34,7 @@ export function getWarnings(workouts: Workout[]): Warning[] {
     if (!CUTBACK_WEEKS.has(week) && !raceWeek && (week < '2027-03-29' || week > '2027-04-12')) baseline = stats.miles;
     previousWeek = week;
     items.filter(w => w.type === 'long').forEach(w => {
-      const approvedPeak = w.date === '2027-03-21' && w.distanceMiles === 20 && Math.abs(stats.miles - 46) < 0.00001;
+      const approvedPeak = w.date === '2027-03-21' && w.distanceMiles === 20 && Math.abs(stats.miles - 45) < 0.00001;
       if (!CUTBACK_WEEKS.has(week) && !approvedPeak && w.distanceMiles > stats.miles * 0.4 + 0.00001) add('long-share', w.id, 'Long run is a big share', `Your long run is ${Math.round(w.distanceMiles / stats.miles * 100)}% of weekly mileage; aim for 40% or less.`, [w.date], week);
     });
   }

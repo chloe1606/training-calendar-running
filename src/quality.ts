@@ -5,7 +5,6 @@ export const QUALITY_SESSIONS = [
   { date: '2026-12-17', style: 'hills', reps: 6 },
   { date: '2026-12-31', style: 'hills', reps: 8 },
   { date: '2027-01-14', style: 'progression' },
-  { date: '2027-01-28', style: 'progression' },
 ] as const;
 export const ORIGINAL_QUALITY_NOTES = 'Total distance includes easy warm-up and cool-down. Quality portion only at the listed pace.';
 export function mainSetMiles(w: Workout): number | null {

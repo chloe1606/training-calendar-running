@@ -26,7 +26,7 @@ export function exportICS(plan: Plan, now = new Date()): string {
   for (const w of plan.workouts) {
     const targets = runTargets(w, plan.settings);
     const description = [
-      isRun(w) ? `${w.distanceMiles} miles; ${w.qualityStyle === 'hills' ? 'Flat-equivalent reference: ' : w.qualityStyle === 'progression' ? 'Threshold portion: ' : mainSetMiles(w) !== null ? 'Work portion: ' : ''}${formatPace(w.paceMinPerMile.min)}–${formatPace(w.paceMinPerMile.max)}/mi` : 'Non-running session',
+      isRun(w) ? `${w.distanceMiles} miles; ${w.qualityStyle === 'hills' ? 'Flat-equivalent reference: ' : w.qualityStyle === 'progression' ? 'Threshold portion: ' : (mainSetMiles(w) ?? 0) > 0 ? 'Work portion: ' : ''}${formatPace(w.paceMinPerMile.min)}–${formatPace(w.paceMinPerMile.max)}/mi` : 'Non-running session',
       ...(targets ? [`Pace ${targets.paceZone}; HR Z${targets.hrZone}: ${targets.hrRange}`] : []),
       ...qualityDetails(w, plan.settings),
       ...(w.marathonFinish ? [`MP finish (hard day): first ${w.distanceMiles - w.marathonFinish.distanceMiles} mi easy, last ${w.marathonFinish.distanceMiles} mi at ${formatPace(w.marathonFinish.paceMinPerMile.min)}–${formatPace(w.marathonFinish.paceMinPerMile.max)}/mi. Easy HR above applies before the finish; finish HR Z${plan.settings.trainingZones.hrTargets.marathonPace}.`] : []),

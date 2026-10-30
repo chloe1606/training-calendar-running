@@ -6,9 +6,9 @@ import { getWarnings } from './rules';
 import { exportICS } from './files';
 
 describe('quality session variety', () => {
-  it('replaces precisely four threshold slots without changing mileage or other workouts', () => {
+  it('retains three varied quality slots without changing mileage or other workouts', () => {
     const plan = createDefaultPlan();
-    expect(plan.workouts.filter(w => w.qualityStyle)).toHaveLength(4);
+    expect(plan.workouts.filter(w => w.qualityStyle && QUALITY_SESSIONS.some(s => s.date === w.date))).toHaveLength(3);
     for (const session of QUALITY_SESSIONS) {
       const run = plan.workouts.find(w => w.date === session.date && w.type === 'threshold')!;
       expect(run.qualityStyle).toBe(session.style);
@@ -16,17 +16,17 @@ describe('quality session variety', () => {
       expect(workoutLabel(run)).toBe(session.style === 'hills' ? 'Hill repeats' : 'Progression run');
     }
     const legacy = { ...plan, qualityVarietyVersion: undefined, workouts: plan.workouts.map(w =>
-      w.qualityStyle ? { ...w, qualityStyle: undefined, notes: ORIGINAL_QUALITY_NOTES } : w) };
+      QUALITY_SESSIONS.some(s => s.date === w.date) ? { ...w, qualityStyle: undefined, notes: ORIGINAL_QUALITY_NOTES } : w) };
     const migrated = addQualityVariety(legacy);
     expect(migrated.workouts.filter(w => w.qualityStyle).map(w => w.qualityStyle)).toEqual(plan.workouts.filter(w => w.qualityStyle).map(w => w.qualityStyle));
     expect(weekStats(migrated.workouts)).toEqual(weekStats(legacy.workouts));
     expect(addQualityVariety(migrated)).toBe(migrated);
-    expect(migrated.workouts.filter(w => !w.qualityStyle)).toEqual(legacy.workouts.filter(w => !QUALITY_SESSIONS.some(s => s.date === w.date && w.type === 'threshold')));
+    expect(migrated.workouts.filter(w => !w.qualityStyle)).toEqual(legacy.workouts.filter(w => !w.qualityStyle && !QUALITY_SESSIONS.some(s => s.date === w.date && w.type === 'threshold')));
   });
   it('preserves completed, moved, deleted, custom-note workouts and subsequent style removals', () => {
     const plan = createDefaultPlan();
     const legacy = { ...plan, qualityVarietyVersion: undefined, workouts: plan.workouts.map(w =>
-      w.qualityStyle ? { ...w, qualityStyle: undefined, notes: ORIGINAL_QUALITY_NOTES } : w) };
+      QUALITY_SESSIONS.some(s => s.date === w.date) ? { ...w, qualityStyle: undefined, notes: ORIGINAL_QUALITY_NOTES } : w) };
     legacy.workouts = legacy.workouts.filter(w => w.id !== 'seed-2027-01-28-threshold-').map(w =>
       w.id === 'seed-2026-12-17-threshold-' ? { ...w, completed: true }
         : w.id === 'seed-2026-12-31-threshold-' ? { ...w, date: '2027-01-01' }

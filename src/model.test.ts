@@ -30,13 +30,13 @@ describe('default plan', () => {
     expect(weeks).toHaveLength(25);
     expect(weeks[0]).toBe('2026-10-26');
     expect(weeks[24]).toBe('2027-04-12');
-    const expected = [25, 27.5, 25, 30, 32.5, 33, 35, 35, 36, 38, 39, 40, 34, 42, 44, 45, 46, 38, 38.9, 37.1, 46, 42, 36, 30, 42.2];
+    const expected = [25, 27.5, 23, 29, 30, 26, 32, 33, 35, 30, 36, 38, 32, 40, 42.5, 45, 45, 36, 41, 32, 45, 40, 32, 24, 42.2];
     expect(weeks.map(week => weekStats(plan.workouts.filter(w => weekKey(w.date) === week)).miles)).toEqual(expected);
     expect(new Set(plan.workouts.map(w => w.id)).size).toBe(plan.workouts.length);
   });
   it('seeds the seven prescribed base long runs', () => {
     const runs = plan.workouts.filter(w => w.type === 'long' && w.date <= '2026-12-13');
-    expect(runs.map(w => w.distanceMiles)).toEqual([10, 11, 8, 12, 13, 10, 13]);
+    expect(runs.map(w => w.distanceMiles)).toEqual([10, 11, 8, 11, 12, 10, 12]);
     expect(runs.every(w => w.paceMinPerMile.min === 9 && w.paceMinPerMile.max === 9.75 && w.hrCapBpm === 146)).toBe(true);
   });
   it('includes the rehearsal, peak long run, race and taper', () => {

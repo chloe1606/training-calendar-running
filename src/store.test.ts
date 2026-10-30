@@ -22,7 +22,7 @@ describe('import validation', () => {
       ...w, qualityStyle: undefined, notes: 'Total distance includes easy warm-up and cool-down. Quality portion only at the listed pace.',
     } : w);
     const migrated = store.validatePlan(legacy);
-    expect(migrated.workouts.filter(w => w.qualityStyle)).toHaveLength(4);
+    expect(migrated.workouts.filter(w => w.qualityStyle)).toHaveLength(3);
     expect(store.validatePlan(JSON.parse(JSON.stringify(migrated)))).toEqual(migrated);
     const run = migrated.workouts.find(w => w.qualityStyle)!;
     run.qualityStyle = undefined;

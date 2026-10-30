@@ -9,6 +9,6 @@ export function RuleWarnings({ warnings, onNavigate }: { warnings: Warning[]; on
       <span className="warning-item-top"><strong>{w.title}</strong><ArrowUpRight size={14} /></span>
       <span>{w.message}</span>
     </button>)}</div> : <div className="all-clear"><CheckCircle2 size={26} /><strong>Looking balanced</strong><p>No planning warnings for this week. Keep listening to your body.</p></div>}
-    <div className="warning-disclaimer"><Info size={14} /><span>Helpful guardrails, not medical advice. Cut-back/recovery weeks are exempt from the 40% long-run share rule. Approved peak exception: 21 March, 20 miles in a 46-mile week (43.48%). Light badminton before quality or long runs is allowed; none from 12 April.</span></div>
+    <div className="warning-disclaimer"><Info size={14} /><span>Helpful guardrails, not medical advice. Cut-back weeks are exempt from the 40% long-run share rule. Conditional peak exception: 21 March, 20 miles in a 45-mile week (44.44%). Only if recovered from the half; otherwise 16–18 easy miles or rest if unwell. Light badminton before quality or long runs is allowed; none from 12 April.</span></div>
   </section>;
 }

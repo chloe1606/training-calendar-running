@@ -42,7 +42,7 @@ export function CardContent({ workout: w, settings, compact = false }: { workout
       <span className="workout-distance">{Number(inUnits(w.distanceMiles, settings.units).toFixed(1))}<small>{settings.units}</small></span>
       <LongRunPaceSplit workout={w} settings={settings} />
       <>
-        {!w.marathonFinish && <span className="workout-pace">{w.qualityStyle === 'hills' ? 'Flat-equivalent reference: ' : w.qualityStyle === 'progression' ? 'Threshold portion: ' : mainSetMiles(w) !== null ? 'Work portion: ' : ''}{formatPace(paceInUnits(w.paceMinPerMile.min, settings.units))}{w.paceMinPerMile.max !== w.paceMinPerMile.min && `–${formatPace(paceInUnits(w.paceMinPerMile.max, settings.units))}`} /{settings.units}</span>}
+        {!w.marathonFinish && <span className="workout-pace">{w.qualityStyle === 'hills' ? 'Flat-equivalent reference: ' : w.qualityStyle === 'progression' ? 'Threshold portion: ' : (mainSetMiles(w) ?? 0) > 0 ? 'Work portion: ' : ''}{formatPace(paceInUnits(w.paceMinPerMile.min, settings.units))}{w.paceMinPerMile.max !== w.paceMinPerMile.min && `–${formatPace(paceInUnits(w.paceMinPerMile.max, settings.units))}`} /{settings.units}</span>}
         {targets && <span className="zone-badges"><span>Pace {targets.paceZone}</span><span>HR Z{targets.hrZone}</span></span>}
         {targets && <span className="workout-meta"><Heart size={12} />{targets.hrRange}</span>}
         {w.qualityStyle && <span className="workout-meta">Quality session · hard day</span>}

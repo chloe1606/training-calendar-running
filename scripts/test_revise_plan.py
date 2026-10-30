@@ -7,7 +7,7 @@ import tempfile
 import unittest
 
 from revise_plan import (check, hard, main_miles, revise, validate_revision,
-                         week, running, TOTALS, MP, THRESHOLD, START, final_total, HALF_SWAP_WARNINGS, strength_notes)
+                         week, running, TOTALS, MP, THRESHOLD, START, final_total, HALF_SWAP_WARNINGS, strength_notes, EASY_THURSDAYS, NORMAL_WEEKS, FINISH_WEEKS, tuesday_quality)
 from datetime import date, timedelta
 
 
@@ -78,6 +78,58 @@ class RevisionTests(unittest.TestCase):
         for w in sessions:
             index = 1 if date.fromisoformat(w['date']).weekday() == 4 else 0
             self.assertEqual(w['notes'], strength_notes(index, w['date']))
+
+    def test_recovery_and_peak_are_explicit(self):
+        self.assertEqual(max(TOTALS), 45)
+        for day in EASY_THURSDAYS:
+            w = next(w for w in self.plan['workouts'] if w['date'] == day and running(w))
+            self.assertEqual(w['type'], 'easy')
+            self.assertEqual(main_miles(w), 0)
+            self.assertFalse(hard(w))
+        peak = next(w for w in self.plan['workouts'] if w['date'] == '2027-03-21' and running(w))
+        self.assertEqual(peak['distanceMiles'], 20)
+        self.assertIn('shorten to 16-18', peak['notes'])
+        self.assertNotIn('marathonFinish', peak)
+        half = next(w for w in self.plan['workouts'] if w['date'] == '2027-03-14' and running(w))
+        self.assertEqual(half['type'], 'race')
+        self.assertEqual(half['paceMinPerMile'], {'min': 7 + 20 / 60, 'max': 7.5})
+        self.assertIn('target 7:20-7:30/mi', half['notes'])
+        self.assertIn('prioritise recovery', half['notes'])
+        mutated_half = deepcopy(self.plan)
+        next(w for w in mutated_half['workouts'] if w['date'] == '2027-03-14' and running(w))['paceMinPerMile'] = {'min': 8, 'max': 8}
+        with self.assertRaisesRegex(ValueError, 'Incorrect half-marathon race pace range'):
+            validate_revision(self.plan, mutated_half)
+        self.assertTrue(all(not hard(w) for w in self.plan['workouts']
+                            if date.fromisoformat(w['date']).weekday() == 5))
+        mutated = deepcopy(self.plan)
+        next(w for w in mutated['workouts'] if w['date'] == '2027-03-18' and running(w))['type'] = 'threshold'
+        with self.assertRaisesRegex(ValueError, 'Incorrect recovery Thursday'):
+            validate_revision(self.plan, mutated)
+
+    def test_two_hard_days_in_normal_weeks_with_lighter_exceptions(self):
+        for i in range(25):
+            monday = START + timedelta(weeks=i)
+            items = [w for w in self.plan['workouts'] if week(w['date']) == monday.isoformat()]
+            hard_days = {w['date'] for w in items if hard(w)}
+            if monday.isoformat() in NORMAL_WEEKS:
+                offsets = (3, 6) if monday.isoformat() in FINISH_WEEKS else (1, 3)
+                self.assertEqual(hard_days, {(monday + timedelta(days=n)).isoformat() for n in offsets})
+            elif i != 24:
+                self.assertLessEqual(len(hard_days), 1)
+            for w in items:
+                if hard(w) and date.fromisoformat(w['date']).weekday() == 1:
+                    self.assertGreater(main_miles(w), 0)
+                    self.assertGreaterEqual(w['distanceMiles'] - main_miles(w), 2.5)
+                    self.assertIn('Warm-up:', w['notes'])
+                    self.assertIn('Cool-down:', w['notes'])
+                    expected = deepcopy(w)
+                    tuesday_quality(expected)
+                    self.assertEqual(w, expected)
+        mutated = deepcopy(self.plan)
+        next(w for w in mutated['workouts'] if w['date'] == '2026-11-03' and running(w)).update(
+            type='easy', hrCapBpm=146, qualityStyle=None)
+        with self.assertRaisesRegex(ValueError, 'expected exactly two hard days'):
+            validate_revision(self.plan, mutated)
 
     def test_cli_writes_only_after_validation_and_logs_counts(self):
         with tempfile.TemporaryDirectory() as directory:

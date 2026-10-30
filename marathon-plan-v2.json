@@ -81,7 +81,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -98,16 +98,15 @@
       "notes": "Heavy 1: runner foundations\n\nFive-week rotation: 1/5. Tuesday main resistance session.\n\nHeavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.\n\nWarm-up: 5 min easy walking or marching, then 8 bodyweight squats and 8 unloaded hip hinges.\n\nSingle-leg calf raises: 2 sets x 12 reps per side. Hold a support; rise smoothly and lower for 3 seconds. Rest 30 s between sides and 60 s between sets.\n\nSupported split squats: 2 sets x 8 reps per side. Bodyweight first, adding light dumbbells only with steady form. Rest 30 s between sides and 75 s between sets. Alternative: 2 x 8 step-ups per side onto a low, stable step; do not do both.\n\nGlute bridges: 2 sets x 12 reps, pause 2 seconds at the top. Bodyweight or one securely held light weight. Rest 60 s between sets.\n\nRomanian deadlifts: 2 sets x 10 reps with two light dumbbells or one comfortable kettlebell. Hinge at the hips, soften knees, lower for 3 seconds. Rest 90 s between sets.\n\nRest 60-90 s when changing exercises. Finish with 2-3 min easy walking. Allow about 30-40 min; reduce to one set if it compromises Thursday running."
     },
     {
-      "id": "seed-2026-10-27-easy-",
+      "id": "seed-2026-10-27-threshold-",
       "date": "2026-10-27",
-      "type": "easy",
+      "type": "threshold",
       "distanceMiles": 4.385185,
       "paceMinPerMile": {
-        "min": 9,
-        "max": 9.75
+        "min": 7.1667,
+        "max": 7.4167
       },
-      "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 2 x 5 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.266667 mi total at 9:22.5/mi reference); then 0.247096 mi easy to complete the allocated mileage. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 1.3714. Quality distance is estimated at the threshold midpoint. Keep the work controlled, not maximal; Thursday is the other quality day. If recovery is poor, run easy instead. Do the Tuesday strength session after running, not before; skip or reduce it if fatigued.",
       "completed": false
     },
     {
@@ -197,7 +196,7 @@
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -210,7 +209,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -227,17 +226,17 @@
       "notes": "Heavy 2: step-up and hinge control\n\nFive-week rotation: 2/5. Tuesday main resistance session.\n\nHeavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.\n\nWarm-up: 5 min walking, then 8 ankle rocks and 8 unloaded hip hinges.\n\nLow step-ups: 2 sets x 8 reps per side on a stable step. Step down slowly; bodyweight or light dumbbells. Rest 30 s between sides and 75 s between sets.\n\nKickstand Romanian deadlifts: 2 sets x 8 reps per side with light dumbbells; back toes support balance. Rest 30 s between sides and 90 s between sets.\n\nGlute bridges: 2 sets x 10 reps with a 3-second hold at the top. Rest 60 s between sets.\n\nSupported single-leg calf raises: 2 sets x 10 reps per side, 3-second lowering. Rest 30 s between sides and 60 s between sets.\n\nRest 60-90 s between exercises. Cool down with 2 min walking. About 30-40 min."
     },
     {
-      "id": "seed-2026-11-03-easy-",
+      "id": "seed-2026-11-03-threshold-",
       "date": "2026-11-03",
-      "type": "easy",
-      "distanceMiles": 4.667063,
+      "type": "threshold",
+      "distanceMiles": 5.31087,
       "paceMinPerMile": {
-        "min": 9,
-        "max": 9.75
+        "min": 7.1667,
+        "max": 7.4167
       },
-      "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
-      "completed": false
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 6 x 30 s uphill at controlled strong effort on a gentle slope, not a sprint. Jog/walk downhill until fully recovered (about 2-3 min); use the remaining 2.399443 mi for easy recovery running. 7:10-7:25/mi is a flat-equivalent reference only, not an uphill speed target. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 0.4114. Quality distance is estimated at the threshold midpoint. Keep the work controlled, not maximal; Thursday is the other quality day. If recovery is poor, run easy instead. Do the Tuesday strength session after running, not before; skip or reduce it if fatigued.",
+      "completed": false,
+      "qualityStyle": "hills"
     },
     {
       "id": "seed-2026-11-04-crossTraining-badminton",
@@ -256,7 +255,7 @@
       "id": "seed-2026-11-04-easy-",
       "date": "2026-11-04",
       "type": "easy",
-      "distanceMiles": 3.231044,
+      "distanceMiles": 3.676757,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -269,12 +268,12 @@
       "id": "seed-2026-11-05-threshold-",
       "date": "2026-11-05",
       "type": "threshold",
-      "distanceMiles": 5.501893,
+      "distanceMiles": 4.412373,
       "paceMinPerMile": {
         "min": 7.1667,
         "max": 7.4167
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3 x 6 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.533333 mi total at 9:22.5/mi reference). Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 2.4686. Time-based main-set miles are estimated at 7:17.5/mi midpoint; no recovery after the final repetition. Easy portions HR Z2 (118-146); threshold portions HR Z4 (161-175).",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 2 x 6 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.266667 mi total at 9:22.5/mi reference). Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 1.6457. Time-based main-set miles are estimated at 7:17.5/mi midpoint; no recovery after the final repetition. Easy portions HR Z2 (118-146); threshold portions HR Z4 (161-175).",
       "completed": false
     },
     {
@@ -313,7 +312,7 @@
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -326,7 +325,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -346,13 +345,13 @@
       "id": "seed-2026-11-10-easy-",
       "date": "2026-11-10",
       "type": "easy",
-      "distanceMiles": 4.957377,
+      "distanceMiles": 4.662295,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Easy conversational run, HR under 146; no quality work in recovery or MP-finish weeks.",
       "completed": false
     },
     {
@@ -372,7 +371,7 @@
       "id": "seed-2026-11-11-easy-",
       "date": "2026-11-11",
       "type": "easy",
-      "distanceMiles": 3.442623,
+      "distanceMiles": 3.237705,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -382,16 +381,17 @@
       "completed": false
     },
     {
-      "id": "seed-2026-11-12-marathonPace-",
+      "id": "seed-2026-11-12-easy-",
       "date": "2026-11-12",
-      "type": "marathonPace",
-      "distanceMiles": 5.5,
+      "type": "easy",
+      "distanceMiles": 4,
       "paceMinPerMile": {
-        "min": 8,
-        "max": 8
+        "min": 9,
+        "max": 9.75
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 3.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
-      "completed": false
+      "notes": "Warm-up: 1 mi relaxed. Main set: 2 mi conversational easy running at 9:00-9:45/mi or slower as needed, no hard efforts. Cool-down: 1 mi easy. Main-set quality miles: 0.0000. HR under 146. Cut-back: easy running only.",
+      "completed": false,
+      "hrCapBpm": 146
     },
     {
       "id": "seed-2026-11-13-crossTraining-pilates",
@@ -442,7 +442,7 @@
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -455,7 +455,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -472,17 +472,17 @@
       "notes": "Heavy 4: controlled squat and posterior chain\n\nFive-week rotation: 4/5. Tuesday main resistance session.\n\nHeavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.\n\nWarm-up: 5 min walking, 8 bodyweight sit-to-stands and 8 unloaded hinges.\n\nGoblet squat to a stable chair: 2 sets x 10 reps, light dumbbell or kettlebell held close; touch the chair without dropping onto it. Rest 75 s between sets.\n\nSupported split squats: 2 sets x 6 reps per side, bodyweight or light dumbbells. Rest 30 s between sides and 75 s between sets.\n\nRomanian deadlifts: 2 sets x 10 reps, 3-second lowering. Rest 90 s between sets.\n\nGlute bridges: 2 sets x 12 reps, pause 2 seconds. Rest 60 s between sets.\n\nSupported single-leg calf raises: 2 sets x 10 reps per side. Rest 30 s between sides and 60 s between sets.\n\nRest 60-90 s between exercises. Cool down with 2 min walking. About 35-40 min; use one set if recovery suffers."
     },
     {
-      "id": "seed-2026-11-17-easy-",
+      "id": "seed-2026-11-17-threshold-",
       "date": "2026-11-17",
-      "type": "easy",
-      "distanceMiles": 4.887404,
+      "type": "threshold",
+      "distanceMiles": 5.846505,
       "paceMinPerMile": {
-        "min": 9,
-        "max": 9.75
+        "min": 7.1667,
+        "max": 7.4167
       },
-      "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
-      "completed": false
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 6 x 30 s uphill at controlled strong effort on a gentle slope, not a sprint. Jog/walk downhill until fully recovered (about 2-3 min); use the remaining 2.935078 mi for easy recovery running. 7:10-7:25/mi is a flat-equivalent reference only, not an uphill speed target. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 0.4114. Quality distance is estimated at the threshold midpoint. Keep the work controlled, not maximal; Thursday is the other quality day. If recovery is poor, run easy instead. Do the Tuesday strength session after running, not before; skip or reduce it if fatigued.",
+      "completed": false,
+      "qualityStyle": "hills"
     },
     {
       "id": "seed-2026-11-18-crossTraining-badminton",
@@ -501,7 +501,7 @@
       "id": "seed-2026-11-18-easy-",
       "date": "2026-11-18",
       "type": "easy",
-      "distanceMiles": 3.421182,
+      "distanceMiles": 4.092553,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -514,12 +514,12 @@
       "id": "seed-2026-11-19-threshold-",
       "date": "2026-11-19",
       "type": "threshold",
-      "distanceMiles": 6.591414,
+      "distanceMiles": 4.960942,
       "paceMinPerMile": {
         "min": 7.1667,
         "max": 7.4167
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 4 x 6 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.800000 mi total at 9:22.5/mi reference). Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 3.2914. Time-based main-set miles are estimated at 7:17.5/mi midpoint; no recovery after the final repetition. Easy portions HR Z2 (118-146); threshold portions HR Z4 (161-175).",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 2 x 8 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.266667 mi total at 9:22.5/mi reference). Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 2.1943. Time-based main-set miles are estimated at 7:17.5/mi midpoint; no recovery after the final repetition. Easy portions HR Z2 (118-146); threshold portions HR Z4 (161-175).",
       "completed": false
     },
     {
@@ -552,13 +552,13 @@
       "id": "seed-2026-11-22-long-",
       "date": "2026-11-22",
       "type": "long",
-      "distanceMiles": 12,
+      "distanceMiles": 11,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -571,7 +571,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -588,16 +588,15 @@
       "notes": "Heavy 5: low-step single-leg stability\n\nFive-week rotation: 5/5. Tuesday main resistance session.\n\nHeavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.\n\nWarm-up: 5 min walking, 8 unloaded hinges and 8 ankle rocks per side.\n\nLow step-ups: 2 sets x 6 reps per side with a 3-second controlled step-down. Use a stable step and support if needed. Rest 30 s between sides and 75 s between sets.\n\nSupported kickstand Romanian deadlifts: 2 sets x 10 reps per side, light weight in the free hand. Rest 30 s between sides and 90 s between sets.\n\nGlute bridges: 2 sets x 10 reps, pause 3 seconds at the top. Rest 60 s between sets.\n\nSupported single-leg calf raises: 2 sets x 12 reps per side, smooth movement. Rest 30 s between sides and 60 s between sets.\n\nRest 60-90 s between exercises. Cool down with 2 min walking. About 30-40 min."
     },
     {
-      "id": "seed-2026-11-24-easy-",
+      "id": "seed-2026-11-24-threshold-",
       "date": "2026-11-24",
-      "type": "easy",
-      "distanceMiles": 5.823529,
+      "type": "threshold",
+      "distanceMiles": 5.529412,
       "paceMinPerMile": {
-        "min": 9,
-        "max": 9.75
+        "min": 7.1667,
+        "max": 7.4167
       },
-      "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 2 x 5 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.266667 mi total at 9:22.5/mi reference); then 1.391323 mi easy to complete the allocated mileage. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 1.3714. Quality distance is estimated at the threshold midpoint. Keep the work controlled, not maximal; Thursday is the other quality day. If recovery is poor, run easy instead. Do the Tuesday strength session after running, not before; skip or reduce it if fatigued.",
       "completed": false
     },
     {
@@ -617,7 +616,7 @@
       "id": "seed-2026-11-25-easy-",
       "date": "2026-11-25",
       "type": "easy",
-      "distanceMiles": 4.076471,
+      "distanceMiles": 3.870588,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -630,12 +629,12 @@
       "id": "seed-2026-11-26-marathonPace-",
       "date": "2026-11-26",
       "type": "marathonPace",
-      "distanceMiles": 6.5,
+      "distanceMiles": 5.5,
       "paceMinPerMile": {
         "min": 8,
         "max": 8
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 4 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 4.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 3.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
       "completed": false
     },
     {
@@ -681,13 +680,13 @@
       "id": "seed-2026-11-29-long-",
       "date": "2026-11-29",
       "type": "long",
-      "distanceMiles": 13,
+      "distanceMiles": 12,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -700,7 +699,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -720,13 +719,13 @@
       "id": "seed-2026-12-01-easy-",
       "date": "2026-12-01",
       "type": "easy",
-      "distanceMiles": 7.985443,
+      "distanceMiles": 4.647059,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Easy conversational run, HR under 146; no quality work in recovery or MP-finish weeks.",
       "completed": false
     },
     {
@@ -746,7 +745,7 @@
       "id": "seed-2026-12-02-easy-",
       "date": "2026-12-02",
       "type": "easy",
-      "distanceMiles": 5.58981,
+      "distanceMiles": 3.252941,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -756,16 +755,17 @@
       "completed": false
     },
     {
-      "id": "seed-2026-12-03-threshold-",
+      "id": "seed-2026-12-03-easy-",
       "date": "2026-12-03",
-      "type": "threshold",
-      "distanceMiles": 6.324747,
+      "type": "easy",
+      "distanceMiles": 5,
       "paceMinPerMile": {
-        "min": 7.1667,
-        "max": 7.4167
+        "min": 9,
+        "max": 9.75
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3 x 8 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.533333 mi total at 9:22.5/mi reference). Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 3.2914. Time-based main-set miles are estimated at 7:17.5/mi midpoint; no recovery after the final repetition. Easy portions HR Z2 (118-146); threshold portions HR Z4 (161-175).",
-      "completed": false
+      "notes": "Warm-up: 1 mi relaxed. Main set: 3 mi conversational easy running at 9:00-9:45/mi or slower as needed, no hard efforts. Cool-down: 1 mi easy. Main-set quality miles: 0.0000. HR under 146. Cut-back: easy running only.",
+      "completed": false,
+      "hrCapBpm": 146
     },
     {
       "id": "seed-2026-12-04-crossTraining-strength",
@@ -803,7 +803,7 @@
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -816,7 +816,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -833,16 +833,15 @@
       "notes": "Heavy 2: step-up and hinge control\n\nFive-week rotation: 2/5. Tuesday main resistance session.\n\nHeavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.\n\nWarm-up: 5 min walking, then 8 ankle rocks and 8 unloaded hip hinges.\n\nLow step-ups: 2 sets x 8 reps per side on a stable step. Step down slowly; bodyweight or light dumbbells. Rest 30 s between sides and 75 s between sets.\n\nKickstand Romanian deadlifts: 2 sets x 8 reps per side with light dumbbells; back toes support balance. Rest 30 s between sides and 90 s between sets.\n\nGlute bridges: 2 sets x 10 reps with a 3-second hold at the top. Rest 60 s between sets.\n\nSupported single-leg calf raises: 2 sets x 10 reps per side, 3-second lowering. Rest 30 s between sides and 60 s between sets.\n\nRest 60-90 s between exercises. Cool down with 2 min walking. About 30-40 min."
     },
     {
-      "id": "seed-2026-12-08-easy-",
+      "id": "seed-2026-12-08-threshold-",
       "date": "2026-12-08",
-      "type": "easy",
+      "type": "threshold",
       "distanceMiles": 6.716279,
       "paceMinPerMile": {
-        "min": 9,
-        "max": 9.75
+        "min": 7.1667,
+        "max": 7.4167
       },
-      "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 2 x 5 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.266667 mi total at 9:22.5/mi reference); then 2.578190 mi easy to complete the allocated mileage. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 1.3714. Quality distance is estimated at the threshold midpoint. Keep the work controlled, not maximal; Thursday is the other quality day. If recovery is poor, run easy instead. Do the Tuesday strength session after running, not before; skip or reduce it if fatigued.",
       "completed": false
     },
     {
@@ -875,12 +874,12 @@
       "id": "seed-2026-12-10-marathonPace-",
       "date": "2026-12-10",
       "type": "marathonPace",
-      "distanceMiles": 7.5,
+      "distanceMiles": 5.5,
       "paceMinPerMile": {
         "min": 8,
         "max": 8
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 5 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 5.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 3.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
       "completed": false
     },
     {
@@ -926,13 +925,13 @@
       "id": "seed-2026-12-13-long-",
       "date": "2026-12-13",
       "type": "long",
-      "distanceMiles": 13,
+      "distanceMiles": 12,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -945,7 +944,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -962,17 +961,17 @@
       "notes": "Heavy 3: split squat and bridge strength\n\nFive-week rotation: 3/5. Tuesday main resistance session.\n\nHeavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.\n\nWarm-up: 5 min walking, 8 bodyweight squats and 8 unloaded hinges.\n\nSupported split squats: 2 sets x 8 reps per side; lower for 3 seconds, bodyweight or light dumbbells. Rest 30 s between sides and 75 s between sets.\n\nRomanian deadlifts: 2 sets x 8 reps with two dumbbells; pause briefly at a comfortable bottom position. Rest 90 s between sets.\n\nStaggered-stance bridges: 2 sets x 10 reps per side, both feet on the floor. Rest 30 s between sides and 60 s between sets.\n\nSupported single-leg calf raises: 2 sets x 12 reps per side, pause 1 second at the top. Rest 30 s between sides and 60 s between sets.\n\nRest 60-90 s between exercises. Cool down with 2 min walking. About 30-40 min."
     },
     {
-      "id": "seed-2026-12-15-easy-",
+      "id": "seed-2026-12-15-threshold-",
       "date": "2026-12-15",
-      "type": "easy",
-      "distanceMiles": 7.6,
+      "type": "threshold",
+      "distanceMiles": 6.421705,
       "paceMinPerMile": {
-        "min": 9,
-        "max": 9.75
+        "min": 7.1667,
+        "max": 7.4167
       },
-      "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
-      "completed": false
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 6 x 45 s uphill at controlled strong effort on a gentle slope, not a sprint. Jog/walk downhill until fully recovered (about 2-3 min); use the remaining 3.304565 mi for easy recovery running. 7:10-7:25/mi is a flat-equivalent reference only, not an uphill speed target. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 0.6171. Quality distance is estimated at the threshold midpoint. Keep the work controlled, not maximal; Thursday is the other quality day. If recovery is poor, run easy instead. Do the Tuesday strength session after running, not before; skip or reduce it if fatigued.",
+      "completed": false,
+      "qualityStyle": "hills"
     },
     {
       "id": "seed-2026-12-16-crossTraining-badminton",
@@ -991,7 +990,7 @@
       "id": "seed-2026-12-16-easy-",
       "date": "2026-12-16",
       "type": "easy",
-      "distanceMiles": 5.3,
+      "distanceMiles": 4.478295,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -1049,7 +1048,7 @@
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -1062,7 +1061,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -1079,16 +1078,15 @@
       "notes": "Heavy 4: controlled squat and posterior chain\n\nFive-week rotation: 4/5. Tuesday main resistance session.\n\nHeavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.\n\nWarm-up: 5 min walking, 8 bodyweight sit-to-stands and 8 unloaded hinges.\n\nGoblet squat to a stable chair: 2 sets x 10 reps, light dumbbell or kettlebell held close; touch the chair without dropping onto it. Rest 75 s between sets.\n\nSupported split squats: 2 sets x 6 reps per side, bodyweight or light dumbbells. Rest 30 s between sides and 75 s between sets.\n\nRomanian deadlifts: 2 sets x 10 reps, 3-second lowering. Rest 90 s between sets.\n\nGlute bridges: 2 sets x 12 reps, pause 2 seconds. Rest 60 s between sets.\n\nSupported single-leg calf raises: 2 sets x 10 reps per side. Rest 30 s between sides and 60 s between sets.\n\nRest 60-90 s between exercises. Cool down with 2 min walking. About 35-40 min; use one set if recovery suffers."
     },
     {
-      "id": "seed-2026-12-22-easy-",
+      "id": "seed-2026-12-22-threshold-",
       "date": "2026-12-22",
-      "type": "easy",
+      "type": "threshold",
       "distanceMiles": 6.716279,
       "paceMinPerMile": {
-        "min": 9,
-        "max": 9.75
+        "min": 7.1667,
+        "max": 7.4167
       },
-      "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 2 x 6 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.266667 mi total at 9:22.5/mi reference); then 2.303906 mi easy to complete the allocated mileage. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 1.6457. Quality distance is estimated at the threshold midpoint. Keep the work controlled, not maximal; Thursday is the other quality day. If recovery is poor, run easy instead. Do the Tuesday strength session after running, not before; skip or reduce it if fatigued.",
       "completed": false
     },
     {
@@ -1121,12 +1119,12 @@
       "id": "seed-2026-12-24-marathonPace-",
       "date": "2026-12-24",
       "type": "marathonPace",
-      "distanceMiles": 7.5,
+      "distanceMiles": 6.5,
       "paceMinPerMile": {
         "min": 8,
         "max": 8
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 5 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 5.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 4 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 4.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
       "completed": false
     },
     {
@@ -1178,7 +1176,7 @@
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -1191,7 +1189,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -1211,13 +1209,13 @@
       "id": "seed-2026-12-29-easy-",
       "date": "2026-12-29",
       "type": "easy",
-      "distanceMiles": 8.4,
+      "distanceMiles": 4.875524,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Easy conversational run, HR under 146; no quality work in recovery or MP-finish weeks.",
       "completed": false
     },
     {
@@ -1237,7 +1235,7 @@
       "id": "seed-2026-12-30-easy-",
       "date": "2026-12-30",
       "type": "easy",
-      "distanceMiles": 5.9,
+      "distanceMiles": 3.424476,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -1255,7 +1253,7 @@
         "min": 7.1667,
         "max": 7.4167
       },
-      "notes": "Warm-up: 1.5 mi easy. Main set: 8 x 45 s uphill at controlled strong effort, not a sprint; jog/walk back down until recovered (about 2-3 min), using the remaining 3.2771 mi for easy recovery running. Do not chase raw uphill pace; 7:10-7:25/mi is a flat-equivalent reference only. Cool-down: 1 mi easy. Main-set quality miles: 0.8229. Uphill distance is estimated at the flat-equivalent midpoint, not measured elevation-adjusted distance. Retain the gentle slope and controlled form; shorten if fatigued.",
+      "notes": "Warm-up: 1.5 mi easy. Main set: 6 x 45 s uphill at controlled strong effort, not a sprint; jog/walk back down until recovered (about 2-3 min), using the remaining 3.4829 mi for easy recovery running. Do not chase raw uphill pace; 7:10-7:25/mi is a flat-equivalent reference only. Cool-down: 1 mi easy. Main-set quality miles: 0.6171. Uphill distance is estimated at the flat-equivalent midpoint, not measured elevation-adjusted distance. Retain the gentle slope and controlled form; shorten if fatigued.",
       "completed": false,
       "qualityStyle": "hills"
     },
@@ -1289,13 +1287,13 @@
       "id": "seed-2027-01-03-long-",
       "date": "2027-01-03",
       "type": "long",
-      "distanceMiles": 14,
+      "distanceMiles": 12,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -1308,7 +1306,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -1325,16 +1323,15 @@
       "notes": "Heavy 1: runner foundations\n\nFive-week rotation: 1/5. Tuesday main resistance session.\n\nHeavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.\n\nWarm-up: 5 min easy walking or marching, then 8 bodyweight squats and 8 unloaded hip hinges.\n\nSingle-leg calf raises: 2 sets x 12 reps per side. Hold a support; rise smoothly and lower for 3 seconds. Rest 30 s between sides and 60 s between sets.\n\nSupported split squats: 2 sets x 8 reps per side. Bodyweight first, adding light dumbbells only with steady form. Rest 30 s between sides and 75 s between sets. Alternative: 2 x 8 step-ups per side onto a low, stable step; do not do both.\n\nGlute bridges: 2 sets x 12 reps, pause 2 seconds at the top. Bodyweight or one securely held light weight. Rest 60 s between sets.\n\nRomanian deadlifts: 2 sets x 10 reps with two light dumbbells or one comfortable kettlebell. Hinge at the hips, soften knees, lower for 3 seconds. Rest 90 s between sets.\n\nRest 60-90 s when changing exercises. Finish with 2-3 min easy walking. Allow about 30-40 min; reduce to one set if it compromises Thursday running."
     },
     {
-      "id": "seed-2027-01-05-easy-",
+      "id": "seed-2027-01-05-threshold-",
       "date": "2027-01-05",
-      "type": "easy",
+      "type": "threshold",
       "distanceMiles": 7.283916,
       "paceMinPerMile": {
-        "min": 9,
-        "max": 9.75
+        "min": 7.1667,
+        "max": 7.4167
       },
-      "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 2 x 6 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.266667 mi total at 9:22.5/mi reference); then 2.871543 mi easy to complete the allocated mileage. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 1.6457. Quality distance is estimated at the threshold midpoint. Keep the work controlled, not maximal; Thursday is the other quality day. If recovery is poor, run easy instead. Do the Tuesday strength session after running, not before; skip or reduce it if fatigued.",
       "completed": false
     },
     {
@@ -1367,12 +1364,12 @@
       "id": "seed-2027-01-07-marathonPace-",
       "date": "2027-01-07",
       "type": "marathonPace",
-      "distanceMiles": 8.5,
+      "distanceMiles": 6.5,
       "paceMinPerMile": {
         "min": 8,
         "max": 8
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 6 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 6.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 4 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 4.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
       "completed": false
     },
     {
@@ -1418,13 +1415,13 @@
       "id": "seed-2027-01-10-long-",
       "date": "2027-01-10",
       "type": "long",
-      "distanceMiles": 15,
+      "distanceMiles": 14,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -1437,7 +1434,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -1454,17 +1451,17 @@
       "notes": "Heavy 2: step-up and hinge control\n\nFive-week rotation: 2/5. Tuesday main resistance session.\n\nHeavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.\n\nWarm-up: 5 min walking, then 8 ankle rocks and 8 unloaded hip hinges.\n\nLow step-ups: 2 sets x 8 reps per side on a stable step. Step down slowly; bodyweight or light dumbbells. Rest 30 s between sides and 75 s between sets.\n\nKickstand Romanian deadlifts: 2 sets x 8 reps per side with light dumbbells; back toes support balance. Rest 30 s between sides and 90 s between sets.\n\nGlute bridges: 2 sets x 10 reps with a 3-second hold at the top. Rest 60 s between sets.\n\nSupported single-leg calf raises: 2 sets x 10 reps per side, 3-second lowering. Rest 30 s between sides and 60 s between sets.\n\nRest 60-90 s between exercises. Cool down with 2 min walking. About 30-40 min."
     },
     {
-      "id": "seed-2027-01-12-easy-",
+      "id": "seed-2027-01-12-threshold-",
       "date": "2027-01-12",
-      "type": "easy",
-      "distanceMiles": 8.4,
+      "type": "threshold",
+      "distanceMiles": 7.812587,
       "paceMinPerMile": {
-        "min": 9,
-        "max": 9.75
+        "min": 7.1667,
+        "max": 7.4167
       },
-      "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
-      "completed": false
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 6 x 45 s uphill at controlled strong effort on a gentle slope, not a sprint. Jog/walk downhill until fully recovered (about 2-3 min); use the remaining 4.695447 mi for easy recovery running. 7:10-7:25/mi is a flat-equivalent reference only, not an uphill speed target. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 0.6171. Quality distance is estimated at the threshold midpoint. Keep the work controlled, not maximal; Thursday is the other quality day. If recovery is poor, run easy instead. Do the Tuesday strength session after running, not before; skip or reduce it if fatigued.",
+      "completed": false,
+      "qualityStyle": "hills"
     },
     {
       "id": "seed-2027-01-13-crossTraining-badminton",
@@ -1483,7 +1480,7 @@
       "id": "seed-2027-01-13-easy-",
       "date": "2027-01-13",
       "type": "easy",
-      "distanceMiles": 5.9,
+      "distanceMiles": 5.487413,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -1535,13 +1532,13 @@
       "id": "seed-2027-01-17-long-",
       "date": "2027-01-17",
       "type": "long",
-      "distanceMiles": 16,
+      "distanceMiles": 15,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -1554,7 +1551,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -1574,13 +1571,13 @@
       "id": "seed-2027-01-19-easy-",
       "date": "2027-01-19",
       "type": "easy",
-      "distanceMiles": 6.698305,
+      "distanceMiles": 6.99209,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Easy conversational run, HR under 146; no quality work in recovery or MP-finish weeks.",
       "completed": false
     },
     {
@@ -1600,7 +1597,7 @@
       "id": "seed-2027-01-20-easy-",
       "date": "2027-01-20",
       "type": "easy",
-      "distanceMiles": 4.701695,
+      "distanceMiles": 4.90791,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -1610,16 +1607,17 @@
       "completed": false
     },
     {
-      "id": "seed-2027-01-21-marathonPace-",
+      "id": "seed-2027-01-21-easy-",
       "date": "2027-01-21",
-      "type": "marathonPace",
-      "distanceMiles": 6.5,
+      "type": "easy",
+      "distanceMiles": 5,
       "paceMinPerMile": {
-        "min": 8,
-        "max": 8
+        "min": 9,
+        "max": 9.75
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 4 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 4.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
-      "completed": false
+      "notes": "Warm-up: 1 mi relaxed. Main set: 3 mi conversational easy running at 9:00-9:45/mi or slower as needed, no hard efforts. Cool-down: 1 mi easy. Main-set quality miles: 0.0000. HR under 146. Cut-back: easy running only.",
+      "completed": false,
+      "hrCapBpm": 146
     },
     {
       "id": "seed-2027-01-22-crossTraining-pilates",
@@ -1664,13 +1662,13 @@
       "id": "seed-2027-01-24-long-",
       "date": "2027-01-24",
       "type": "long",
-      "distanceMiles": 13,
+      "distanceMiles": 12,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -1683,7 +1681,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -1703,13 +1701,13 @@
       "id": "seed-2027-01-26-easy-",
       "date": "2027-01-26",
       "type": "easy",
-      "distanceMiles": 9.2,
+      "distanceMiles": 8.787179,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Easy conversational run, HR under 146; no quality work in recovery or MP-finish weeks.",
       "completed": false
     },
     {
@@ -1729,7 +1727,7 @@
       "id": "seed-2027-01-27-easy-",
       "date": "2027-01-27",
       "type": "easy",
-      "distanceMiles": 6.4,
+      "distanceMiles": 6.112821,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -1739,17 +1737,16 @@
       "completed": false
     },
     {
-      "id": "seed-2027-01-28-threshold-",
+      "id": "seed-2027-01-28-marathonPace-",
       "date": "2027-01-28",
-      "type": "threshold",
-      "distanceMiles": 7.3,
+      "type": "marathonPace",
+      "distanceMiles": 6.0,
       "paceMinPerMile": {
-        "min": 7.1667,
-        "max": 7.4167
+        "min": 8,
+        "max": 8
       },
-      "notes": "Warm-up: 1.5 mi easy. Main set: continuous gradual progression, no recovery breaks. Easy progression: 1.920000 mi. MP progression: 1.680000 mi at 8:00/mi. Threshold progression: 1.200000 mi at 7:10-7:25/mi. Cool-down: 1 mi easy. Main-set quality miles: 2.8800. Progress smoothly from easy through marathon effort to threshold, never sprint. Easy portions HR Z2; MP Z3; threshold Z4.",
-      "completed": false,
-      "qualityStyle": "progression"
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3.5 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 3.5000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
+      "completed": false
     },
     {
       "id": "seed-2027-01-29-crossTraining-strength",
@@ -1787,7 +1784,7 @@
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "First 12 mi easy at 9:00-9:45/mi, HR under 146; last 4 mi continuous at 8:00/mi. Practise fuelling; this counts as a hard day.",
+      "notes": "First 12 mi easy at 9:00-9:45/mi, HR under 146; last 4 mi continuous at 8:00/mi. Practise fuelling; this counts as a hard day. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false,
       "marathonFinish": {
         "distanceMiles": 4,
@@ -1807,7 +1804,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -1824,16 +1821,15 @@
       "notes": "Heavy 5: low-step single-leg stability\n\nFive-week rotation: 5/5. Tuesday main resistance session.\n\nHeavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.\n\nWarm-up: 5 min walking, 8 unloaded hinges and 8 ankle rocks per side.\n\nLow step-ups: 2 sets x 6 reps per side with a 3-second controlled step-down. Use a stable step and support if needed. Rest 30 s between sides and 75 s between sets.\n\nSupported kickstand Romanian deadlifts: 2 sets x 10 reps per side, light weight in the free hand. Rest 30 s between sides and 90 s between sets.\n\nGlute bridges: 2 sets x 10 reps, pause 3 seconds at the top. Rest 60 s between sets.\n\nSupported single-leg calf raises: 2 sets x 12 reps per side, smooth movement. Rest 30 s between sides and 60 s between sets.\n\nRest 60-90 s between exercises. Cool down with 2 min walking. About 30-40 min."
     },
     {
-      "id": "seed-2027-02-02-easy-",
+      "id": "seed-2027-02-02-threshold-",
       "date": "2027-02-02",
-      "type": "easy",
-      "distanceMiles": 9.069939,
+      "type": "threshold",
+      "distanceMiles": 9.364417,
       "paceMinPerMile": {
-        "min": 9,
-        "max": 9.75
+        "min": 7.1667,
+        "max": 7.4167
       },
-      "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3 x 5 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.533333 mi total at 9:22.5/mi reference); then 4.273950 mi easy to complete the allocated mileage. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 2.0571. Quality distance is estimated at the threshold midpoint. Keep the work controlled, not maximal; Thursday is the other quality day. If recovery is poor, run easy instead. Do the Tuesday strength session after running, not before; skip or reduce it if fatigued.",
       "completed": false
     },
     {
@@ -1853,7 +1849,7 @@
       "id": "seed-2027-02-03-easy-",
       "date": "2027-02-03",
       "type": "easy",
-      "distanceMiles": 6.330061,
+      "distanceMiles": 6.535583,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -1866,12 +1862,12 @@
       "id": "seed-2027-02-04-marathonPace-",
       "date": "2027-02-04",
       "type": "marathonPace",
-      "distanceMiles": 8.5,
+      "distanceMiles": 6.5,
       "paceMinPerMile": {
         "min": 8,
         "max": 8
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 6 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 6.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 4 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 4.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
       "completed": false
     },
     {
@@ -1923,7 +1919,7 @@
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -1936,7 +1932,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -1956,13 +1952,13 @@
       "id": "seed-2027-02-09-easy-",
       "date": "2027-02-09",
       "type": "easy",
-      "distanceMiles": 10.023499,
+      "distanceMiles": 10.542331,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Easy conversational run, HR under 146; no quality work in recovery or MP-finish weeks.",
       "completed": false
     },
     {
@@ -1982,7 +1978,7 @@
       "id": "seed-2027-02-10-easy-",
       "date": "2027-02-10",
       "type": "easy",
-      "distanceMiles": 6.995567,
+      "distanceMiles": 7.357669,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -1992,15 +1988,15 @@
       "completed": false
     },
     {
-      "id": "seed-2027-02-11-threshold-",
+      "id": "seed-2027-02-11-marathonPace-",
       "date": "2027-02-11",
-      "type": "threshold",
-      "distanceMiles": 6.880934,
+      "type": "marathonPace",
+      "distanceMiles": 6.0,
       "paceMinPerMile": {
-        "min": 7.1667,
-        "max": 7.4167
+        "min": 8,
+        "max": 8
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 2 x 15 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.266667 mi total at 9:22.5/mi reference). Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 4.1143. Time-based main-set miles are estimated at 7:17.5/mi midpoint; no recovery after the final repetition. Easy portions HR Z2 (118-146); threshold portions HR Z4 (161-175).",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3.5 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 3.5000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
       "completed": false
     },
     {
@@ -2039,7 +2035,7 @@
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "First 12 mi easy at 9:00-9:45/mi, HR under 146; last 6 mi continuous at 8:00/mi. Practise fuelling; this counts as a hard day.",
+      "notes": "First 12 mi easy at 9:00-9:45/mi, HR under 146; last 6 mi continuous at 8:00/mi. Practise fuelling; this counts as a hard day. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false,
       "marathonFinish": {
         "distanceMiles": 6,
@@ -2059,7 +2055,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -2076,16 +2072,15 @@
       "notes": "Heavy 2: step-up and hinge control\n\nFive-week rotation: 2/5. Tuesday main resistance session.\n\nHeavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.\n\nWarm-up: 5 min walking, then 8 ankle rocks and 8 unloaded hip hinges.\n\nLow step-ups: 2 sets x 8 reps per side on a stable step. Step down slowly; bodyweight or light dumbbells. Rest 30 s between sides and 75 s between sets.\n\nKickstand Romanian deadlifts: 2 sets x 8 reps per side with light dumbbells; back toes support balance. Rest 30 s between sides and 90 s between sets.\n\nGlute bridges: 2 sets x 10 reps with a 3-second hold at the top. Rest 60 s between sets.\n\nSupported single-leg calf raises: 2 sets x 10 reps per side, 3-second lowering. Rest 30 s between sides and 60 s between sets.\n\nRest 60-90 s between exercises. Cool down with 2 min walking. About 30-40 min."
     },
     {
-      "id": "seed-2027-02-16-easy-",
+      "id": "seed-2027-02-16-threshold-",
       "date": "2027-02-16",
-      "type": "easy",
-      "distanceMiles": 9.058824,
+      "type": "threshold",
+      "distanceMiles": 10.235294,
       "paceMinPerMile": {
-        "min": 9,
-        "max": 9.75
+        "min": 7.1667,
+        "max": 7.4167
       },
-      "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3 x 5 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.533333 mi total at 9:22.5/mi reference); then 5.144827 mi easy to complete the allocated mileage. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 2.0571. Quality distance is estimated at the threshold midpoint. Keep the work controlled, not maximal; Thursday is the other quality day. If recovery is poor, run easy instead. Do the Tuesday strength session after running, not before; skip or reduce it if fatigued.",
       "completed": false
     },
     {
@@ -2105,7 +2100,7 @@
       "id": "seed-2027-02-17-easy-",
       "date": "2027-02-17",
       "type": "easy",
-      "distanceMiles": 6.341176,
+      "distanceMiles": 7.164706,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -2118,12 +2113,12 @@
       "id": "seed-2027-02-18-marathonPace-",
       "date": "2027-02-18",
       "type": "marathonPace",
-      "distanceMiles": 9.5,
+      "distanceMiles": 6.5,
       "paceMinPerMile": {
         "min": 8,
         "max": 8
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 7 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 7.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 4 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 4.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
       "completed": false
     },
     {
@@ -2175,7 +2170,7 @@
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -2188,7 +2183,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -2208,13 +2203,13 @@
       "id": "seed-2027-02-23-easy-",
       "date": "2027-02-23",
       "type": "easy",
-      "distanceMiles": 7.988811,
+      "distanceMiles": 8.165035,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Easy conversational run, HR under 146; no quality work in recovery or MP-finish weeks.",
       "completed": false
     },
     {
@@ -2234,7 +2229,7 @@
       "id": "seed-2027-02-24-easy-",
       "date": "2027-02-24",
       "type": "easy",
-      "distanceMiles": 5.611189,
+      "distanceMiles": 5.734965,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -2244,16 +2239,17 @@
       "completed": false
     },
     {
-      "id": "seed-2027-02-25-threshold-",
+      "id": "seed-2027-02-25-easy-",
       "date": "2027-02-25",
-      "type": "threshold",
-      "distanceMiles": 7.3,
+      "type": "easy",
+      "distanceMiles": 5,
       "paceMinPerMile": {
-        "min": 7.1667,
-        "max": 7.4167
+        "min": 9,
+        "max": 9.75
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 4 x 1 mi at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.800000 mi total at 9:22.5/mi reference). Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 4.0000. Time-based main-set miles are estimated at 7:17.5/mi midpoint; no recovery after the final repetition. Easy portions HR Z2 (118-146); threshold portions HR Z4 (161-175).",
-      "completed": false
+      "notes": "Warm-up: 1 mi relaxed. Main set: 3 mi conversational easy running at 9:00-9:45/mi or slower as needed, no hard efforts. Cool-down: 1 mi easy. Main-set quality miles: 0.0000. HR under 146. Cut-back: easy running only.",
+      "completed": false,
+      "hrCapBpm": 146
     },
     {
       "id": "seed-2027-02-26-crossTraining-strength",
@@ -2291,7 +2287,7 @@
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -2304,7 +2300,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -2321,16 +2317,15 @@
       "notes": "Heavy 4: controlled squat and posterior chain\n\nFive-week rotation: 4/5. Tuesday main resistance session.\n\nHeavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.\n\nWarm-up: 5 min walking, 8 bodyweight sit-to-stands and 8 unloaded hinges.\n\nGoblet squat to a stable chair: 2 sets x 10 reps, light dumbbell or kettlebell held close; touch the chair without dropping onto it. Rest 75 s between sets.\n\nSupported split squats: 2 sets x 6 reps per side, bodyweight or light dumbbells. Rest 30 s between sides and 75 s between sets.\n\nRomanian deadlifts: 2 sets x 10 reps, 3-second lowering. Rest 90 s between sets.\n\nGlute bridges: 2 sets x 12 reps, pause 2 seconds. Rest 60 s between sets.\n\nSupported single-leg calf raises: 2 sets x 10 reps per side. Rest 30 s between sides and 60 s between sets.\n\nRest 60-90 s between exercises. Cool down with 2 min walking. About 35-40 min; use one set if recovery suffers."
     },
     {
-      "id": "seed-2027-03-02-easy-",
+      "id": "seed-2027-03-02-threshold-",
       "date": "2027-03-02",
-      "type": "easy",
-      "distanceMiles": 8.398413,
+      "type": "threshold",
+      "distanceMiles": 9.631746,
       "paceMinPerMile": {
-        "min": 9,
-        "max": 9.75
+        "min": 7.1667,
+        "max": 7.4167
       },
-      "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3 x 5 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.533333 mi total at 9:22.5/mi reference); then 4.541279 mi easy to complete the allocated mileage. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 2.0571. Quality distance is estimated at the threshold midpoint. Keep the work controlled, not maximal; Thursday is the other quality day. If recovery is poor, run easy instead. Do the Tuesday strength session after running, not before; skip or reduce it if fatigued.",
       "completed": false
     },
     {
@@ -2350,7 +2345,7 @@
       "id": "seed-2027-03-03-easy-",
       "date": "2027-03-03",
       "type": "easy",
-      "distanceMiles": 5.901587,
+      "distanceMiles": 6.768254,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -2419,9 +2414,9 @@
         "min": 9,
         "max": 9.75
       },
-      "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
-      "completed": false
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
+      "completed": false,
+      "hrCapBpm": 146
     },
     {
       "id": "seed-2027-03-08-crossTraining-swim",
@@ -2433,7 +2428,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -2453,13 +2448,13 @@
       "id": "seed-2027-03-09-easy-",
       "date": "2027-03-09",
       "type": "easy",
-      "distanceMiles": 8.237191,
+      "distanceMiles": 6.345763,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Easy conversational run, HR under 146; no quality work in recovery or MP-finish weeks.",
       "completed": false
     },
     {
@@ -2479,7 +2474,7 @@
       "id": "seed-2027-03-10-easy-",
       "date": "2027-03-10",
       "type": "easy",
-      "distanceMiles": 5.781875,
+      "distanceMiles": 4.454237,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -2489,16 +2484,17 @@
       "completed": false
     },
     {
-      "id": "seed-2027-03-11-threshold-",
+      "id": "seed-2027-03-11-easy-",
       "date": "2027-03-11",
-      "type": "threshold",
-      "distanceMiles": 6.880934,
+      "type": "easy",
+      "distanceMiles": 5,
       "paceMinPerMile": {
-        "min": 7.1667,
-        "max": 7.4167
+        "min": 9,
+        "max": 9.75
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 2 x 15 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.266667 mi total at 9:22.5/mi reference). Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 4.1143. Time-based main-set miles are estimated at 7:17.5/mi midpoint; no recovery after the final repetition. Easy portions HR Z2 (118-146); threshold portions HR Z4 (161-175).",
-      "completed": false
+      "notes": "Warm-up: 1 mi relaxed. Main set: 3 mi conversational easy running at 9:00-9:45/mi or slower as needed, no hard efforts. Cool-down: 1 mi easy. Main-set quality miles: 0.0000. HR under 146. Half-marathon week: save quality effort for Sunday.",
+      "completed": false,
+      "hrCapBpm": 146
     },
     {
       "id": "seed-2027-03-12-crossTraining-strength",
@@ -2532,10 +2528,10 @@
       "type": "race",
       "distanceMiles": 13.1,
       "paceMinPerMile": {
-        "min": 8,
-        "max": 8
+        "min": 7.333333333333333,
+        "max": 7.5
       },
-      "notes": "Half-marathon dress rehearsal at controlled marathon effort (8:00/mi), not all-out. Practise kit, breakfast and fuelling.",
+      "notes": "Half-marathon race: target 7:20-7:30/mi if training and conditions support it. Start near 7:30/mi for the first 2-3 miles, then work towards 7:20/mi only if controlled; do not force the pace. Practise familiar kit, breakfast and fuelling. This is harder than marathon effort: prioritise recovery afterwards and reassess the conditional 20-miler on 21 March; shorten to 16-18 easy miles or rest if not recovered, with no make-up mileage.",
       "completed": false
     },
     {
@@ -2548,7 +2544,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -2568,13 +2564,13 @@
       "id": "seed-2027-03-16-easy-",
       "date": "2027-03-16",
       "type": "easy",
-      "distanceMiles": 8.492308,
+      "distanceMiles": 9.376923,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Easy conversational run, HR under 146; no quality work in recovery or MP-finish weeks.",
       "completed": false
     },
     {
@@ -2594,7 +2590,7 @@
       "id": "seed-2027-03-17-easy-",
       "date": "2027-03-17",
       "type": "easy",
-      "distanceMiles": 5.907692,
+      "distanceMiles": 6.523077,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -2604,16 +2600,17 @@
       "completed": false
     },
     {
-      "id": "seed-2027-03-18-marathonPace-",
+      "id": "seed-2027-03-18-easy-",
       "date": "2027-03-18",
-      "type": "marathonPace",
-      "distanceMiles": 8.5,
+      "type": "easy",
+      "distanceMiles": 6,
       "paceMinPerMile": {
-        "min": 8,
-        "max": 8
+        "min": 9,
+        "max": 9.75
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 6 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 6.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
-      "completed": false
+      "notes": "Warm-up: 1 mi relaxed. Main set: 4 mi conversational easy running at 9:00-9:45/mi or slower as needed, no hard efforts. Cool-down: 1 mi easy. Main-set quality miles: 0.0000. HR under 146. Recovery after the half; no threshold or MP before the conditional 20-miler.",
+      "completed": false,
+      "hrCapBpm": 146
     },
     {
       "id": "seed-2027-03-19-crossTraining-pilates",
@@ -2664,7 +2661,7 @@
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Approved exception: 20/46 mi (43.48%) exceeds the usual 40% share; do not extend or add a fast finish.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conditional 20-miler, one week after the half: only attempt if easy running feels normal and there is no lingering soreness, unusual fatigue or pain. Otherwise shorten to 16-18 easy miles or skip if unwell; do not make up the miles. About 3 hours is sufficient; do not chase distance beyond a comfortable duration. No fast finish. Planned long-share exception: 20/45 mi (44.44%); recovery takes priority. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -2677,7 +2674,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -2694,17 +2691,17 @@
       "notes": "Heavy 2: step-up and hinge control\n\nFive-week rotation: 2/5. Tuesday main resistance session.\n\nHeavy means the main resistance session, not maximal lifting: use bodyweight first, then your two dumbbells (up to 5 kg each) or a kettlebell you can control comfortably. Finish each set with 2-3 reps in reserve, never to failure. If new to these exercises, use one set for the first two weeks; otherwise use the sets listed. Train after the easy run or separate by several hours. Light sessions are bodyweight only, easy effort, and should not cause soreness. Stop for sharp pain, dizziness or unusual symptoms; get technique help if unsure.\n\nWarm-up: 5 min walking, then 8 ankle rocks and 8 unloaded hip hinges.\n\nLow step-ups: 2 sets x 8 reps per side on a stable step. Step down slowly; bodyweight or light dumbbells. Rest 30 s between sides and 75 s between sets.\n\nKickstand Romanian deadlifts: 2 sets x 8 reps per side with light dumbbells; back toes support balance. Rest 30 s between sides and 90 s between sets.\n\nGlute bridges: 2 sets x 10 reps with a 3-second hold at the top. Rest 60 s between sets.\n\nSupported single-leg calf raises: 2 sets x 10 reps per side, 3-second lowering. Rest 30 s between sides and 60 s between sets.\n\nRest 60-90 s between exercises. Cool down with 2 min walking. About 30-40 min."
     },
     {
-      "id": "seed-2027-03-23-easy-",
+      "id": "seed-2027-03-23-threshold-",
       "date": "2027-03-23",
-      "type": "easy",
-      "distanceMiles": 8.177778,
+      "type": "threshold",
+      "distanceMiles": 9.082051,
       "paceMinPerMile": {
-        "min": 9,
-        "max": 9.75
+        "min": 7.1667,
+        "max": 7.4167
       },
-      "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
-      "completed": false
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 6 x 45 s uphill at controlled strong effort on a gentle slope, not a sprint. Jog/walk downhill until fully recovered (about 2-3 min); use the remaining 5.964911 mi for easy recovery running. 7:10-7:25/mi is a flat-equivalent reference only, not an uphill speed target. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 0.6171. Quality distance is estimated at the threshold midpoint. Keep the work controlled, not maximal; Thursday is the other quality day. If recovery is poor, run easy instead. Do the Tuesday strength session after running, not before; skip or reduce it if fatigued.",
+      "completed": false,
+      "qualityStyle": "hills"
     },
     {
       "id": "seed-2027-03-24-crossTraining-badminton",
@@ -2723,7 +2720,7 @@
       "id": "seed-2027-03-24-easy-",
       "date": "2027-03-24",
       "type": "easy",
-      "distanceMiles": 5.688889,
+      "distanceMiles": 6.317949,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -2733,15 +2730,15 @@
       "completed": false
     },
     {
-      "id": "seed-2027-03-25-threshold-",
+      "id": "seed-2027-03-25-marathonPace-",
       "date": "2027-03-25",
-      "type": "threshold",
-      "distanceMiles": 9.033333,
+      "type": "marathonPace",
+      "distanceMiles": 5.5,
       "paceMinPerMile": {
-        "min": 7.1667,
-        "max": 7.4167
+        "min": 8,
+        "max": 8
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3 x 2 mi at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.533333 mi total at 9:22.5/mi reference). Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 6.0000. Time-based main-set miles are estimated at 7:17.5/mi midpoint; no recovery after the final repetition. Easy portions HR Z2 (118-146); threshold portions HR Z4 (161-175).",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 3.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
       "completed": false
     },
     {
@@ -2780,7 +2777,7 @@
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -2793,7 +2790,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -2813,13 +2810,13 @@
       "id": "seed-2027-03-30-easy-",
       "date": "2027-03-30",
       "type": "easy",
-      "distanceMiles": 7.908197,
+      "distanceMiles": 6.727869,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Easy conversational run, HR under 146; no quality work in recovery or MP-finish weeks.",
       "completed": false
     },
     {
@@ -2839,7 +2836,7 @@
       "id": "seed-2027-03-31-easy-",
       "date": "2027-03-31",
       "type": "easy",
-      "distanceMiles": 5.491803,
+      "distanceMiles": 4.672131,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -2852,12 +2849,12 @@
       "id": "seed-2027-04-01-marathonPace-",
       "date": "2027-04-01",
       "type": "marathonPace",
-      "distanceMiles": 6.5,
+      "distanceMiles": 5.5,
       "paceMinPerMile": {
         "min": 8,
         "max": 8
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 4 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 4.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3 mi continuous at MP, 8:00/mi, no recovery breaks. Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 3.0000. Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).",
       "completed": false
     },
     {
@@ -2903,13 +2900,13 @@
       "id": "seed-2027-04-04-long-",
       "date": "2027-04-04",
       "type": "long",
-      "distanceMiles": 13,
+      "distanceMiles": 12,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -2922,7 +2919,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
@@ -2942,13 +2939,13 @@
       "id": "seed-2027-04-06-easy-",
       "date": "2027-04-06",
       "type": "easy",
-      "distanceMiles": 6.421212,
+      "distanceMiles": 5.177493,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Conversational effort. Keep your heart rate under the cap.",
+      "notes": "Easy conversational run, HR under 146; no quality work in recovery or MP-finish weeks.",
       "completed": false
     },
     {
@@ -2968,7 +2965,7 @@
       "id": "seed-2027-04-07-easy-",
       "date": "2027-04-07",
       "type": "easy",
-      "distanceMiles": 4.445455,
+      "distanceMiles": 3.584418,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
@@ -2981,12 +2978,12 @@
       "id": "seed-2027-04-08-threshold-",
       "date": "2027-04-08",
       "type": "threshold",
-      "distanceMiles": 6.033333,
+      "distanceMiles": 4.138089,
       "paceMinPerMile": {
         "min": 7.1667,
         "max": 7.4167
       },
-      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 3 x 1 mi at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.533333 mi total at 9:22.5/mi reference). Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 3.0000. Time-based main-set miles are estimated at 7:17.5/mi midpoint; no recovery after the final repetition. Easy portions HR Z2 (118-146); threshold portions HR Z4 (161-175).",
+      "notes": "Warm-up: 1.5 mi easy at 9:00-9:45/mi. Main set: 2 x 5 min at threshold, 7:10-7:25/mi, with 2.5 min easy jog between repetitions (0.266667 mi total at 9:22.5/mi reference). Cool-down: 1 mi easy at 9:00-9:45/mi. Main-set quality miles: 1.3714. Time-based main-set miles are estimated at 7:17.5/mi midpoint; no recovery after the final repetition. Easy portions HR Z2 (118-146); threshold portions HR Z4 (161-175).",
       "completed": false
     },
     {
@@ -3019,13 +3016,13 @@
       "id": "seed-2027-04-11-long-",
       "date": "2027-04-11",
       "type": "long",
-      "distanceMiles": 10,
+      "distanceMiles": 8,
       "paceMinPerMile": {
         "min": 9,
         "max": 9.75
       },
       "hrCapBpm": 146,
-      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.",
+      "notes": "Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling. Conversational effort takes priority over pace on hills, in heat or when tired. Practise familiar breakfast, kit and fuelling; gradually build a tolerated carbohydrate strategy, never try something new on race day.",
       "completed": false
     },
     {
@@ -3038,7 +3035,7 @@
         "max": 9.75
       },
       "activity": "swim",
-      "notes": "Easy recovery swim. Keep it relaxed.",
+      "notes": "Optional easy recovery swim, 15-25 min relaxed. Replace with complete rest if tired or sore; this is not another training obligation.",
       "completed": false
     },
     {
