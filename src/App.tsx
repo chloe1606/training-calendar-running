@@ -204,9 +204,9 @@ export default function App() {
             return usePlanner.getState().error;
           }} /></div>
         {page === 'insights' && <Suspense fallback={<p role="status">Loading plan insights…</p>}><InsightsPage plan={plan} selectedWeek={week} onSelect={navigate} onUnitsChange={toggleUnits} onCalendar={date => { navigate(date); setPage('calendar'); window.location.hash = 'calendar'; }} /></Suspense>}
-        {page === 'calendar' && <div>
+        {page === 'calendar' && <div id="calendar">
         <div className="page-heading"><div><span className="eyebrow muted-eyebrow">CONSISTENCY OVER PERFECTION</span><h1>Your training, in stride<span>.</span></h1><p>A plan with purpose. The flexibility to make it yours.</p></div>
-          <div className="heading-actions"><button className="secondary-button" onClick={() => setModal('export')}><Download size={16} />Export plan</button><button className="primary-button" onClick={() => setModal('add')}><Plus size={17} />Add workout</button></div>
+          <div className="heading-actions"><button className="secondary-button" onClick={() => setModal('export')}><Download size={16} />Import / Export</button><button className="primary-button" onClick={() => setModal('add')}><Plus size={17} />Add workout</button></div>
         </div>
         <GoalBanner settings={plan.settings} />
         <div className="stats-row">
@@ -224,7 +224,7 @@ export default function App() {
               onDragCancel: () => 'Move cancelled.',
             },
           }}>
-          <section className="calendar-panel" id="calendar">
+          <section className="calendar-panel">
             <header className="calendar-top"><div><h2>Training calendar</h2><span className="calendar-hint">A little structure. A lot of possibility.</span></div>
               <div className="calendar-top-actions"><div className="unit-toggle" aria-label="Distance units">{(['mi', 'km'] as const).map(unit => <button key={unit} aria-pressed={plan.settings.units === unit} className={plan.settings.units === unit ? 'selected' : ''} onClick={() => toggleUnits(unit)}>{unit}</button>)}</div>
                 <div className="view-toggle" aria-label="Calendar view">{(['week', 'agenda', 'month'] as const).map(v => <button key={v} className={view === v ? 'selected' : ''} aria-pressed={view === v} onClick={() => { setView(v); setEditingId(null); }}>{v === 'week' ? 'Week' : v === 'agenda' ? 'Agenda' : 'Month'}</button>)}</div>
@@ -259,10 +259,10 @@ export default function App() {
     {notice && <div className="toast" role={notice.startsWith('Import failed') ? 'alert' : 'status'}>{notice.startsWith('Import failed') ? <AlertCircle size={16} /> : <Check size={16} />}<span>{notice}</span><button onClick={() => setNotice('')} aria-label="Dismiss notification"><X size={15} /></button></div>}
     {modal === 'settings' && <SettingsPanel close={() => setModal(null)} />}
     {modal === 'add' && <AddWorkout selectedDate={week} settings={plan.settings} close={() => setModal(null)} onAdd={addWorkout} />}
-    {modal === 'export' && <Modal title="Take your plan with you" onClose={() => setModal(null)}><p className="modal-intro">A backup for peace of mind, or a calendar that goes wherever you do.</p><div className="export-options">
+    {modal === 'export' && <Modal title="Import or export your plan" onClose={() => setModal(null)}><p className="modal-intro">Restore a saved plan, make a JSON backup, or export events to your calendar.</p><div className="export-options">
       <button onClick={() => { download(JSON.stringify(plan, null, 2), 'marathon-plan.json', 'application/json'); setModal(null); setNotice('JSON backup exported.'); }}><Download size={22} /><span><strong>Export JSON</strong><small>Complete plan and settings. Import it anytime.</small></span><ArrowUpRight size={17} /></button>
       <button onClick={() => { download(exportICS(plan), 'marathon-plan.ics', 'text/calendar;charset=utf-8'); setModal(null); setNotice('Calendar exported as an .ics file.'); }}><CalendarDays size={22} /><span><strong>Export calendar (.ics)</strong><small>All-day events for Apple, Google or Outlook.</small></span><ArrowUpRight size={17} /></button>
-      <button onClick={() => inputRef.current?.click()}><Upload size={22} /><span><strong>Import JSON backup</strong><small>Replace your plan. You can undo the import.</small></span><ArrowUpRight size={17} /></button>
+      <button onClick={() => inputRef.current?.click()}><Upload size={22} /><span><strong>Import JSON</strong><small>Choose a JSON backup to replace your plan. You can undo the import.</small></span><ArrowUpRight size={17} /></button>
     </div></Modal>}
     {modal === 'reset' && <Modal title="A fresh starting line?" onClose={() => setModal(null)}><p className="modal-intro">This restores the original training plan and settings. Your edits will be replaced, but you can undo the reset.</p><div className="modal-actions"><button className="secondary-button" onClick={() => setModal(null)}>Keep my plan</button><button className="primary-button" onClick={() => { change(() => createDefaultPlan()); navigate('2026-10-26'); setModal(null); setNotice('Default plan restored. Undo is available.'); }}>Reset plan</button></div></Modal>}
     {modal === 'import' && pendingImport && <Modal title="Bring in your saved plan?" onClose={() => { setModal(null); setPendingImport(null); }}><p className="modal-intro">Import {pendingImport.workouts.length} workouts and their settings? This replaces your current plan. You can undo this change.</p><div className="modal-actions"><button className="secondary-button" onClick={() => setModal(null)}>Cancel</button><button className="primary-button" onClick={() => { change(() => pendingImport); navigate(pendingImport.workouts[0]?.date ?? pendingImport.settings.raceDate); setModal(null); setPendingImport(null); setNotice('Plan imported and saved.'); }}>Import plan</button></div></Modal>}
