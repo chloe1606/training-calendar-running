@@ -13,6 +13,7 @@ import { usePlanner } from '../store';
 import { formatDistance } from '../distance';
 import { thresholdSummary, thresholdSession, thresholdNotes } from '../threshold';
 import { mainSetMiles, qualityDetails, qualityDuration, qualityNotes } from '../quality';
+import { strengthSummary } from '../strength-guide';
 
 export function WorkoutIcon({ workout, size = 16 }: { workout: Workout; size?: number }) {
   const Icon = workout.type === 'crossTraining' ? workout.activity === 'swim' ? Waves : Dumbbell
@@ -67,6 +68,7 @@ function SessionExplanation({ workout: w, settings }: { workout: Workout; settin
   const tooltip = useRef<HTMLDivElement>(null);
   const id = useId();
   const qualityMiles = mainSetMiles(w);
+  const strengthLines = w.activity === 'strength' ? strengthSummary(w.notes) : [];
   useLayoutEffect(() => {
     if (!open || !trigger.current || !tooltip.current) return;
     const rect = trigger.current.getBoundingClientRect();
@@ -120,7 +122,10 @@ function SessionExplanation({ workout: w, settings }: { workout: Workout; settin
         <p>Finish pace zone: {paceZoneLabel({ ...w, paceMinPerMile: w.marathonFinish.paceMinPerMile }, settings.trainingZones)}.</p>
         <p>Finish HR Z{settings.trainingZones.hrTargets.marathonPace}: {hrRangeLabel(settings.trainingZones.hrTargets.marathonPace, settings.trainingZones.hrBoundaries)}.</p>
       </>}
-      {w.notes && <p className="session-notes">{w.notes}</p>}
+      {strengthLines.length > 0 ? <>
+        <p><strong>Summary notes</strong></p>
+        <ul>{strengthLines.map((line, index) => <li key={index}>{line}</li>)}</ul>
+      </> : w.notes && <p className="session-notes">{w.notes}</p>}
     </div>, document.body)}
   </>;
 }
@@ -208,7 +213,9 @@ function WorkoutEditor({ workout: w, settings, close }: { workout: Workout; sett
         {finishDistance && <label>Finish pace (/{settings.units})<input required value={finishPace} onChange={e => setFinishPace(e.target.value)} /></label>}
         <p className="field-help">Clear finish distance for an all-easy long run. Easy pace and HR above apply before the finish.</p></>}
     </>}
-    <label>Notes<textarea rows={3} value={notes} onChange={e => setNotes(e.target.value)} /></label>
+    {type === 'crossTraining' && activity === 'strength'
+      ? <p className="field-help">Choose and log completed exercises in <a href="#strength">Strength studio</a>.</p>
+      : <label>Notes<textarea rows={3} value={notes} onChange={e => setNotes(e.target.value)} /></label>}
     {error && <p className="form-error" role="alert">{error}</p>}
     <div className="editor-actions"><button className="small-primary" type="submit">Save</button><button type="button" onClick={close}>Cancel</button>
       <button type="button" className="delete-button" aria-label="Delete workout" onClick={() => { change(p => ({ ...p, workouts: p.workouts.filter(item => item.id !== w.id) })); close(); }}><Trash2 size={15} /></button>
@@ -230,7 +237,7 @@ export function WorkoutCard({ workout, settings, compact, editingId, setEditingI
     <div className="card-controls">
       <button className={`completion-button ${workout.completed ? 'checked' : ''}`} aria-label={`${workout.completed ? 'Mark incomplete' : 'Complete'}: ${workoutLabel(workout)} on ${workout.date}`} aria-pressed={workout.completed}
         onClick={() => change(p => ({ ...p, workouts: p.workouts.map(w => w.id === workout.id ? { ...w, completed: !w.completed } : w) }))}>{workout.completed && <Check size={11} />}</button>
-      {(workout.notes || workout.qualityStyle || workout.marathonFinish) && <SessionExplanation workout={workout} settings={settings} />}
+      {(workout.activity === 'strength' ? workout.completed && workout.notes.trim() : workout.notes || workout.qualityStyle || workout.marathonFinish) && <SessionExplanation workout={workout} settings={settings} />}
       <button className="drag-handle" {...attributes} {...listeners} aria-label={`Drag ${workoutLabel(workout)} on ${workout.date}`}><GripVertical size={14} /></button>
     </div>
     <button className="card-main" onClick={() => setEditingId(editing ? null : workout.id)} aria-expanded={editing} aria-label={`Edit ${workoutLabel(workout)} on ${workout.date}`}>

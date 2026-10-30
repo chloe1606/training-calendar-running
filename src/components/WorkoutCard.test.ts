@@ -4,12 +4,37 @@ import { createElement } from 'react';
 import { createDefaultPlan } from '../seed';
 
 let CardContent: typeof import('./WorkoutCard')['CardContent'];
+let WorkoutCard: typeof import('./WorkoutCard')['WorkoutCard'];
 beforeAll(async () => {
   vi.stubGlobal('localStorage', { getItem: () => null, setItem: () => undefined });
-  CardContent = (await import('./WorkoutCard')).CardContent;
+  const module = await import('./WorkoutCard');
+  CardContent = module.CardContent;
+  WorkoutCard = module.WorkoutCard;
 });
 
 describe('long-run pace split', () => {
+  it('offers completed strength summaries in a tooltip without expanding cards or editors', () => {
+    const plan = createDefaultPlan();
+    const workout = { ...plan.workouts.find(w => w.activity === 'strength')!, completed: true, notes: 'Dead bug: 2 sets x 6 reps.' };
+    for (const editing of [false, true]) {
+      const html = renderToStaticMarkup(createElement(WorkoutCard, {
+        workout, settings: plan.settings, editingId: editing ? workout.id : null, setEditingId: () => undefined,
+      }));
+      expect(html).not.toContain('Dead bug');
+      expect(html).toContain('Session details: Strength');
+      expect(html).toContain('Mark incomplete: Strength');
+      expect(html).toContain('aria-pressed="true"');
+      expect(html).not.toContain('<textarea');
+      if (editing) expect(html).toContain('Strength studio');
+    }
+    expect(workout.notes).toBe('Dead bug: 2 sets x 6 reps.');
+    for (const other of [{ ...workout, completed: false }, { ...workout, notes: '' }]) {
+      const html = renderToStaticMarkup(createElement(WorkoutCard, {
+        workout: other, settings: plan.settings, editingId: null, setEditingId: () => undefined,
+      }));
+      expect(html).not.toContain('Session details: Strength');
+    }
+  });
   it('shows easy and MP distances and paces in full and compact cards', () => {
     const plan = createDefaultPlan();
     const run = plan.workouts.find(w => w.date === '2027-02-14' && w.type === 'long')!;

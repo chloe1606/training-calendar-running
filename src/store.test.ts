@@ -2,6 +2,8 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createDefaultPlan } from './seed';
 import baseline from './default-plan.json';
 import { thresholdSession } from './threshold';
+import { addCompletedStrength, completedStrengthWorkout, generateStrengthWorkout } from './random-strength';
+import { exportICS } from './files';
 
 let store: typeof import('./store');
 const storage = new Map<string, string>();
@@ -114,6 +116,25 @@ describe('import validation', () => {
   });
 });
 describe('history and persistence', () => {
+  it('persists generated completion dates and notes, with undo, redo, JSON and ICS support', () => {
+    const original = store.usePlanner.getState().plan;
+    const generated = generateStrengthWorkout('heavy', () => 0);
+    const logged = completedStrengthWorkout(generated, '2026-10-29', '2026-10-30', 'strength-log-persistence');
+    store.usePlanner.getState().change(plan => addCompletedStrength(plan, logged));
+    const saved = JSON.parse(storage.get('marathon-planner-v1')!);
+    expect(store.validatePlan(saved).workouts.find(workout => workout.id === logged.id)).toEqual(logged);
+    expect(saved.workouts.slice(0, -1)).toEqual(original.workouts);
+    const ics = exportICS({ ...saved, workouts: [logged] }).replace(/\r\n /g, '');
+    expect(ics).toContain('DTSTART;VALUE=DATE:20261029');
+    expect(ics).toContain('Completed');
+    expect(ics).toContain('Supported split squat: 2 sets x 8 reps per side');
+    store.usePlanner.getState().undo();
+    expect(store.usePlanner.getState().plan).toEqual(original);
+    expect(JSON.parse(storage.get('marathon-planner-v1')!).workouts.some((workout: { id: string }) => workout.id === logged.id)).toBe(false);
+    store.usePlanner.getState().redo();
+    expect(store.usePlanner.getState().plan.workouts.find(workout => workout.id === logged.id)).toEqual(logged);
+    expect(() => store.usePlanner.getState().change(plan => addCompletedStrength(plan, logged))).toThrow('already been saved');
+  });
   it('undoes and redoes changes including whole-plan replacement', () => {
     const original = store.usePlanner.getState().plan;
     store.usePlanner.getState().change(p => ({ ...p, workouts: p.workouts.map((w, i) => i === 0 ? { ...w, completed: true } : w) }));

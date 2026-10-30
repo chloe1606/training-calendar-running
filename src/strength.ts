@@ -5,6 +5,16 @@ export const STRENGTH_ROUTINES = routines.routines;
 export const STRENGTH_GUIDANCE = routines.guidance;
 export const MOBILITY_NOTES = routines.mobility;
 
+export function unassignPlannedStrength(plan: Plan): Plan {
+  const workouts = plan.workouts.map(workout => {
+    if (workout.activity !== 'strength' || workout.completed
+      || !/^(?:Heavy|Light) \d+:/.test(workout.notes)
+      || !workout.notes.includes('Five-week rotation:')) return workout;
+    return { ...workout, notes: '' };
+  });
+  return { ...plan, workouts };
+}
+
 export function strengthNotes(index: number, week: string, raceDate: string): string {
   const weekIndex = Math.floor((Date.parse(weekKey(week)) - Date.parse(PLAN_START)) / 604800000);
   const rotation = ((weekIndex % 5) + 5) % 5;
@@ -42,7 +52,7 @@ export function scheduleStrength(plan: Plan, days: [Weekday, Weekday], moveExist
       workouts.push({
         id, date: dayOffset(week, days[index]), type: 'crossTraining', activity: 'strength', distanceMiles: 0,
         paceMinPerMile: { ...plan.settings.paceZones.easy }, completed: false,
-        notes: strengthNotes(index, week, plan.settings.raceDate),
+        notes: '',
       });
     }
   }

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { createDefaultPlan } from './seed';
-import { scheduleStrength, strengthNotes, STRENGTH_ROUTINES } from './strength';
+import { scheduleStrength, strengthNotes, STRENGTH_ROUTINES, unassignPlannedStrength } from './strength';
+import baseline from './default-plan.json';
+import type { Plan } from './model';
 import { dayOffset, PLAN_START, weekKey, weekStats } from './model';
 
 describe('twice weekly strength', () => {
@@ -14,8 +16,7 @@ describe('twice weekly strength', () => {
     expect(sessions[0].date).toBe('2026-10-27');
     expect(sessions[1].date).toBe('2026-10-30');
     expect(weekStats(sessions).miles).toBe(0);
-    expect(sessions[0].notes).toContain('Single-leg calf raises: 2 sets x 12 reps');
-    expect(sessions[1].notes).toContain('No heavy leg work');
+    expect(sessions.every(session => session.notes === '')).toBe(true);
     expect(sessions.every(w => w.date <= '2027-04-06')).toBe(true);
     expect(scheduleStrength(plan, [1, 4], true)).toEqual(plan.workouts);
   });
@@ -35,6 +36,7 @@ describe('twice weekly strength', () => {
     plan.workouts = plan.workouts.filter(w => w.activity !== 'strength');
     const workouts = scheduleStrength(plan, [1, 4], true);
     expect(workouts.filter(w => w.activity === 'strength')).toHaveLength(47);
+    expect(workouts.filter(w => w.activity === 'strength').every(w => !w.notes)).toBe(true);
     expect(strengthNotes(0, '2027-03-29', plan.settings.raceDate)).toContain('1 easy set');
     expect(strengthNotes(1, '2027-04-12', plan.settings.raceDate)).toContain('not loaded strength');
   });
@@ -58,12 +60,18 @@ describe('twice weekly strength', () => {
       expect(strengthNotes(index, dayOffset(PLAN_START, 35), '2027-04-18').split('\n')[0]).toBe(titles[0]);
       expect(titles.every(title => title.startsWith(index === 0 ? 'Heavy ' : 'Light '))).toBe(true);
     }
-    const plan = createDefaultPlan();
-    for (const session of plan.workouts.filter(w => w.activity === 'strength')) {
-      const index = new Date(`${session.date}T12:00:00`).getDay() === 5 ? 1 : 0;
-      expect(session.notes).toBe(strengthNotes(index, weekKey(session.date), plan.settings.raceDate));
-      expect(session.notes).toContain('between sets');
-    }
-    expect(new Set(plan.workouts.filter(w => w.activity === 'strength').map(w => w.notes.split('\n')[0])).size).toBe(10);
+    expect(createDefaultPlan().workouts.filter(w => w.activity === 'strength').every(w => !w.notes)).toBe(true);
+  });
+  it('removes only automatically assigned incomplete routines, preserving dates and completed/custom history', () => {
+    const plan = structuredClone(baseline) as Plan;
+    const strength = plan.workouts.filter(w => w.activity === 'strength');
+    strength[0].completed = true;
+    strength[1].notes = 'My custom exercise record';
+    const next = unassignPlannedStrength(plan);
+    expect(next.workouts.find(w => w.id === strength[0].id)).toEqual(strength[0]);
+    expect(next.workouts.find(w => w.id === strength[1].id)).toEqual(strength[1]);
+    expect(next.workouts.filter(w => w.activity === 'strength' && !w.completed && w.id !== strength[1].id).every(w => !w.notes)).toBe(true);
+    expect(next.workouts.map(w => [w.id, w.date, w.distanceMiles, w.completed])).toEqual(plan.workouts.map(w => [w.id, w.date, w.distanceMiles, w.completed]));
+    expect(unassignPlannedStrength(next)).toEqual(next);
   });
 });

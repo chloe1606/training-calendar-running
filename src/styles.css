@@ -298,6 +298,7 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
 .random-workout h3 { display: flex; align-items: center; gap: 7px; font-size: 13px; margin-bottom: 12px; }
 .random-workout p { font-size: 11px; line-height: 1.7; color: var(--subtle); margin-block: 10px; }
 .random-workout .primary-button { width: 100%; }
+.strength-generator { margin: 0 0 20px; }
 .timer-display { font-size: 42px; text-align: center; font-variant-numeric: tabular-nums; color: var(--olive); font-weight: 600; margin-top: 10px; }
 .timer-status { min-height: 34px; text-align: center; font-size: 12px; color: var(--subtle); }
 .timer-finished { border-color: var(--olive); background: var(--olive-light); }
@@ -321,6 +322,19 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
 .workout-summary ul { list-style: disc; padding-left: 20px; font-size: 12px; line-height: 1.7; }
 .workout-summary li { margin-bottom: 8px; }
 .workout-summary-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.strength-pool { margin-block: 12px; }
+.strength-pool > label { margin-block: 10px; }
+.strength-pool-options { max-height: 390px; overflow-y: auto; margin-block: 12px; }
+.strength-pool-options fieldset { border: 1px solid var(--line); border-radius: 6px; padding: 8px; margin-bottom: 10px; min-width: 0; }
+.strength-pool-options legend { font-size: 11px; font-weight: 600; padding-inline: 3px; }
+.strength-pool-choice { display: flex; flex-direction: row; align-items: flex-start; gap: 8px; padding-block: 8px; font-size: 11px; cursor: pointer; min-height: 44px; }
+.strength-pool-choice input { flex-shrink: 0; width: 18px; height: 18px; margin-top: 2px; accent-color: var(--accent); }
+.strength-pool-choice small { display: block; color: var(--subtle); line-height: 1.6; margin-top: 4px; }
+.strength-log { padding: 14px; border: 1px solid var(--line); border-radius: 7px; margin-block: 16px; }
+.strength-log label { margin-block: 12px; }
+.strength-log [role="status"] { font-size: 12px; line-height: 1.7; margin-top: 10px; }
+.strength-history { max-height: 300px; overflow-y: auto; display: grid; gap: 8px; }
+.strength-history button { width: 100%; text-align: left; white-space: normal; overflow-wrap: anywhere; font-size: 11px; }
 .move-category { display: inline-block; margin-left: 7px; padding: 2px 6px; border-radius: 4px; background: #fce7f3; color: #9d174d; font-size: 10px; font-weight: 550; line-height: 1.5; }
 .dark .move-category { background: #4a2038; color: #fbcfe8; }
 .strength-guide-content h3 { font-size: 13px; line-height: 1.6; margin-bottom: 10px; overflow-wrap: anywhere; }

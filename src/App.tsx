@@ -28,6 +28,7 @@ import { SettingsPanel } from './components/SettingsPanel';
 import { AddWorkout } from './components/AddWorkout';
 import { Modal } from './components/Modal';
 import { formatDistance } from './distance';
+import { addCompletedStrength } from './random-strength';
 
 const InsightsPage = lazy(() => import('./components/InsightsPage').then(module => ({ default: module.InsightsPage })));
 type Page = 'calendar' | 'strength' | 'insights';
@@ -197,7 +198,11 @@ export default function App() {
       </header>
       <div className="main-content">
         {error && <div className="error-banner" role="alert">{error}<button onClick={retrySave}>Retry saving</button></div>}
-        <div hidden={page !== 'strength'} id="strength"><StrengthPage workouts={weeklyWorkouts} weeks={weeks} selectedWeek={week} onWeekChange={navigate} /></div>
+        <div hidden={page !== 'strength'} id="strength"><StrengthPage workouts={weeklyWorkouts} allWorkouts={plan.workouts} weeks={weeks} selectedWeek={week} onWeekChange={navigate}
+          onSaveWorkout={workout => {
+            change(current => addCompletedStrength(current, workout));
+            return usePlanner.getState().error;
+          }} /></div>
         {page === 'insights' && <Suspense fallback={<p role="status">Loading plan insights…</p>}><InsightsPage plan={plan} selectedWeek={week} onSelect={navigate} onUnitsChange={toggleUnits} onCalendar={date => { navigate(date); setPage('calendar'); window.location.hash = 'calendar'; }} /></Suspense>}
         {page === 'calendar' && <div>
         <div className="page-heading"><div><span className="eyebrow muted-eyebrow">CONSISTENCY OVER PERFECTION</span><h1>Your training, in stride<span>.</span></h1><p>A plan with purpose. The flexibility to make it yours.</p></div>

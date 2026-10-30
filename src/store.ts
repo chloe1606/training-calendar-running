@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { ACTIVITIES, TYPES, SCHEDULE_TYPES, DEFAULT_DAYS, DEFAULT_TRAINING_ZONES, type Plan } from './model';
 import { validTrainingZones } from './zones';
-import { scheduleStrength } from './strength';
+import { scheduleStrength, unassignPlannedStrength } from './strength';
 import { createDefaultPlan } from './seed';
 import { addMarathonFinishes } from './finishes';
 import { addQualityVariety } from './quality';
@@ -70,7 +70,7 @@ export function validatePlan(value: unknown): Plan {
     plan.settings.defaultDays.strength = 1;
     plan.workouts = scheduleStrength(plan, plan.settings.strengthDays, true);
   }
-  return refineThresholdPlan(addQualityVariety(addMarathonFinishes(plan)));
+  return unassignPlannedStrength(refineThresholdPlan(addQualityVariety(addMarathonFinishes(plan))));
 }
 
 function load(): { plan: Plan; error: string | null } {
