@@ -2,11 +2,20 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import routines from './strength-routines.json';
-import { bodyAreas, moveDifficulty, equipmentTags, guidesForNotes, MOVE_GUIDES, MOVE_PROGRESSIONS, workoutFlowSteps, strengthDurationLabel } from './strength-guide';
+import { bodyAreas, moveDifficulty, equipmentTags, guidesForNotes, MOVE_GUIDES, MOVE_PROGRESSIONS, workoutFlowSteps, strengthSummary, strengthDurationLabel } from './strength-guide';
 import { StrengthPage, ExerciseDiagram, EquipmentLabels, WorkoutFlow } from './components/StrengthPage';
 import { strengthNotes } from './strength';
 
 describe('illustrated strength guide', () => {
+  it('summarises prescribed exercises once with sets, reps and alternatives', () => {
+    const summary = strengthSummary(routines.routines[0].exercises.join('\n\n'));
+    expect(summary).toHaveLength(4);
+    expect(summary[0]).toBe('Single-leg calf raises: 2 sets x 12 reps per side.');
+    expect(summary[1]).toContain('do not do both');
+    expect(summary.some(line => /Warm-up|between sets|Allow about/.test(line))).toBe(false);
+    expect(strengthSummary(strengthNotes(0, '2027-03-29', '2027-04-18')).every(line => !line.includes('2 sets'))).toBe(true);
+    expect(strengthSummary('Custom session with no prescription')).toEqual([]);
+  });
   it('shows the exercise name only in its diagram link, retaining set instructions', () => {
     const html = renderToStaticMarkup(createElement(WorkoutFlow, {
       notes: 'Warm-up: 3 min walking.\nGlute bridges: 2 sets x 12 reps. Rest 60 s between sets.',
@@ -76,6 +85,15 @@ describe('illustrated strength guide', () => {
     expect(html).toContain('aria-current="step"');
     expect(html).toContain('start 60s rest');
     expect(html).toContain('start 90s rest');
+  });
+  it('places side-rest timer buttons beside the exercise diagram link', () => {
+    const html = renderToStaticMarkup(createElement(WorkoutFlow, {
+      notes: 'Supported split squats: 2 sets x 8 reps per side. Rest 30 s between sides and 75 s between sets.',
+      onMovement: () => undefined, onRest: () => undefined,
+    }));
+    expect(html.match(/start 30s rest/g)).toHaveLength(2);
+    expect(html).toContain('start 75s rest');
+    expect(html).toMatch(/view Supported split squat[^]*?start 30s rest[^]*?<\/div>/);
   });
   it('uses the saved taper prescription, keeps custom instructions and excludes only routine metadata', () => {
     const steps = workoutFlowSteps(strengthNotes(0, '2027-03-29', '2027-04-18'));

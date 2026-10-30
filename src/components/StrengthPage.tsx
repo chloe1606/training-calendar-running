@@ -1,7 +1,7 @@
 import { useEffect, useId, useReducer, useRef, useState, type Dispatch } from 'react';
 import { Dumbbell, Pause, Play, RotateCcw, Timer, PersonStanding, Armchair, BrickWall, Hand } from 'lucide-react';
 import routines from '../strength-routines.json';
-import { MOVE_GUIDES, MOVE_PROGRESSIONS, bodyAreas, moveDifficulty, guidesForNotes, equipmentTags, workoutFlowSteps, strengthDurationLabel, type EquipmentKind, type MoveGuide, type ExercisePose } from '../strength-guide';
+import { MOVE_GUIDES, MOVE_PROGRESSIONS, bodyAreas, moveDifficulty, guidesForNotes, equipmentTags, workoutFlowSteps, strengthSummary, strengthDurationLabel, type EquipmentKind, type MoveGuide, type ExercisePose } from '../strength-guide';
 import { initialRestTimer, restTimerLabel, restTimerReducer, restStepDurations, validRestSeconds, type RestTimerState, type RestTimerAction } from '../rest-timer';
 import { initialStopwatch, stopwatchLabel, stopwatchReducer } from '../stopwatch';
 import { type Workout } from '../model';
@@ -58,18 +58,15 @@ export function WorkoutFlow({ notes, onMovement, onRest }: { notes: string; onMo
   const [completed, setCompleted] = useState<number[]>([]);
   const next = steps.findIndex((_, index) => !completed.includes(index));
   return <section className="workout-flow" aria-label="Step-by-step workout">
-    <h3>Your workout, step by step</h3>
-    <p className="field-help">Follow in order: complete each set, take the separate rest step, then continue. Rest is between sets, not individual reps. Select a movement to open its diagrams below. Alternatives are choices, not extra exercises.</p>
     <p className="flow-progress" role="status">{completed.length} of {steps.length} steps complete{next < 0 ? ' - Workout complete!' : ` - Next: step ${next + 1}`}</p>
     <p className="field-help">Check off steps when finished. Starting a rest replaces any current countdown; check it off when ready. Progress clears when you change workouts or reload.</p>
     <ol>{steps.map((step, index) => <li className={completed.includes(index) ? 'flow-complete' : index === next ? 'flow-next' : undefined} key={`${index}:${step.text}`}>
       <span className="flow-number" aria-hidden="true">{index + 1}</span>
       <div className="flow-step" aria-current={index === next ? 'step' : undefined}>
         <label className="flow-check"><input type="checkbox" checked={completed.includes(index)} aria-label={`Step ${index + 1} complete`} onChange={event => setCompleted(previous => event.target.checked ? [...previous, index] : previous.filter(item => item !== index))} /><span>{step.moves.length > 0 && !/^(Warm-up|Cool-down|Mobility):/i.test(step.text) ? step.text.replace(/^((?:Set \d+ of \d+ - )?)[^:]+:\s*/, '$1') : step.text}</span></label>
-        {onRest && restStepDurations(step.text).length > 0 && <div className="flow-links">{restStepDurations(step.text).map(seconds => <button key={seconds} type="button" aria-label={`Step ${index + 1}: start ${seconds}s rest`} onClick={() => onRest(seconds)}><Play size={12} aria-hidden="true" />Start {seconds}s rest</button>)}</div>}
-        {step.moves.length > 0 && <div className="flow-links">{step.moves.map(move => <button key={move.id} type="button" onClick={() => onMovement(move.id)} aria-label={`Step ${index + 1}: view ${move.name}`}>
+        {(step.moves.length > 0 || (onRest && restStepDurations(step.text).length > 0)) && <div className="flow-links">{step.moves.map(move => <button key={move.id} type="button" onClick={() => onMovement(move.id)} aria-label={`Step ${index + 1}: view ${move.name}`}>
           {move.name}<span aria-hidden="true"> ↓</span>
-        </button>)}</div>}
+        </button>)}{onRest && restStepDurations(step.text).map(seconds => <button key={`rest:${seconds}`} type="button" aria-label={`Step ${index + 1}: start ${seconds}s rest`} onClick={() => onRest(seconds)}><Play size={12} aria-hidden="true" />Start {seconds}s rest</button>)}</div>}
       </div>
     </li>)}</ol>
   </section>;
@@ -195,12 +192,14 @@ export function StrengthPage({ workouts, weeks, selectedWeek, onWeekChange }: {
       {!library && <>
         <h3 ref={generatedHeading} tabIndex={-1}>{title}</h3>
         {selection === 'generated' && <p role="status">New reference workout generated. Not added to your calendar. Use instead of a suitable strength session, not as extra training; keep recovery and taper days light.</p>}
-        <p className="strength-duration"><Timer size={15} aria-hidden="true" />{strengthDurationLabel(notes)}<span>Includes warm-up, rests and cool-down where prescribed.</span></p>
+        <p className="strength-duration"><Timer size={15} aria-hidden="true" />{strengthDurationLabel(notes)}</p>
         {selection === 'week' && scheduled.length === 0 && <p>No strength workout scheduled this week. This is a reference routine, not an instruction to add training.</p>}
         <WorkoutFlow key={`${selection}:${selectedWeek}:${notes}`} notes={notes} onMovement={showMovement} onRest={seconds => restDispatch({ type: 'restart', seconds, now: Date.now() })} />
       </>}
-      <p className="field-help">Original schematic diagrams, not personalised technique assessment. Expand a move for two positions and form cues.{!library && ' Follow the workout prescription above for sets and rest.'}</p>
-      <p className="field-help">Easy / Medium / Hard describes the standard version's relative balance and control demands. Your load, resistance and experience change the effort; optional progressions can be harder. A Hard movement is not a running-calendar hard day.</p>
+      {!library && <details className="workout-summary" key={`summary:${selection}:${notes}`}>
+        <summary>Summary notes</summary>
+        {strengthSummary(notes).length ? <ul>{strengthSummary(notes).map((text, index) => <li key={index}>{text}</li>)}</ul> : <p>No exercise sets or reps specified for this workout.</p>}
+      </details>}
       {library && <p className="field-help">A menu of alternatives, not a 60-exercise workout. Introduce one unfamiliar move at a time, use bodyweight or the lightest band/weight first, and leave 2-3 reps in reserve. Inspect bands for damage; no door anchors are needed for these moves. Use a low, non-slip step and stable support.</p>}
       <div className="move-library">{moves.map((move, index) => <details className="move-guide" key={move.id} open={index === 0} ref={element => { if (element) movementRefs.current.set(move.id, element); else movementRefs.current.delete(move.id); }}>
         <summary tabIndex={0}>{move.name}<span className={`move-difficulty difficulty-${moveDifficulty(move).toLowerCase()}`} aria-label={`Difficulty: ${moveDifficulty(move)}`}>{moveDifficulty(move)}</span><EquipmentLabels move={move} /><span className="body-area-tags" aria-label="Body areas">{bodyAreas(move).map(area => <span className="body-area-tag" key={area}>{area}</span>)}</span></summary><ExerciseDiagram move={move} />

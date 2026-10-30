@@ -316,6 +316,9 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
 .strength-duration { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; color: var(--olive); font-size: 13px; font-weight: 550; }
 .strength-duration span { flex-basis: 100%; color: var(--subtle); font-size: 11px; font-weight: 400; }
 .strength-guide-content { margin-top: 16px; }
+.workout-summary { border: 1px solid var(--line); border-radius: 6px; padding: 5px 12px; margin-block: 16px; }
+.workout-summary ul { list-style: disc; padding-left: 20px; font-size: 12px; line-height: 1.7; }
+.workout-summary li { margin-bottom: 8px; }
 .strength-guide-content h3 { font-size: 13px; line-height: 1.6; margin-bottom: 10px; overflow-wrap: anywhere; }
 .strength-guide-content > p { font-size: 12px; line-height: 1.6; margin-block: 10px; }
 .move-guide { border: 1px solid var(--line); border-radius: 6px; margin-block: 8px; scroll-margin-block: 24px; }

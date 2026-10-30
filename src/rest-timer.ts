@@ -30,8 +30,8 @@ export function restTimerReducer(state: RestTimerState, action: RestTimerAction)
   return { ...state, remainingMs, endsAt: remainingMs === 0 || action.type === 'pause' ? null : state.endsAt, finished: remainingMs === 0 };
 }
 export function restStepDurations(text: string): number[] {
-  const match = text.match(/^Rest (\d+)(?:-(\d+))?s\b/i);
-  return match ? [...new Set(match.slice(1).filter(Boolean).map(Number))].filter(validRestSeconds) : [];
+  const matches = text.matchAll(/\brest\s+(\d+)(?:\s*[-–]\s*(\d+))?\s*(?:seconds?|s)\b/gi);
+  return [...new Set([...matches].flatMap(match => match.slice(1).filter(Boolean).map(Number)))].filter(validRestSeconds);
 }
 export function restTimerLabel(remainingMs: number): string {
   const seconds = Math.ceil(remainingMs / 1000);

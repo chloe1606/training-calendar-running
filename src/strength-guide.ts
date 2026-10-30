@@ -301,6 +301,17 @@ export function workoutFlowSteps(notes: string): { text: string; moves: MoveGuid
   return [...steps, ...guidance.map(text => ({ text, moves: [] }))];
 }
 
+export function strengthSummary(notes: string): string[] {
+  return notes.split(/\n\s*\n|\n/).map(line => line.trim()).filter(line =>
+    line && !/^(?:Warm-up|Cool[- ]down|Rest |Finish with|Heavy |Light |Five-week rotation|Taper:)/i.test(line)
+    && guidesForNotes(line).length > 0 && /\b(?:sets?|reps|round)\b/i.test(line),
+  ).map(line => {
+    const firstSentence = line.split(/\.\s+/)[0].replace(/[;,.]?\s*rest\b.*$/i, '').replace(/\.$/, '');
+    const alternative = line.match(/Alternative: [^.]+(?:\.)?/i)?.[0];
+    return `${firstSentence}.${alternative ? ` ${alternative}` : ''}`;
+  });
+}
+
 export function strengthDurationLabel(notes: string): string {
   const match = notes.match(/(?:about\s+|^)(\d+)(?:[-–](\d+))?\s*min(?:utes)?\b/i);
   if (!match) return 'Duration not specified';

@@ -11,7 +11,10 @@ describe('rest countdown', () => {
     expect(() => restTimerReducer(initialRestTimer, { type: 'restart', seconds: 0, now: 1000 })).toThrow();
     expect(restStepDurations('Rest 60s between sets.')).toEqual([60]);
     expect(restStepDurations('Rest 60-90s before the next exercise.')).toEqual([60, 90]);
-    expect(restStepDurations('Set 1 of 2 - Rest 30 s between sides.')).toEqual([]);
+    expect(restStepDurations('Set 1 of 2 - Rest 30 s between sides.')).toEqual([30]);
+    expect(restStepDurations('8 reps per side; rest 15 seconds in between sides.')).toEqual([15]);
+    expect(restStepDurations('Rest 30–45 s between sides; rest 30s as needed.')).toEqual([30, 45]);
+    expect(restStepDurations('Hold 30 s per side, 3 seconds lowering.')).toEqual([]);
     expect(restStepDurations('Rest 0s.')).toEqual([]);
   });
   it('uses elapsed time rather than interval counts, including delayed background ticks', () => {
