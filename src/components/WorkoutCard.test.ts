@@ -18,13 +18,13 @@ describe('long-run pace split', () => {
       expect(html).toContain('First 12 mi easy:');
       expect(html).toContain('9:00–9:45/mi');
       expect(html).toContain('Last 6 mi at MP:');
-      expect(html).toContain('8:00/mi');
+      expect(html).toContain('7:50–8:10/mi');
       expect(html).not.toContain('8:00–8:00');
     }
     const metric = renderToStaticMarkup(createElement(CardContent, { workout: run, settings: { ...plan.settings, units: 'km' } }));
     expect(metric).toContain('First 19.3 km easy:');
     expect(metric).toContain('Last 9.7 km at MP:');
-    expect(metric).toContain('4:58/km');
+    expect(metric).toContain('4:52–5:04/km');
   });
   it('does not imply a fast finish for an all-easy long run', () => {
     const plan = createDefaultPlan();

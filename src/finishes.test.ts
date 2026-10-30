@@ -12,7 +12,7 @@ describe('marathon-pace long-run finishes', () => {
     for (const session of MARATHON_FINISHES) {
       const run = plan.workouts.find(w => w.date === session.date && w.type === 'long')!;
       expect(run.distanceMiles).toBe(session.distance);
-      expect(run.marathonFinish).toEqual({ distanceMiles: session.finish, paceMinPerMile: { min: 8, max: 8 } });
+      expect(run.marathonFinish).toEqual({ distanceMiles: session.finish, paceMinPerMile: { min: 7 + 50 / 60, max: 8 + 10 / 60 } });
       expect(isHard(run)).toBe(true);
     }
     expect(plan.workouts.find(w => w.date === '2027-03-21' && w.type === 'long')?.marathonFinish).toBeUndefined();
@@ -22,14 +22,14 @@ describe('marathon-pace long-run finishes', () => {
   it('calculates durations from the easy and fast portions and counts a hard day', () => {
     const plan = createDefaultPlan();
     const run = plan.workouts.find(w => w.date === '2027-02-14' && w.type === 'long')!;
-    expect(workoutDuration(run)).toEqual({ min: 12 * 9 + 6 * 8, max: 12 * 9.75 + 6 * 8 });
+    expect(workoutDuration(run)).toEqual({ min: 12 * 9 + 6 * (7 + 50 / 60), max: 12 * 9.75 + 6 * (8 + 10 / 60) });
     expect(weekStats([run]).hardDays).toBe(1);
     const saturday = { ...run, id: 'sat', date: '2027-02-13', marathonFinish: undefined, type: 'parkrun' as const, paceMinPerMile: { min: 8.5, max: 9 } };
     const rules = getWarnings([saturday, run]).map(w => w.rule);
     expect(rules).toContain('consecutive-hard');
     expect(rules).toContain('before-long');
     const ics = exportICS({ ...plan, workouts: [run] }).replace(/\r\n /g, '');
-    expect(ics).toContain('last 6 mi at 8:00–8:00/mi');
+    expect(ics).toContain('last 6 mi at 7:50–8:10/mi');
     expect(ics).toContain('Finish HR: 147–160 bpm');
   });
   it('does not reapply removed finishes or alter completed, moved, deleted or resized workouts', () => {

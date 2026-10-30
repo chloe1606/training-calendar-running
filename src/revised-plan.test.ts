@@ -12,6 +12,9 @@ describe('validated v2 app default', () => {
     expect(plan.qualityVarietyVersion).toBe(1);
     expect(plan.settings.trainingZones.paceBoundaries).toEqual([8.9833, 7.7333, 6.9333, 6.5, 6.1]);
     expect(plan.settings.paceZones.threshold).toEqual({ min: 7.1667, max: 7.4167 });
+    expect(plan.settings.paceZones.marathonPace).toEqual({ min: 7 + 50 / 60, max: 8 + 10 / 60 });
+    expect(plan.workouts.filter(w => w.type === 'marathonPace' || w.type === 'race' && w.date === '2027-04-18')
+      .every(w => w.paceMinPerMile.min === 7 + 50 / 60 && w.paceMinPerMile.max === 8 + 10 / 60)).toBe(true);
     expect(plan.settings.defaultDays.badminton).toBe(2);
     expect(plan.settings.defaultDays.swim).toBe(0);
     expect(plan.workouts.every(w => !w.completed && w.id === `seed-${w.date}-${w.type}-${w.activity ?? ''}`)).toBe(true);
@@ -90,6 +93,7 @@ describe('validated v2 app default', () => {
     const plan = createDefaultPlan();
     const run = plan.workouts.find(w => w.date === '2027-04-15' && isRun(w))!;
     expect(mainSetMiles(run)).toBe(2);
-    expect(qualityDuration(run, plan.settings)).toEqual({ min: 43, max: 45.25 });
+    expect(qualityDuration(run, plan.settings).min).toBeCloseTo(27 + 2 * (7 + 50 / 60));
+    expect(qualityDuration(run, plan.settings).max).toBeCloseTo(29.25 + 2 * (8 + 10 / 60));
   });
 });

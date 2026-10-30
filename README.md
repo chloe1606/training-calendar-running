@@ -50,7 +50,7 @@ Current training decisions (supersede the original mileage/main-set prescription
 
 - Click a card to edit it inline; click the circle to complete it.
 - Hover over a card's info icon for session instructions, notes and pace/HR breakdowns without expanding the card. Keyboard focus or tapping the icon also opens the tooltip; Escape, tapping outside or moving away dismisses it. Notes remain editable on the card and are included in exports.
-- Long runs with fast finishes show both portions directly on week/month cards (for example, first 12 mi easy at 9:00–9:45/mi, last 6 mi at MP at 8:00/mi). The info tooltip repeats the numeric split with the separate HR targets; it is not necessary to infer the finish pace from notes.
+- Long runs with fast finishes show both portions directly on week/month cards (for example, first 12 mi easy at 9:00–9:45/mi, last 6 mi at MP at 7:50–8:10/mi). The info tooltip repeats the numeric split with the separate HR targets; it is not necessary to infer the finish pace from notes.
 - Drag a card by its grip. Drop on a day in Week or Month view, or on a previous/next navigation arrow to move it to the same weekday in another week.
 - Keyboard: focus the grip, press Space/Enter, use left/right for days and up/down for weeks, then Space/Enter to drop or Escape to cancel. Touch: hold the grip briefly before dragging.
 - Change weeks with the arrows or calendar selector. The chart selector includes exact weekly totals and week-on-week percentage changes.
@@ -72,7 +72,7 @@ Current training decisions (supersede the original mileage/main-set prescription
 
 The skeleton spans 25 Monday-to-Sunday weeks from 26 October 2026. Seven base weeks lead into the 18-week plan starting 14 December. It includes the prescribed base long runs, a 14 March half-marathon rehearsal, a 20-miler on 21 March, and a three-week taper beginning 29 March.
 
-Weekly targets are running mileage; cross-training does not add running miles. Thursday notes specify warm-up, main set, recoveries, cool-down and main-set quality miles. MP work is continuous at 8:00/mi; threshold repetitions use 7:10–7:25 with 2.5-minute jog recoveries. Duration sums easy/work portions for structured Thursday, progression and long-finish sessions; time-based quality mileage and hill moving time remain estimates. All easy/long runs use 9:00–9:45/mi with HR cap 146.
+Weekly targets are running mileage; cross-training does not add running miles. Thursday notes specify warm-up, main set, recoveries, cool-down and main-set quality miles. MP work is continuous at 7:50–8:10/mi, including progression MP portions, long-run finishes and the marathon race target range; the 3:30 goal and half-marathon pace are unchanged. Threshold repetitions use 7:10–7:25 with 2.5-minute jog recoveries. Duration sums easy/work portions for structured Thursday, progression and long-finish sessions; time-based quality mileage and hill moving time remain estimates. All easy/long runs use 9:00–9:45/mi with HR cap 146.
 
 The final week includes 16 pre-race miles plus the 26.2-mile marathon (42.2 total): Tuesday 5, Wednesday 4 including 4 × 20-second strides plus an easy swim, Thursday 5 including 2 at MP, Saturday 2 including four relaxed strides. Monday is an easy swim and Friday rest/mobility only. No race-week strength or badminton. Warnings never prevent a move. Easy parkruns are not hard days; steady parkruns are. Light Wednesday evening badminton (about 90 minutes, no hard matches) is allowed before quality and long runs, but none is allowed from 12 April.
 

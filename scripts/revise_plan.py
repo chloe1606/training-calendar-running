@@ -40,7 +40,7 @@ VARIETY = {'2026-12-17': 'hills', '2026-12-31': 'hills',
            '2027-01-14': 'progression'}
 EASY = {'min': 9, 'max': 9.75}
 TEMPO = {'min': 7.1667, 'max': 7.4167}
-MP_PACE = {'min': 8, 'max': 8}
+MP_PACE = {'min': 7 + 50 / 60, 'max': 8 + 10 / 60}
 JOG_PACE = 9.375
 THRESHOLD_REFERENCE = (TEMPO['min'] + TEMPO['max']) / 2
 PEAK_EXCEPTION = '2027-03-21'
@@ -212,6 +212,7 @@ def revise(source):
     settings = plan['settings']
     settings['trainingZones']['paceBoundaries'] = [8.9833, 7.7333, 6.9333, 6.5, 6.1]
     settings['paceZones']['threshold'] = deepcopy(TEMPO)
+    settings['paceZones']['marathonPace'] = deepcopy(MP_PACE)
     settings['paceZones']['parkrun'] = {'min': 8.5, 'max': 9}
     settings['defaultDays']['badminton'] = 2
     settings['defaultDays']['swim'] = 0
@@ -257,10 +258,13 @@ def revise(source):
             w['notes'] = 'Easy long run at 9:00-9:45/mi, HR under 146; practise fuelling.'
         else:
             w.pop('hrCapBpm', None)
+            w['paceMinPerMile'] = deepcopy(MP_PACE)
         if sunday in FINISHES:
             finish = FINISHES[sunday]
             w['marathonFinish'] = {'distanceMiles': finish, 'paceMinPerMile': deepcopy(MP_PACE)}
-            w['notes'] = f'First {distance - finish} mi easy at 9:00-9:45/mi, HR under 146; last {finish} mi continuous at 8:00/mi. Practise fuelling; this counts as a hard day.'
+            w['notes'] = f'First {distance - finish} mi easy at 9:00-9:45/mi, HR under 146; last {finish} mi continuous at 7:50-8:10/mi. Practise fuelling; this counts as a hard day.'
+        if sunday == '2027-04-18':
+            w['notes'] = 'Marathon race: 3:30:00 goal, with a working pace range of 7:50-8:10/mi. Aim for even effort around goal average; do not bank time by chasing the fast end. Practise and follow familiar fuelling.'
         if sunday == '2027-03-14':
             w['paceMinPerMile'] = {'min': 7 + 20 / 60, 'max': 7.5}
             w['notes'] = 'Half-marathon race: target 7:20-7:30/mi if training and conditions support it. Start near 7:30/mi for the first 2-3 miles, then work towards 7:20/mi only if controlled; do not force the pace. Practise familiar kit, breakfast and fuelling. This is harder than marathon effort: prioritise recovery afterwards and reassess the conditional 20-miler on 21 March; shorten to 16-18 easy miles or rest if not recovered, with no make-up mileage.'
@@ -279,7 +283,7 @@ def revise(source):
         warm, cool = (1.5, 1.5) if day == '2027-04-15' else (1.5, 1)
         w['distanceMiles'] = warm + main + cool
         w['paceMinPerMile'] = deepcopy(MP_PACE)
-        w['notes'] = (f'Warm-up: {warm:g} mi easy at 9:00-9:45/mi. Main set: {main:g} mi continuous at MP, 8:00/mi, no recovery breaks. '
+        w['notes'] = (f'Warm-up: {warm:g} mi easy at 9:00-9:45/mi. Main set: {main:g} mi continuous at MP, 7:50-8:10/mi, no recovery breaks. '
                       f'Cool-down: {cool:g} mi easy at 9:00-9:45/mi. Main-set quality miles: {main:.4f}. '
                       'Easy portions HR Z2 (118-146); MP portion HR Z3 (147-160).')
     for day, (reps, amount, unit) in THRESHOLD.items():
@@ -313,7 +317,7 @@ def revise(source):
             remaining = w['distanceMiles'] - 2.5
             easy, mp, tempo = (remaining * .4, remaining * .35, remaining * .25)
             w['notes'] = (f'Warm-up: 1.5 mi easy. Main set: continuous gradual progression, no recovery breaks. '
-                          f'Easy progression: {easy:.6f} mi. MP progression: {mp:.6f} mi at 8:00/mi. '
+                          f'Easy progression: {easy:.6f} mi. MP progression: {mp:.6f} mi at 7:50-8:10/mi. '
                           f'Threshold progression: {tempo:.6f} mi at 7:10-7:25/mi. '
                           f'Cool-down: 1 mi easy. Main-set quality miles: {mp + tempo:.4f}. '
                           'Progress smoothly from easy through marathon effort to threshold, never sprint. Easy portions HR Z2; MP Z3; threshold Z4.')
@@ -419,6 +423,8 @@ def validate_revision(source, result):
         errors.append('Incorrect pace boundaries')
     if result['settings']['paceZones']['threshold'] != TEMPO:
         errors.append('Incorrect threshold pace setting')
+    if result['settings']['paceZones']['marathonPace'] != MP_PACE:
+        errors.append('Incorrect marathon pace range')
     if result['settings']['defaultDays']['badminton'] != 2 or result['settings']['defaultDays']['swim'] != 0:
         errors.append('Incorrect badminton/swim default days')
     def key_paths(value, prefix=''):
@@ -497,6 +503,7 @@ def log_changes(source, result):
     lines = ['Marathon Planner v2 change log: experienced-runner two-quality-day revision',
              'Runner baseline: 25 mi/week, second marathon, ten years running, comfortable with 10-13 mi long runs. Peak capped at 45 mi/week.',
              'Normal weeks: Tuesday short threshold/hills plus Thursday quality. MP-finish weeks: Tuesday easy, Thursday MP and Sunday finish. Weekly mileage unchanged.',
+             'Marathon pace is now 7:50-8:10/mi across settings, MP sessions, progression portions, long finishes and marathon race; 3:30 goal and half pace unchanged.',
              'Cut-back, half-marathon, post-half recovery and taper weeks remain lighter; race week retains Thursday MP plus Sunday marathon.',
              'All Saturday parkruns are easy, especially during the taper; no distance added to maintain an arbitrary intensity target.',
              'Planned long-share exception: conditional 20 mi on 21 Mar in a 45 mi week (44.44%), one week after the half.',
