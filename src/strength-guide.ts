@@ -18,6 +18,34 @@ export interface MoveGuide {
 export type EquipmentKind = 'bodyweight' | 'band' | 'dumbbell' | 'kettlebell' | 'step' | 'support' | 'chair' | 'wall';
 export interface EquipmentTag { kind: EquipmentKind; label: string }
 export type MoveDifficulty = 'Easy' | 'Medium' | 'Hard';
+export type MoveCategory = 'Strength' | 'Mobility' | 'Stretch' | 'Balance & control' | 'Warm-up';
+const MOVE_CATEGORIES: Record<string, MoveCategory> = {
+  walk: 'Warm-up', squat: 'Strength', hinge: 'Strength', calf: 'Strength', split: 'Strength',
+  step: 'Strength', bridge: 'Strength', rdl: 'Strength', kickstand: 'Strength',
+  staggered: 'Strength', goblet: 'Strength', deadbug: 'Strength', bird: 'Strength',
+  clam: 'Strength', 'ankle-rock': 'Mobility', cat: 'Mobility', 'hip-stretch': 'Stretch',
+  'calf-stretch': 'Stretch', plank: 'Strength', slide: 'Balance & control',
+  'leg-raise': 'Strength', 'open-book': 'Mobility', 'seated-hip': 'Mobility',
+  'ankle-circle': 'Mobility', tap: 'Balance & control', reach: 'Mobility',
+  'hip-circle': 'Mobility', balance: 'Balance & control', tilt: 'Mobility',
+  'bent-calf': 'Strength', 'seated-calf': 'Strength', tibialis: 'Strength',
+  'short-foot': 'Strength', 'toe-yoga': 'Balance & control', 'band-lateral': 'Strength',
+  monster: 'Strength', 'band-extension': 'Strength', 'band-abduction': 'Strength',
+  'band-march': 'Strength', 'lateral-step': 'Strength', 'step-down': 'Strength',
+  'hip-hike': 'Strength', 'reverse-lunge': 'Strength', 'lateral-lunge': 'Strength',
+  'single-rdl': 'Strength', 'single-bridge': 'Strength', 'bridge-march': 'Strength',
+  'hamstring-walkout': 'Strength', suitcase: 'Strength', farmer: 'Strength',
+  'db-row': 'Strength', 'floor-press': 'Strength', 'overhead-press': 'Strength',
+  'lateral-raise': 'Strength', 'reverse-fly': 'Strength', biceps: 'Strength',
+  triceps: 'Strength', 'band-pull': 'Strength', 'band-rotation': 'Strength',
+  'wall-push': 'Strength', 'kneeling-step-drive': 'Strength',
+};
+export function moveCategory(move: MoveGuide): MoveCategory {
+  const category = MOVE_CATEGORIES[move.id];
+  if (!category) throw new Error(`Missing exercise category for ${move.name}`);
+  return category;
+}
+
 const MOVE_DIFFICULTIES: Record<string, MoveDifficulty> = {
   walk: 'Easy', squat: 'Easy', hinge: 'Easy', calf: 'Medium', split: 'Medium', step: 'Medium',
   bridge: 'Easy', rdl: 'Medium', kickstand: 'Medium', staggered: 'Medium', goblet: 'Medium',
@@ -277,6 +305,7 @@ export function workoutFlowSteps(notes: string): { text: string; moves: MoveGuid
     text = text.replace(/(?:rest |;\s*rest )\d+(?:-\d+)? s (?:when changing|between) exercises\./gi, '').trim();
     if (/^(?:Allow )?about \d+(?:[-–]\d+)? min/i.test(text)) continue;
     text = text.replace(/\b(?:Allow )?about \d+(?:[-–]\d+)? min(?:utes)?[^.]*\./gi, '').trim();
+    text = text.replace(/\bBodyweight only[;.]?\s*|\bNo heavy leg work\.\s*|\bWith Pilates, use one set or mobility only\.\s*/gi, '').trim();
     if (!text) continue;
     if (/^Warm-up:/i.test(text)) {
       steps.push({ text: `${text} Alternatives: gentle side steps or seated heel lifts for the same time.`, moves: guidesForNotes(text) });

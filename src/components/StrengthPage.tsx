@@ -1,7 +1,7 @@
 import { useEffect, useId, useReducer, useRef, useState, type Dispatch } from 'react';
 import { Dumbbell, Pause, Play, RotateCcw, Timer, PersonStanding, Armchair, BrickWall, Hand } from 'lucide-react';
 import routines from '../strength-routines.json';
-import { MOVE_GUIDES, MOVE_PROGRESSIONS, bodyAreas, moveDifficulty, guidesForNotes, equipmentTags, workoutFlowSteps, strengthSummary, strengthDurationLabel, type EquipmentKind, type MoveGuide, type ExercisePose } from '../strength-guide';
+import { MOVE_GUIDES, MOVE_PROGRESSIONS, bodyAreas, moveCategory, moveDifficulty, guidesForNotes, equipmentTags, workoutFlowSteps, strengthSummary, strengthDurationLabel, type EquipmentKind, type MoveGuide, type ExercisePose } from '../strength-guide';
 import { initialRestTimer, restTimerLabel, restTimerReducer, restStepDurations, validRestSeconds, type RestTimerState, type RestTimerAction } from '../rest-timer';
 import { initialStopwatch, stopwatchLabel, stopwatchReducer } from '../stopwatch';
 import { type Workout } from '../model';
@@ -65,7 +65,7 @@ export function WorkoutFlow({ notes, onMovement, onRest }: { notes: string; onMo
       <div className="flow-step" aria-current={index === next ? 'step' : undefined}>
         <label className="flow-check"><input type="checkbox" checked={completed.includes(index)} aria-label={`Step ${index + 1} complete`} onChange={event => setCompleted(previous => event.target.checked ? [...previous, index] : previous.filter(item => item !== index))} /><span>{step.moves.length > 0 && !/^(Warm-up|Cool-down|Mobility):/i.test(step.text) ? step.text.replace(/^((?:Set \d+ of \d+ - )?)[^:]+:\s*/, '$1') : step.text}</span></label>
         {(step.moves.length > 0 || (onRest && restStepDurations(step.text).length > 0)) && <div className="flow-links">{step.moves.map(move => <button key={move.id} type="button" onClick={() => onMovement(move.id)} aria-label={`Step ${index + 1}: view ${move.name}`}>
-          {move.name}<span aria-hidden="true"> ↓</span>
+          {move.name}<span className="move-category" aria-label={`Category: ${moveCategory(move)}`}>{moveCategory(move)}</span><span className={`move-difficulty difficulty-${moveDifficulty(move).toLowerCase()}`} aria-label={`Difficulty: ${moveDifficulty(move)}`}>{moveDifficulty(move)}</span><span aria-hidden="true"> ↓</span>
         </button>)}{onRest && restStepDurations(step.text).map(seconds => <button key={`rest:${seconds}`} type="button" aria-label={`Step ${index + 1}: start ${seconds}s rest`} onClick={() => onRest(seconds)}><Play size={12} aria-hidden="true" />Start {seconds}s rest</button>)}</div>}
       </div>
     </li>)}</ol>
@@ -134,6 +134,42 @@ function RestTimer({ state, dispatch }: { state: RestTimerState; dispatch: Dispa
   </section>;
 }
 
+export function WorkoutSummary({ notes, title }: { notes: string; title: string }) {
+  const lines = strengthSummary(notes);
+  const [copying, setCopying] = useState(false);
+  const [status, setStatus] = useState('');
+  const [error, setError] = useState('');
+  async function copyToStrava() {
+    setCopying(true);
+    setStatus('');
+    setError('');
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error('Clipboard access is unavailable in this browser.');
+      await navigator.clipboard.writeText(`${title}\n\n${lines.join('\n')}`);
+      setStatus('Summary copied. Paste it into the description, select Weight Training or Workout, and enter your date and duration before saving in Strava. If no tab opened, use the link beside the copy button.');
+      window.open('https://www.strava.com/upload/manual', '_blank', 'noopener,noreferrer');
+    } catch (error) {
+      console.error('Unable to copy strength summary for Strava', error);
+      setError('Could not copy the summary. Allow clipboard access and retry, or select and copy the notes below manually.');
+    } finally {
+      setCopying(false);
+    }
+  }
+  return <details className="workout-summary">
+    <summary>Summary notes</summary>
+    {lines.length ? <>
+      <div className="workout-summary-actions">
+        <button type="button" className="secondary-button" disabled={copying} onClick={copyToStrava}>{copying ? 'Copying…' : 'Copy & open Strava'}</button>
+        {status && <a href="https://www.strava.com/upload/manual" target="_blank" rel="noopener noreferrer">Open Strava manual activity form</a>}
+      </div>
+      <p className="field-help">Copies the title, exercises and reps. You review and save the activity in Strava; nothing is logged automatically.</p>
+      {status && <p role="status" className="field-help">{status}</p>}
+      {error && <p role="alert" className="form-error">{error}</p>}
+      <ul>{lines.map((text, index) => <li key={index}>{text}</li>)}</ul>
+    </> : <p>No exercise sets or reps specified for this workout.</p>}
+  </details>;
+}
+
 export function StrengthPage({ workouts, weeks, selectedWeek, onWeekChange }: {
   workouts: Workout[]; weeks: string[]; selectedWeek: string; onWeekChange: (week: string) => void;
 }) {
@@ -166,7 +202,7 @@ export function StrengthPage({ workouts, weeks, selectedWeek, onWeekChange }: {
     if (selection === 'generated' && generated) generatedHeading.current?.focus({ preventScroll: true });
   }, [selection, generated]);
   const library = selection === 'library';
-  const moves = library ? MOVE_GUIDES.filter(move => `${move.name} ${move.equipment ?? ''} ${equipmentTags(move).map(tag => tag.label).join(' ')} ${bodyAreas(move).join(' ')} ${moveDifficulty(move)} ${move.cue}`.toLowerCase().includes(search.trim().toLowerCase())) : guidesForNotes(notes);
+  const moves = library ? MOVE_GUIDES.filter(move => `${move.name} ${move.equipment ?? ''} ${equipmentTags(move).map(tag => tag.label).join(' ')} ${bodyAreas(move).join(' ')} ${moveCategory(move)} ${moveDifficulty(move)} ${move.cue}`.toLowerCase().includes(search.trim().toLowerCase())) : guidesForNotes(notes);
   return <section className="strength-page" aria-label="Strength workout guide">
     <header className="page-heading"><div><span className="eyebrow muted-eyebrow">STRONGER, ONE REP AT A TIME</span><h1><Dumbbell size={26} />Strength studio<span>.</span></h1><p>Your ten-session rotation, illustrated. Move with control.</p></div>
       <label className="strength-week">Training week<select aria-label="Strength workout week" value={selectedWeek} onChange={event => onWeekChange(event.target.value)}>
@@ -196,13 +232,10 @@ export function StrengthPage({ workouts, weeks, selectedWeek, onWeekChange }: {
         {selection === 'week' && scheduled.length === 0 && <p>No strength workout scheduled this week. This is a reference routine, not an instruction to add training.</p>}
         <WorkoutFlow key={`${selection}:${selectedWeek}:${notes}`} notes={notes} onMovement={showMovement} onRest={seconds => restDispatch({ type: 'restart', seconds, now: Date.now() })} />
       </>}
-      {!library && <details className="workout-summary" key={`summary:${selection}:${notes}`}>
-        <summary>Summary notes</summary>
-        {strengthSummary(notes).length ? <ul>{strengthSummary(notes).map((text, index) => <li key={index}>{text}</li>)}</ul> : <p>No exercise sets or reps specified for this workout.</p>}
-      </details>}
+      {!library && <WorkoutSummary key={`summary:${selection}:${notes}`} notes={notes} title={title} />}
       {library && <p className="field-help">A menu of alternatives, not a {MOVE_GUIDES.length}-exercise workout. Introduce one unfamiliar move at a time, use bodyweight or the lightest band/weight first, and leave 2-3 reps in reserve. Inspect bands for damage; no door anchors are needed for these moves. Use a low, non-slip step and stable support.</p>}
       <div className="move-library">{moves.map((move, index) => <details className="move-guide" key={move.id} open={index === 0} ref={element => { if (element) movementRefs.current.set(move.id, element); else movementRefs.current.delete(move.id); }}>
-        <summary tabIndex={0}>{move.name}<span className={`move-difficulty difficulty-${moveDifficulty(move).toLowerCase()}`} aria-label={`Difficulty: ${moveDifficulty(move)}`}>{moveDifficulty(move)}</span><EquipmentLabels move={move} /><span className="body-area-tags" aria-label="Body areas">{bodyAreas(move).map(area => <span className="body-area-tag" key={area}>{area}</span>)}</span></summary><ExerciseDiagram move={move} />
+        <summary tabIndex={0}>{move.name}<span className="move-category" aria-label={`Category: ${moveCategory(move)}`}>{moveCategory(move)}</span><span className={`move-difficulty difficulty-${moveDifficulty(move).toLowerCase()}`} aria-label={`Difficulty: ${moveDifficulty(move)}`}>{moveDifficulty(move)}</span><EquipmentLabels move={move} /><span className="body-area-tags" aria-label="Body areas">{bodyAreas(move).map(area => <span className="body-area-tag" key={area}>{area}</span>)}</span></summary><ExerciseDiagram move={move} />
       </details>)}</div>
       {!moves.length && <p>{library ? 'No moves match your search. Try another name or equipment type.' : 'No matching illustrations for this custom workout. Choose All moves to browse the full library.'}</p>}
     </div>

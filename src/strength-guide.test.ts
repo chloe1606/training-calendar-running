@@ -2,11 +2,42 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import routines from './strength-routines.json';
-import { bodyAreas, moveDifficulty, equipmentTags, guidesForNotes, MOVE_GUIDES, MOVE_PROGRESSIONS, workoutFlowSteps, strengthSummary, strengthDurationLabel } from './strength-guide';
-import { StrengthPage, ExerciseDiagram, EquipmentLabels, WorkoutFlow } from './components/StrengthPage';
+import { bodyAreas, moveCategory, moveDifficulty, equipmentTags, guidesForNotes, MOVE_GUIDES, MOVE_PROGRESSIONS, workoutFlowSteps, strengthSummary, strengthDurationLabel } from './strength-guide';
+import { StrengthPage, ExerciseDiagram, EquipmentLabels, WorkoutFlow, WorkoutSummary } from './components/StrengthPage';
 import { strengthNotes } from './strength';
 
 describe('illustrated strength guide', () => {
+  it('shows each movement difficulty on flowchart steps without rating rest steps', () => {
+    const notes = 'Glute bridges: 1 set x 12 reps.\nDead bug: 1 set x 6 reps.\nHalf-kneeling to step-up with knee drive: 1 set x 4 reps per side.\nRest 30s between sets.';
+    const html = renderToStaticMarkup(createElement(WorkoutFlow, { notes, onMovement: () => undefined }));
+    for (const difficulty of ['Easy', 'Medium', 'Hard']) {
+      expect(html).toContain(`class="move-difficulty difficulty-${difficulty.toLowerCase()}" aria-label="Difficulty: ${difficulty}">${difficulty}</span>`);
+    }
+    expect(html.match(/aria-label="Difficulty:/g)).toHaveLength(3);
+    expect(html).toContain('Rest 30s between sets.');
+  });
+  it('categorises all exercises and shows pink category badges in the library and flow', () => {
+    const categories = ['Strength', 'Mobility', 'Stretch', 'Balance & control', 'Warm-up'];
+    for (const move of MOVE_GUIDES) expect(categories).toContain(moveCategory(move));
+    for (const [id, category] of [['hip-stretch', 'Stretch'], ['ankle-rock', 'Mobility'], ['balance', 'Balance & control'], ['walk', 'Warm-up'], ['kneeling-step-drive', 'Strength']]) {
+      expect(moveCategory(MOVE_GUIDES.find(move => move.id === id)!)).toBe(category);
+    }
+    const page = renderToStaticMarkup(createElement(StrengthPage, { workouts: [], weeks: ['2026-10-26'], selectedWeek: '2026-10-26', onWeekChange: () => undefined }));
+    expect(page).toContain('class="move-category"');
+    expect(page).toContain('aria-label="Category: Strength"');
+    const flow = renderToStaticMarkup(createElement(WorkoutFlow, { notes: 'Dead bug: 2 sets x 6 reps.', onMovement: () => undefined }));
+    expect(flow).toContain('class="move-category" aria-label="Category: Strength"');
+    expect(() => moveCategory({ ...MOVE_GUIDES[0], id: 'unknown' })).toThrow('Missing exercise category');
+  });
+  it('offers manual Strava logging only when there are exercise summary notes', () => {
+    const html = renderToStaticMarkup(createElement(WorkoutSummary, { title: 'Light strength', notes: routines.routines[0].exercises.join('\n\n') }));
+    expect(html).toContain('Copy &amp; open Strava');
+    expect(html).not.toContain('Open Strava manual activity form');
+    expect(html).toContain('nothing is logged automatically');
+    expect(html).toContain('Single-leg calf raises: 2 sets x 12 reps per side.');
+    const empty = renderToStaticMarkup(createElement(WorkoutSummary, { title: 'Empty', notes: '' }));
+    expect(empty).not.toContain('Copy &amp; open Strava');
+  });
   it('starts the half-kneeling knee drive with a foot already on the step', () => {
     const move = MOVE_GUIDES.find(move => move.id === 'kneeling-step-drive')!;
     expect(move.cue).toContain('front foot planted on a low, non-slip step');
@@ -148,6 +179,12 @@ describe('illustrated strength guide', () => {
     expect(equipmentTags(MOVE_GUIDES.find(move => move.id === 'step')!)).toContainEqual({ kind: 'dumbbell', label: 'Dumbbells optional' });
     expect(equipmentTags(MOVE_GUIDES.find(move => move.id === 'rdl')!)).toContainEqual({ kind: 'kettlebell', label: 'Or kettlebell' });
     expect(equipmentTags(MOVE_GUIDES.find(move => move.id === 'band-pull')!)).toEqual([{ kind: 'band', label: 'Resistance band' }]);
+  });
+  it('omits the redundant bodyweight and Pilates footer without changing exercise steps', () => {
+    const notes = 'Dead bug: 2 sets x 6 reps; rest 30 s between sets.\nBodyweight only; rest 30 s between exercises. About 15-20 min. No heavy leg work. With Pilates, use one set or mobility only.';
+    const steps = workoutFlowSteps(notes);
+    expect(steps.some(step => step.text.includes('Dead bug'))).toBe(true);
+    expect(steps.map(step => step.text).join('\n')).not.toMatch(/Bodyweight only|No heavy leg work|With Pilates/);
   });
   it('covers every prescribed movement line across all ten routines and mobility', () => {
     expect(MOVE_GUIDES).toHaveLength(61);
