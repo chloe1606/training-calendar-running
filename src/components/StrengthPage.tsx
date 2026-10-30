@@ -216,6 +216,14 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
   }, [selection, generated]);
   const library = selection === 'library';
   const poolGroups = strengthPoolGroups(intensity);
+  const filteredPoolGroups = poolGroups.map(group => ({
+    ...group,
+    candidates: group.candidates.filter(item => {
+      const move = MOVE_GUIDES.find(move => move.id === item.id)!;
+      return `${move.name} ${move.equipment ?? ''} ${bodyAreas(move).join(' ')} ${moveCategory(move)} ${moveDifficulty(move)}`.toLowerCase().includes(poolSearch.trim().toLowerCase());
+    }),
+  }));
+  const visiblePoolIds = filteredPoolGroups.flatMap(group => group.candidates.map(item => item.id));
   const missingGroups = strengthPoolCoverage(intensity, pool[intensity]);
   const savedWorkout = savedId ? allWorkouts.find(w => w.id === savedId) : undefined;
   function generate() {
@@ -268,15 +276,15 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
         <summary>Choose exercises ({pool[intensity].length} selected)</summary>
         <label>Search exercise pool<input type="search" value={poolSearch} onChange={event => setPoolSearch(event.target.value)} placeholder="Name, equipment, body area…" /></label>
         <div className="workout-summary-actions">
-          <button type="button" className="secondary-button" onClick={() => setPool(previous => ({ ...previous, [intensity]: poolGroups.flatMap(group => group.candidates.map(item => item.id)) }))}>Select all</button>
+          <button type="button" className="secondary-button" disabled={visiblePoolIds.length === 0} onClick={() => {
+            setPool(previous => ({ ...previous, [intensity]: [...new Set([...previous[intensity], ...visiblePoolIds])] }));
+            setGeneratorError('');
+          }}>{poolSearch.trim() ? 'Select all results' : 'Select all'}</button>
           <button type="button" className="secondary-button" onClick={() => setPool(previous => ({ ...previous, [intensity]: [] }))}>Clear pool</button>
         </div>
-        <div className="strength-pool-options">{poolGroups.map(group => <fieldset key={group.label}>
-          <legend>{group.label} ({group.candidates.filter(item => pool[intensity].includes(item.id)).length} selected)</legend>
-          {group.candidates.filter(item => {
-            const move = MOVE_GUIDES.find(move => move.id === item.id)!;
-            return `${move.name} ${move.equipment ?? ''} ${bodyAreas(move).join(' ')} ${moveCategory(move)} ${moveDifficulty(move)}`.toLowerCase().includes(poolSearch.trim().toLowerCase());
-          }).map(item => {
+        <div className="strength-pool-options">{filteredPoolGroups.map(group => <fieldset key={group.label}>
+          <legend>{group.label} ({poolGroups.find(item => item.label === group.label)!.candidates.filter(item => pool[intensity].includes(item.id)).length} selected)</legend>
+          {group.candidates.map(item => {
             const move = MOVE_GUIDES.find(move => move.id === item.id)!;
             return <label className="strength-pool-choice" key={item.id}>
               <input type="checkbox" checked={pool[intensity].includes(item.id)} onChange={event => {
