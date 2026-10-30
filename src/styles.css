@@ -313,7 +313,13 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
 .body-area-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
 .body-area-tag { border: 1px solid var(--line); color: var(--subtle); border-radius: 4px; padding: 2px 6px; font-size: 10px; font-weight: 450; line-height: 1.5; }
 .move-difficulty { display: inline-block; margin-left: 7px; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 550; line-height: 1.5; }
-.difficulty-easy { background: var(--easy-bg); color: var(--easy-fg); }
+.difficulty-easy { background: #e7f5eb; color: #24633b; }
+.flow-check { display: flex; flex-direction: row; align-items: flex-start; gap: 9px; cursor: pointer; }
+.flow-check input { flex-shrink: 0; width: 18px; height: 18px; margin-top: 3px; accent-color: var(--olive); }
+.flow-next .flow-step { border-color: var(--olive); box-shadow: 0 0 0 1px var(--olive); }
+.flow-complete .flow-number { background: #e7f5eb; color: #24633b; }
+.flow-progress { color: var(--olive); font-weight: 600; margin-block: 10px; }
+.dark .difficulty-easy { background: #243f30; color: #a4dfb6; }
 .difficulty-medium { background: var(--threshold-bg); color: var(--threshold-fg); }
 .difficulty-hard { background: var(--race-bg); color: var(--race-fg); }
 .strength-panel summary { cursor: pointer; font-size: 12px; padding: 11px 9px; font-weight: 550; line-height: 1.6; }
@@ -338,6 +344,9 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
   .strength-layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: "tools" "guide"; }
   .strength-tools { position: static; }
   .strength-tools .rest-timer { margin-top: 0; }
+  .strength-page button, .strength-page select, .strength-page input:not([type="checkbox"]) { min-height: 44px; }
+  .flow-check { min-height: 44px; }
+  .strength-page .move-guide > summary { min-height: 44px; }
 }
 .mileage-panel, .warnings-panel { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); padding: 21px; }
 .mileage-panel { scroll-margin-top: 20px; min-width: 0; }

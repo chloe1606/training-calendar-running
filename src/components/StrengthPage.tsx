@@ -1,8 +1,8 @@
-import { useEffect, useId, useReducer, useRef, useState } from 'react';
+import { useEffect, useId, useReducer, useRef, useState, type Dispatch } from 'react';
 import { Dumbbell, Pause, Play, RotateCcw, Timer, PersonStanding, Armchair, BrickWall, Hand } from 'lucide-react';
 import routines from '../strength-routines.json';
 import { MOVE_GUIDES, MOVE_PROGRESSIONS, bodyAreas, moveDifficulty, guidesForNotes, equipmentTags, workoutFlowSteps, strengthDurationLabel, type EquipmentKind, type MoveGuide, type ExercisePose } from '../strength-guide';
-import { initialRestTimer, restTimerLabel, restTimerReducer, validRestSeconds } from '../rest-timer';
+import { initialRestTimer, restTimerLabel, restTimerReducer, restStepDurations, validRestSeconds, type RestTimerState, type RestTimerAction } from '../rest-timer';
 import { initialStopwatch, stopwatchLabel, stopwatchReducer } from '../stopwatch';
 import { type Workout } from '../model';
 import { generateStrengthWorkout, type GeneratedStrength, type StrengthIntensity } from '../random-strength';
@@ -53,13 +53,20 @@ export function ExerciseDiagram({ move }: { move: MoveGuide }) {
   </figure>;
 }
 
-export function WorkoutFlow({ notes, onMovement }: { notes: string; onMovement: (id: string) => void }) {
+export function WorkoutFlow({ notes, onMovement, onRest }: { notes: string; onMovement: (id: string) => void; onRest?: (seconds: number) => void }) {
+  const steps = workoutFlowSteps(notes);
+  const [completed, setCompleted] = useState<number[]>([]);
+  const next = steps.findIndex((_, index) => !completed.includes(index));
   return <section className="workout-flow" aria-label="Step-by-step workout">
     <h3>Your workout, step by step</h3>
     <p className="field-help">Follow in order: complete each set, take the separate rest step, then continue. Rest is between sets, not individual reps. Select a movement to open its diagrams below. Alternatives are choices, not extra exercises.</p>
-    <ol>{workoutFlowSteps(notes).map((step, index) => <li key={`${index}:${step.text}`}>
+    <p className="flow-progress" role="status">{completed.length} of {steps.length} steps complete{next < 0 ? ' - Workout complete!' : ` - Next: step ${next + 1}`}</p>
+    <p className="field-help">Check off steps when finished. Starting a rest replaces any current countdown; check it off when ready. Progress clears when you change workouts or reload.</p>
+    <ol>{steps.map((step, index) => <li className={completed.includes(index) ? 'flow-complete' : index === next ? 'flow-next' : undefined} key={`${index}:${step.text}`}>
       <span className="flow-number" aria-hidden="true">{index + 1}</span>
-      <div className="flow-step"><p>{step.text}</p>
+      <div className="flow-step" aria-current={index === next ? 'step' : undefined}>
+        <label className="flow-check"><input type="checkbox" checked={completed.includes(index)} aria-label={`Step ${index + 1} complete`} onChange={event => setCompleted(previous => event.target.checked ? [...previous, index] : previous.filter(item => item !== index))} /><span>{step.moves.length > 0 && !/^(Warm-up|Cool-down|Mobility):/i.test(step.text) ? step.text.replace(/^((?:Set \d+ of \d+ - )?)[^:]+:\s*/, '$1') : step.text}</span></label>
+        {onRest && restStepDurations(step.text).length > 0 && <div className="flow-links">{restStepDurations(step.text).map(seconds => <button key={seconds} type="button" aria-label={`Step ${index + 1}: start ${seconds}s rest`} onClick={() => onRest(seconds)}><Play size={12} aria-hidden="true" />Start {seconds}s rest</button>)}</div>}
         {step.moves.length > 0 && <div className="flow-links">{step.moves.map(move => <button key={move.id} type="button" onClick={() => onMovement(move.id)} aria-label={`Step ${index + 1}: view ${move.name}`}>
           {move.name}<span aria-hidden="true"> ↓</span>
         </button>)}</div>}
@@ -90,11 +97,11 @@ function Stopwatch() {
   </section>;
 }
 
-function RestTimer() {
-  const [state, dispatch] = useReducer(restTimerReducer, initialRestTimer);
+function RestTimer({ state, dispatch }: { state: RestTimerState; dispatch: Dispatch<RestTimerAction> }) {
   const [custom, setCustom] = useState('60');
   const [error, setError] = useState('');
   const inputId = useId();
+  useEffect(() => { setCustom(String(state.durationSeconds)); setError(''); }, [state.durationSeconds]);
   useEffect(() => {
     if (state.endsAt === null) return;
     const timer = window.setInterval(() => dispatch({ type: 'tick', now: Date.now() }), 200);
@@ -138,6 +145,7 @@ export function StrengthPage({ workouts, weeks, selectedWeek, onWeekChange }: {
   const [search, setSearch] = useState('');
   const [intensity, setIntensity] = useState<StrengthIntensity>('light');
   const [generated, setGenerated] = useState<GeneratedStrength | null>(null);
+  const [restState, restDispatch] = useReducer(restTimerReducer, initialRestTimer);
   const generatedHeading = useRef<HTMLHeadingElement>(null);
   const movementRefs = useRef(new Map<string, HTMLDetailsElement>());
   function showMovement(id: string) {
@@ -189,7 +197,7 @@ export function StrengthPage({ workouts, weeks, selectedWeek, onWeekChange }: {
         {selection === 'generated' && <p role="status">New reference workout generated. Not added to your calendar. Use instead of a suitable strength session, not as extra training; keep recovery and taper days light.</p>}
         <p className="strength-duration"><Timer size={15} aria-hidden="true" />{strengthDurationLabel(notes)}<span>Includes warm-up, rests and cool-down where prescribed.</span></p>
         {selection === 'week' && scheduled.length === 0 && <p>No strength workout scheduled this week. This is a reference routine, not an instruction to add training.</p>}
-        <WorkoutFlow notes={notes} onMovement={showMovement} />
+        <WorkoutFlow key={`${selection}:${selectedWeek}:${notes}`} notes={notes} onMovement={showMovement} onRest={seconds => restDispatch({ type: 'restart', seconds, now: Date.now() })} />
       </>}
       <p className="field-help">Original schematic diagrams, not personalised technique assessment. Expand a move for two positions and form cues.{!library && ' Follow the workout prescription above for sets and rest.'}</p>
       <p className="field-help">Easy / Medium / Hard describes the standard version's relative balance and control demands. Your load, resistance and experience change the effort; optional progressions can be harder. A Hard movement is not a running-calendar hard day.</p>
@@ -199,7 +207,7 @@ export function StrengthPage({ workouts, weeks, selectedWeek, onWeekChange }: {
       </details>)}</div>
       {!moves.length && <p>{library ? 'No moves match your search. Try another name or equipment type.' : 'No matching illustrations for this custom workout. Choose All moves to browse the full library.'}</p>}
     </div>
-    </div><aside className="strength-tools" aria-label="Workout tools"><Stopwatch /><RestTimer />
+    </div><aside className="strength-tools" aria-label="Workout tools"><Stopwatch /><RestTimer state={restState} dispatch={restDispatch} />
       <section className="random-workout" aria-label="Random workout generator">
         <h3><Dumbbell size={16} aria-hidden="true" />Mix up your workout</h3>
         <label className="strength-picker">Workout intensity<select value={intensity} onChange={event => setIntensity(event.target.value === 'heavy' ? 'heavy' : 'light')}>

@@ -6,6 +6,7 @@ export interface RestTimerState {
 }
 export type RestTimerAction =
   | { type: 'duration'; seconds: number }
+  | { type: 'restart'; seconds: number; now: number }
   | { type: 'start' | 'pause' | 'tick'; now: number }
   | { type: 'reset' };
 
@@ -14,9 +15,9 @@ export function validRestSeconds(seconds: number): boolean {
   return Number.isInteger(seconds) && seconds >= 1 && seconds <= 3600;
 }
 export function restTimerReducer(state: RestTimerState, action: RestTimerAction): RestTimerState {
-  if (action.type === 'duration') {
+  if (action.type === 'duration' || action.type === 'restart') {
     if (!validRestSeconds(action.seconds)) throw new Error('Rest duration must be a whole number from 1 to 3600 seconds.');
-    return { durationSeconds: action.seconds, remainingMs: action.seconds * 1000, endsAt: null, finished: false };
+    return { durationSeconds: action.seconds, remainingMs: action.seconds * 1000, endsAt: action.type === 'restart' ? action.now + action.seconds * 1000 : null, finished: false };
   }
   if (action.type === 'reset') return { ...state, remainingMs: state.durationSeconds * 1000, endsAt: null, finished: false };
   if (action.type === 'start') {
@@ -27,6 +28,10 @@ export function restTimerReducer(state: RestTimerState, action: RestTimerAction)
   if (state.endsAt === null) return state;
   const remainingMs = Math.max(0, state.endsAt - action.now);
   return { ...state, remainingMs, endsAt: remainingMs === 0 || action.type === 'pause' ? null : state.endsAt, finished: remainingMs === 0 };
+}
+export function restStepDurations(text: string): number[] {
+  const match = text.match(/^Rest (\d+)(?:-(\d+))?s\b/i);
+  return match ? [...new Set(match.slice(1).filter(Boolean).map(Number))].filter(validRestSeconds) : [];
 }
 export function restTimerLabel(remainingMs: number): string {
   const seconds = Math.ceil(remainingMs / 1000);

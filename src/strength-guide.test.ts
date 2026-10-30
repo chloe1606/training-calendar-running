@@ -7,6 +7,18 @@ import { StrengthPage, ExerciseDiagram, EquipmentLabels, WorkoutFlow } from './c
 import { strengthNotes } from './strength';
 
 describe('illustrated strength guide', () => {
+  it('shows the exercise name only in its diagram link, retaining set instructions', () => {
+    const html = renderToStaticMarkup(createElement(WorkoutFlow, {
+      notes: 'Warm-up: 3 min walking.\nGlute bridges: 2 sets x 12 reps. Rest 60 s between sets.',
+      onMovement: () => undefined,
+    }));
+    expect(html).toContain('Set 1 of 2 - 12 reps.');
+    expect(html).toContain('Set 2 of 2 - 12 reps.');
+    expect(html).not.toContain('Glute bridges:');
+    expect(html).toContain('view Glute bridge');
+    expect(html).toContain('Warm-up:');
+    expect(html).toContain('Cool-down:');
+  });
   it('rates all 60 standard movements with explicit difficulty levels', () => {
     for (const move of MOVE_GUIDES) expect(['Easy', 'Medium', 'Hard']).toContain(moveDifficulty(move));
     expect(new Set(MOVE_GUIDES.map(moveDifficulty)).size).toBe(3);
@@ -46,7 +58,7 @@ describe('illustrated strength guide', () => {
       }
       const html = renderToStaticMarkup(createElement(WorkoutFlow, { notes, onMovement: () => undefined }));
       expect(html).toContain('<ol>');
-      expect(html.match(/<li>/g)).toHaveLength(steps.length);
+      expect(html.match(/<li(?:\s[^>]*)?>/g)).toHaveLength(steps.length);
       expect(html).toContain('Step 1: view Walking / marching');
     }
     const heavy = workoutFlowSteps(routines.routines[0].exercises.join('\n\n'));
@@ -54,6 +66,16 @@ describe('illustrated strength guide', () => {
     const split = heavy.find(step => step.text.includes('Supported split squats'))!;
     expect(split.moves.map(move => move.id)).toEqual(['split', 'step']);
     expect(split.text).toContain('do not do both');
+  });
+  it('renders step checkboxes, progress and explicit one-click rest choices', () => {
+    const notes = 'Warm-up: 3 min walking.\nGlute bridges: 2 sets x 12 reps. Rest 60 s between sets.\nRest 60-90 s between exercises.\nDead bug: 1 set x 6 reps.';
+    const steps = workoutFlowSteps(notes);
+    const html = renderToStaticMarkup(createElement(WorkoutFlow, { notes, onMovement: () => undefined, onRest: () => undefined }));
+    expect(html.match(/type="checkbox"/g)).toHaveLength(steps.length);
+    expect(html).toContain(`0 of ${steps.length} steps complete`);
+    expect(html).toContain('aria-current="step"');
+    expect(html).toContain('start 60s rest');
+    expect(html).toContain('start 90s rest');
   });
   it('uses the saved taper prescription, keeps custom instructions and excludes only routine metadata', () => {
     const steps = workoutFlowSteps(strengthNotes(0, '2027-03-29', '2027-04-18'));

@@ -1,7 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { initialRestTimer, restTimerLabel, restTimerReducer, validRestSeconds } from './rest-timer';
+import { initialRestTimer, restTimerLabel, restTimerReducer, restStepDurations, validRestSeconds } from './rest-timer';
 
 describe('rest countdown', () => {
+  it('starts a new step rest immediately, replacing a running or finished countdown', () => {
+    for (const state of [initialRestTimer, { ...initialRestTimer, endsAt: 50000 }, { ...initialRestTimer, remainingMs: 0, finished: true }]) {
+      expect(restTimerReducer(state, { type: 'restart', seconds: 75, now: 1000 })).toEqual({
+        durationSeconds: 75, remainingMs: 75000, endsAt: 76000, finished: false,
+      });
+    }
+    expect(() => restTimerReducer(initialRestTimer, { type: 'restart', seconds: 0, now: 1000 })).toThrow();
+    expect(restStepDurations('Rest 60s between sets.')).toEqual([60]);
+    expect(restStepDurations('Rest 60-90s before the next exercise.')).toEqual([60, 90]);
+    expect(restStepDurations('Set 1 of 2 - Rest 30 s between sides.')).toEqual([]);
+    expect(restStepDurations('Rest 0s.')).toEqual([]);
+  });
   it('uses elapsed time rather than interval counts, including delayed background ticks', () => {
     const started = restTimerReducer(initialRestTimer, { type: 'start', now: 1000 });
     expect(started.endsAt).toBe(61000);
