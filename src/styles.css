@@ -325,6 +325,10 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
 .timer-actions button { flex: 1; justify-content: center; }
 .strength-picker { display: grid; gap: 7px; font-size: 12px; font-weight: 500; }
 .strength-picker select { width: 100%; font-size: 12px; }
+.strength-choice-group { margin-block: 12px; font-size: 12px; font-weight: 500; }
+.strength-choice-group > div { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 7px; }
+.strength-choice-group button { min-width: 44px; min-height: 44px; }
+.strength-choice-group button[aria-pressed="true"] { background: var(--accent-solid); border-color: var(--accent-solid); color: #fff; }
 .strength-search { margin-top: 16px; }
 .strength-search [role="status"] { color: var(--subtle); font-size: 11px; }
 .strength-duration { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; color: var(--olive); font-size: 13px; font-weight: 550; }

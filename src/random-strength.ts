@@ -1,8 +1,9 @@
 import { isValid, parseISO } from 'date-fns';
 import { dateKey, type Plan, type Workout } from './model';
-import { MOVE_GUIDES } from './strength-guide';
+import { MOVE_GUIDES, moveDifficulty } from './strength-guide';
 
-export type StrengthIntensity = 'light' | 'heavy';
+export type StrengthIntensity = 'light' | 'medium' | 'heavy';
+export const DEFAULT_EXERCISE_COUNTS = { light: 3, medium: 4, heavy: 5 };
 export interface GeneratedStrength {
   title: string;
   notes: string;
@@ -91,25 +92,26 @@ export function strengthPoolGroups(intensity: StrengthIntensity): StrengthPoolGr
   return ['Legs and single-leg control', 'Posterior chain and hips', 'Calves and soleus', 'Upper body', 'Core and runner control']
     .map((label, index) => ({ label, candidates: [
       ...HEAVY_SLOTS[index], ...extra[index], ...HEAVY_ADDITIONS[index].map(libraryCandidate),
-    ] }));
+    ].filter(item => intensity !== 'medium' || moveDifficulty(MOVE_GUIDES.find(move => move.id === item.id)!) !== 'Hard') }));
 }
 
-export function generateStrengthWorkout(intensity: StrengthIntensity, random: () => number = Math.random, selectedIds?: readonly string[]): GeneratedStrength {
+export function generateStrengthWorkout(intensity: StrengthIntensity, random: () => number = Math.random, selectedIds?: readonly string[], exerciseCount = DEFAULT_EXERCISE_COUNTS[intensity]): GeneratedStrength {
+  if (!Number.isInteger(exerciseCount) || exerciseCount < 3 || exerciseCount > 6) throw new Error('Choose 3–6 main exercises.');
   const candidates = strengthPoolGroups(intensity).flatMap(group => group.candidates);
   const pool = selectedIds ?? candidates.map(item => item.id);
   if (pool.some(id => !candidates.some(item => item.id === id))) throw new Error('The pool includes an exercise that is not suitable for this intensity.');
   const available = candidates.filter(item => pool.includes(item.id));
   if (!available.length) throw new Error('Choose at least one exercise in the pool.');
-  const heavy = intensity === 'heavy';
-  const count = Math.min(heavy ? 5 : 4, available.length);
+  const heavy = intensity !== 'light';
+  const count = Math.min(exerciseCount, available.length);
   const chosen: Candidate[] = [];
   while (chosen.length < count) {
     const sample = random();
     if (!Number.isFinite(sample) || sample < 0 || sample >= 1) throw new Error('Random sample must be between 0 (inclusive) and 1 (exclusive).');
     chosen.push(...available.splice(Math.floor(sample * available.length), 1));
   }
-  const title = heavy ? 'Generated heavy: custom strength workout' : 'Generated light: custom strength workout';
-  const notes = [
+  const title = `Generated ${intensity}: custom strength workout`;
+  let notes = [
     heavy
       ? 'Warm-up: 5 min easy walking. Alternatives: replace part of the walking with 6-8 comfortable bodyweight squats or sit-to-stands, 6-8 small mini-band lateral walk steps each way, or 6 small mini-band diagonal walk steps forward and back. Use a light band above the knees. Choose one option within the same 5 min, not all of them; keep the effort easy and avoid fatigue.'
       : 'Warm-up: 3 min easy walking. Alternatives: replace part of the walking with 4-6 shallow bodyweight squats or supported sit-to-stands, gentle side steps, or seated heel lifts. Choose one option within the same 3 min, not all of them; stay bodyweight-only and keep the effort easy.',
@@ -122,6 +124,12 @@ export function generateStrengthWorkout(intensity: StrengthIntensity, random: ()
       ? 'Rest 60-90 s when changing exercises.\n\nCool-down: 2 min easy walking.\n\nAbout 25-45 min total, depending on selected doses. Use the equipment and technique cues for each selected move. Heavy means the main resistance session, not maximal lifting. Leave 2-3 reps in reserve. Start with one set if unfamiliar; replace a comparable exercise rather than adding volume. Avoid new demanding eccentric work near key runs or races; keep recovery and taper days light.'
       : 'Cool-down: 3-5 min gentle calf and hip-flexor stretches, 20 s per side.\n\nAbout 12-15 min total. Bodyweight only, no heavy leg work or effort to fatigue. Finish fresher than you started.',
   ].join('\n\n');
+  if (intensity === 'medium') {
+    notes = notes.replace('Heavy means the main resistance session, not maximal lifting.', 'Medium uses Easy and Medium-rated movements with their starting doses, not maximal lifting.');
+  }
+  if (intensity === 'medium' || count !== (heavy ? 5 : 4)) {
+    notes = notes.replace(/About \d+-\d+ min total[^.]*\./, `Duration varies with these ${count} main exercises, prescribed sets and rest; use the stopwatch to log actual time.`);
+  }
   return { title, notes, movementIds: chosen.map(item => item.id) };
 }
 

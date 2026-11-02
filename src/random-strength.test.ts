@@ -5,6 +5,35 @@ import { createDefaultPlan } from './seed';
 import { weekStats } from './model';
 
 describe('custom random strength workouts', () => {
+  it('defaults to three Light, four Medium and five Heavy moves and keeps Medium doses without Hard moves', () => {
+    for (const [intensity, count] of [['light', 3], ['medium', 4], ['heavy', 5]] as const) {
+      expect(generateStrengthWorkout(intensity, () => 0).movementIds).toHaveLength(count);
+    }
+    const heavy = strengthPoolGroups('heavy').flatMap(group => group.candidates);
+    const medium = strengthPoolGroups('medium').flatMap(group => group.candidates);
+    expect(medium.length).toBeGreaterThan(6);
+    for (const candidate of medium) {
+      expect(moveDifficulty(MOVE_GUIDES.find(move => move.id === candidate.id)!)).not.toBe('Hard');
+      expect(candidate).toEqual(heavy.find(item => item.id === candidate.id));
+    }
+    const workout = generateStrengthWorkout('medium', () => 0);
+    expect(workout.title).toContain('Generated medium:');
+    expect(workoutFlowSteps(`${workout.title}\n\n${workout.notes}`).some(step => step.text.startsWith('Generated medium:'))).toBe(false);
+    expect(strengthSummary(workout.notes)).toHaveLength(4);
+    expect(workout.notes).not.toContain('Bodyweight only');
+  });
+  it('honours exercise counts, caps at the unique pool size and validates count input', () => {
+    for (const intensity of ['light', 'heavy'] as const) {
+      for (const count of [3, 4, 5, 6]) {
+        const workout = generateStrengthWorkout(intensity, () => 0, undefined, count);
+        expect(workout.movementIds).toHaveLength(count);
+        expect(new Set(workout.movementIds).size).toBe(count);
+      }
+      const pool = strengthPoolGroups(intensity)[0].candidates.slice(0, 2).map(item => item.id);
+      expect(generateStrengthWorkout(intensity, () => 0, pool, 6).movementIds).toHaveLength(2);
+      for (const count of [0, 2, 7, 1.5, NaN]) expect(() => generateStrengthWorkout(intensity, () => 0, pool, count)).toThrow('3–6');
+    }
+  });
   it('offers optional warm-up alternatives without adding main exercises or duplicate suggestions', () => {
     for (const intensity of ['light', 'heavy'] as const) {
       const workout = generateStrengthWorkout(intensity, () => 0);
@@ -34,7 +63,7 @@ describe('custom random strength workouts', () => {
           return seed / 4294967296;
         });
         combinations.add(workout.movementIds.join(','));
-        expect(workout.movementIds).toHaveLength(intensity === 'heavy' ? 5 : 4);
+        expect(workout.movementIds).toHaveLength(intensity === 'heavy' ? 5 : 3);
         expect(new Set(workout.movementIds).size).toBe(workout.movementIds.length);
         const steps = workoutFlowSteps(workout.notes);
         expect(steps[0].text).toMatch(/^Warm-up:/);
@@ -46,7 +75,7 @@ describe('custom random strength workouts', () => {
         }
         expect(steps.some(step => /^Rest \d/.test(step.text))).toBe(true);
         expect(steps.filter(step => step.text.startsWith('Cool-down:'))).toHaveLength(1);
-        expect(strengthDurationLabel(workout.notes)).toBe(intensity === 'heavy' ? 'Approx. 25–45 min' : 'Approx. 12–15 min');
+        expect(strengthDurationLabel(workout.notes)).toBe(intensity === 'heavy' ? 'Approx. 25–45 min' : 'Duration not specified');
         const moves = workout.movementIds.map(id => MOVE_GUIDES.find(move => move.id === id)!);
         if (intensity === 'light') {
           expect(moves.flatMap(equipmentTags).some(tag => ['dumbbell', 'band', 'kettlebell'].includes(tag.kind))).toBe(false);
@@ -67,7 +96,7 @@ describe('custom random strength workouts', () => {
     for (const intensity of ['light', 'heavy'] as const) {
       const groups = strengthPoolGroups(intensity);
       const selected = groups.map(group => group.candidates[0].id);
-      expect(generateStrengthWorkout(intensity, () => 0, selected).movementIds).toEqual(selected);
+      expect(generateStrengthWorkout(intensity, () => 0, selected, selected.length).movementIds).toEqual(selected);
       expect(generateStrengthWorkout(intensity, () => 0, selected.slice(1)).movementIds).toEqual(selected.slice(1));
       const focused = groups[0].candidates.slice(0, 3).map(item => item.id);
       expect(generateStrengthWorkout(intensity, () => 0, focused).movementIds).toEqual(focused);

@@ -5,7 +5,7 @@ import { MOVE_GUIDES, MOVE_PROGRESSIONS, bodyAreas, moveCategory, moveDifficulty
 import { initialRestTimer, restTimerLabel, restTimerReducer, restStepDurations, validRestSeconds, type RestTimerState, type RestTimerAction } from '../rest-timer';
 import { initialStopwatch, stopwatchLabel, stopwatchReducer } from '../stopwatch';
 import { dateKey, weekKey, type Workout } from '../model';
-import { generateStrengthWorkout, strengthPoolGroups, completedStrengthWorkout, type GeneratedStrength, type StrengthIntensity } from '../random-strength';
+import { generateStrengthWorkout, strengthPoolGroups, completedStrengthWorkout, DEFAULT_EXERCISE_COUNTS, type GeneratedStrength, type StrengthIntensity } from '../random-strength';
 
 function EquipmentIcon({ kind }: { kind: EquipmentKind }) {
   if (kind === 'dumbbell') return <Dumbbell size={14} aria-hidden="true" />;
@@ -181,9 +181,11 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
   const [generated, setGenerated] = useState<GeneratedStrength | null>(null);
   const [pool, setPool] = useState<Record<StrengthIntensity, string[]>>(() => ({
     light: strengthPoolGroups('light').flatMap(group => group.candidates.map(item => item.id)),
+    medium: strengthPoolGroups('medium').flatMap(group => group.candidates.map(item => item.id)),
     heavy: strengthPoolGroups('heavy').flatMap(group => group.candidates.map(item => item.id)),
   }));
   const [poolSearch, setPoolSearch] = useState('');
+  const [exerciseCounts, setExerciseCounts] = useState({ ...DEFAULT_EXERCISE_COUNTS });
   const [generatorError, setGeneratorError] = useState('');
   const [completionDate, setCompletionDate] = useState(() => dateKey(new Date()));
   const [savedId, setSavedId] = useState<string | null>(null);
@@ -229,7 +231,7 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
   function generate() {
     setGeneratorError('');
     try {
-      const next = generateStrengthWorkout(intensity, Math.random, pool[intensity]);
+      const next = generateStrengthWorkout(intensity, Math.random, pool[intensity], exerciseCounts[intensity]);
       setGenerated(next);
       setSavedId(null);
       setSaveMessage('');
@@ -268,10 +270,18 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
     </header>
     <section className="random-workout strength-generator" aria-label="Random workout generator">
       <h3><Dumbbell size={16} aria-hidden="true" />Mix up your workout</h3>
-      <label className="strength-picker">Workout intensity<select value={intensity} onChange={event => setIntensity(event.target.value === 'heavy' ? 'heavy' : 'light')}>
-        <option value="light">Light: core and mobility</option><option value="heavy">Heavy: main strength session</option>
-      </select></label>
-      <p>Generate up to five Heavy or four Light exercises from your selected pool, plus warm-up and cool-down. No muscle-group requirements or limit on Hard moves. Light uses gentle bodyweight doses only.</p>
+      <div className="strength-choice-group" role="group" aria-label="Workout intensity">
+        <span>Workout intensity</span>
+        <div>{(['light', 'medium', 'heavy'] as const).map(value => <button key={value} type="button" className="secondary-button" aria-pressed={intensity === value} onClick={() => {
+          setIntensity(value);
+          setGeneratorError('');
+        }}>{value.charAt(0).toUpperCase() + value.slice(1)}</button>)}</div>
+      </div>
+      <div className="strength-choice-group" role="group" aria-label="Number of main exercises">
+        <span>Number of main exercises</span>
+        <div>{[3, 4, 5, 6].map(count => <button key={count} type="button" className="secondary-button" aria-pressed={exerciseCounts[intensity] === count}
+          onClick={() => setExerciseCounts(previous => ({ ...previous, [intensity]: count }))}>{count}</button>)}</div>
+      </div>
       <details className="strength-pool">
         <summary>Choose exercises ({pool[intensity].length} selected)</summary>
         <label>Search exercise pool<input type="search" value={poolSearch} onChange={event => setPoolSearch(event.target.value)} placeholder="Name, equipment, body area…" /></label>

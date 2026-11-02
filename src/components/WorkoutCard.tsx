@@ -14,6 +14,7 @@ import { formatDistance } from '../distance';
 import { thresholdSummary, thresholdSession, thresholdNotes } from '../threshold';
 import { mainSetMiles, qualityDetails, qualityDuration, qualityNotes } from '../quality';
 import { strengthSummary } from '../strength-guide';
+import { WorkoutDateActions } from './WorkoutDateActions';
 
 export function WorkoutIcon({ workout, size = 16 }: { workout: Workout; size?: number }) {
   const Icon = workout.type === 'crossTraining' ? workout.activity === 'swim' ? Waves : Dumbbell
@@ -217,7 +218,8 @@ function WorkoutEditor({ workout: w, settings, close }: { workout: Workout; sett
     </>}
     {type === 'crossTraining' && activity === 'strength'
       ? <p className="field-help">Choose and log completed exercises in <a href="#strength">Strength studio</a>.</p>
-      : <label>Notes<textarea rows={3} value={notes} onChange={e => setNotes(e.target.value)} /></label>}
+      : <label>{type === 'track' ? 'Session notes' : 'Notes'}<textarea rows={3} placeholder={type === 'track' ? 'e.g. 1 mi warm-up, 6 x 400 m with 200 m jog recoveries, easy cool-down. Enter total distance above.' : undefined} value={notes} onChange={e => setNotes(e.target.value)} /></label>}
+    {type === 'track' && <p className="field-help">Write the session in your own words. Enter total distance separately, including warm-up, recoveries and cool-down.</p>}
     {error && <p className="form-error" role="alert">{error}</p>}
     <div className="editor-actions"><button className="small-primary" type="submit">Save</button><button type="button" onClick={close}>Cancel</button>
       <button type="button" className="delete-button" aria-label="Delete workout" onClick={() => { change(p => ({ ...p, workouts: p.workouts.filter(item => item.id !== w.id) })); close(); }}><Trash2 size={15} /></button>
@@ -245,6 +247,7 @@ export function WorkoutCard({ workout, settings, compact, editingId, setEditingI
     <button className="card-main" onClick={() => setEditingId(editing ? null : workout.id)} aria-expanded={editing} aria-label={`Edit ${workoutLabel(workout)} on ${workout.date}`}>
       <CardContent workout={workout} settings={settings} compact={compact} />
     </button>
-    {editing && <WorkoutEditor key={`${workout.id}-${settings.units}`} workout={workout} settings={settings} close={() => setEditingId(null)} />}
+    {editing && <><WorkoutEditor key={`${workout.id}-${settings.units}`} workout={workout} settings={settings} close={() => setEditingId(null)} />
+      <WorkoutDateActions key={workout.id} workout={workout} close={() => setEditingId(null)} /></>}
   </article>;
 }

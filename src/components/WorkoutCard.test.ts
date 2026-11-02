@@ -13,6 +13,18 @@ beforeAll(async () => {
 });
 
 describe('long-run pace split', () => {
+  it('keeps Track sessions simple and offers move/copy actions', () => {
+    const plan = createDefaultPlan();
+    const workout = { ...plan.workouts[0], type: 'track' as const, notes: '1 mi warm-up, 6 x 400 m, easy cool-down.' };
+    const html = renderToStaticMarkup(createElement(WorkoutCard, {
+      workout, settings: plan.settings, editingId: workout.id, setEditingId: () => undefined,
+    }));
+    expect(html).toContain('Session notes');
+    expect(html).toContain(workout.notes);
+    expect(html).not.toContain('Structured session');
+    expect(html).toContain('Move to date');
+    expect(html).toContain('Copy to date');
+  });
   it('offers completed strength summaries in a tooltip without expanding cards or editors', () => {
     const plan = createDefaultPlan();
     const workout = { ...plan.workouts.find(w => w.activity === 'strength')!, completed: true, notes: 'Dead bug: 2 sets x 6 reps.' };

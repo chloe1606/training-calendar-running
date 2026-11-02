@@ -656,7 +656,7 @@ export function guidesForNotes(notes: string): MoveGuide[] {
 
 export function workoutFlowSteps(notes: string): { text: string; moves: MoveGuide[] }[] {
   const lines = notes.split(/\n\s*\n|\n/).map(text => text.trim()).filter(text =>
-    text && !/^(Heavy|Light) \d+:|^Generated (?:heavy|light):|^Five-week rotation:|^Heavy means the main resistance session/.test(text),
+    text && !/^(Heavy|Light) \d+:|^Generated (?:heavy|medium|light):|^Five-week rotation:|^Heavy means the main resistance session/.test(text),
   );
   const steps: { text: string; moves: MoveGuide[] }[] = [];
   const cooldown: string[] = [];
@@ -712,7 +712,7 @@ export function workoutFlowSteps(notes: string): { text: string; moves: MoveGuid
 
 export function strengthSummary(notes: string): string[] {
   return notes.split(/\n\s*\n|\n/).map(line => line.trim()).filter(line =>
-    line && !/^(?:Warm-up|Cool[- ]down|Rest |Finish with|(?:Heavy|Light) \d+:|Generated (?:heavy|light):|Five-week rotation|Taper:)/i.test(line)
+    line && !/^(?:Warm-up|Cool[- ]down|Rest |Finish with|(?:Heavy|Light) \d+:|Generated (?:heavy|medium|light):|Five-week rotation|Taper:)/i.test(line)
     && guidesForNotes(line).length > 0 && /\b(?:sets?|reps|round)\b/i.test(line),
   ).map(line => {
     const firstSentence = line.split(/\.\s+/)[0].replace(/[;,.]?\s*rest\b.*$/i, '').replace(/\.$/, '');
