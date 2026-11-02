@@ -31,6 +31,7 @@
   --threshold-bg: #f9eee2; --threshold-fg: #91602f; --threshold-line: #f0dfc8;
   --mp-bg: #edf0f9; --mp-fg: #55628e; --mp-line: #dfe4f2;
   --parkrun-bg: #f9eaf4; --parkrun-fg: #96557d; --parkrun-line: #efd2e5;
+  --cross-country-bg: #edf2e4; --cross-country-fg: #465b31; --cross-country-line: #cbd8b8;
   --cross-bg: #eaf2f3; --cross-fg: #426c72; --cross-line: #dae8e9;
   --rest-bg: #f2f0f4; --rest-fg: #7e7687; --rest-line: #e5e0e9;
   --race-bg: #fae9e6; --race-fg: #b56b58; --race-line: #efd4cd;
@@ -47,6 +48,7 @@
   --threshold-bg: #493b2b; --threshold-fg: #e7c392; --threshold-line: #624d34;
   --mp-bg: #333c51; --mp-fg: #bdc9eb; --mp-line: #465374;
   --parkrun-bg: #4f3046; --parkrun-fg: #edb9d8; --parkrun-line: #714860;
+  --cross-country-bg: #303d28; --cross-country-fg: #ccdeb5; --cross-country-line: #566a43;
   --cross-bg: #2b4141; --cross-fg: #a8cdd0; --cross-line: #3b5a5a;
   --rest-bg: #38313e; --rest-fg: #c2b6cc; --rest-line: #4f4358;
   --race-bg: #4a3530; --race-fg: #edb7a5; --race-line: #66463e;
@@ -219,9 +221,10 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
 .threshold-breakdown { display: grid; gap: 6px; margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--card-line); font-size: 11px; line-height: 1.6; overflow-wrap: anywhere; }
 .type-easy { --card-bg: var(--easy-bg); --card-fg: var(--easy-fg); --card-line: var(--easy-line); }
 .type-long { --card-bg: var(--long-bg); --card-fg: var(--long-fg); --card-line: var(--long-line); }
-.type-threshold, .type-strides { --card-bg: var(--threshold-bg); --card-fg: var(--threshold-fg); --card-line: var(--threshold-line); }
+.type-threshold, .type-strides, .type-track { --card-bg: var(--threshold-bg); --card-fg: var(--threshold-fg); --card-line: var(--threshold-line); }
 .type-marathonPace { --card-bg: var(--mp-bg); --card-fg: var(--mp-fg); --card-line: var(--mp-line); }
 .type-parkrun { --card-bg: var(--parkrun-bg); --card-fg: var(--parkrun-fg); --card-line: var(--parkrun-line); }
+.type-crossCountry { --card-bg: var(--cross-country-bg); --card-fg: var(--cross-country-fg); --card-line: var(--cross-country-line); }
 .type-crossTraining { --card-bg: var(--cross-bg); --card-fg: var(--cross-fg); --card-line: var(--cross-line); }
 .type-rest { --card-bg: var(--rest-bg); --card-fg: var(--rest-fg); --card-line: var(--rest-line); }
 .type-race { --card-bg: var(--race-bg); --card-fg: var(--race-fg); --card-line: var(--race-line); }

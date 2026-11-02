@@ -20,6 +20,8 @@ npm run preview
 
 Run unit tests with `npm test`.
 
+Run options include **Track** (4 miles total by default, including a 1-mile easy warm-up) and **Cross Country** (5 miles by default). Both count as hard days in totals and recovery warnings, have editable distance/pace/notes, and support default weekdays and HR targets in Settings. Their initial pace is the easy-zone reference, not a prescribed interval or off-road target; adjust it to the session and terrain. Existing plans are preserved, with no new runs automatically scheduled.
+
 Generated strength notes include optional warm-up substitutions within the existing warm-up time, not extra exercises to complete. Heavy sessions offer easy bodyweight squats/sit-to-stands or light mini-band lateral/diagonal walks. Light sessions offer shallow squats, supported sit-to-stands, gentle side steps or seated heel lifts without a band. Choose one option and keep the effort easy.
 
 ## Revised plan (v2)

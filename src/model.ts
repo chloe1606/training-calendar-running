@@ -1,8 +1,8 @@
 import { addDays, differenceInCalendarDays, format, parseISO, startOfWeek } from 'date-fns';
 
-export const TYPES = ['easy', 'long', 'threshold', 'marathonPace', 'strides', 'parkrun', 'crossTraining', 'rest', 'race'] as const;
+export const TYPES = ['easy', 'long', 'threshold', 'marathonPace', 'strides', 'parkrun', 'track', 'crossCountry', 'crossTraining', 'rest', 'race'] as const;
 export type WorkoutType = typeof TYPES[number];
-export const RUN_TYPES = ['easy', 'long', 'threshold', 'marathonPace', 'strides', 'parkrun', 'race'] as const;
+export const RUN_TYPES = ['easy', 'long', 'threshold', 'marathonPace', 'strides', 'parkrun', 'track', 'crossCountry', 'race'] as const;
 export type RunType = typeof RUN_TYPES[number];
 export type HRZone = 1 | 2 | 3 | 4 | 5;
 export interface TrainingZones {
@@ -13,17 +13,17 @@ export interface TrainingZones {
 export const DEFAULT_TRAINING_ZONES: TrainingZones = {
   hrBoundaries: [118, 147, 161, 176],
   paceBoundaries: [8.9833, 7.7333, 6.9333, 6.5, 6.1],
-  hrTargets: { easy: 2, long: 2, threshold: 4, marathonPace: 3, strides: 5, parkrun: 3, race: 3 },
+  hrTargets: { easy: 2, long: 2, threshold: 4, marathonPace: 3, strides: 5, parkrun: 3, track: 4, crossCountry: 4, race: 3 },
 };
 export const ACTIVITIES = ['swim', 'ride', 'pilates', 'strength', 'badminton'] as const;
 export type Activity = typeof ACTIVITIES[number];
-export const SCHEDULE_TYPES = ['easy', 'long', 'threshold', 'marathonPace', 'strides', 'parkrun', 'rest', ...ACTIVITIES] as const;
+export const SCHEDULE_TYPES = ['easy', 'long', 'threshold', 'marathonPace', 'strides', 'parkrun', 'track', 'crossCountry', 'rest', ...ACTIVITIES] as const;
 export type ScheduleType = typeof SCHEDULE_TYPES[number];
 export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export type DefaultDays = Record<ScheduleType, Weekday | null>;
 export const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as const;
 export const DEFAULT_DAYS: DefaultDays = {
-  easy: null, long: 6, threshold: 3, marathonPace: 3, strides: null, parkrun: 5, rest: null,
+  easy: null, long: 6, threshold: 3, marathonPace: 3, strides: null, parkrun: 5, track: null, crossCountry: null, rest: null,
   swim: 0, ride: null, pilates: 4, strength: 1, badminton: 2,
 };
 export interface PaceRange { min: number; max: number }
@@ -54,9 +54,20 @@ export interface Settings {
   darkMode: boolean;
 }
 export interface Plan { workouts: Workout[]; settings: Settings; marathonFinishesVersion?: 1; qualityVarietyVersion?: 1 }
+export function newWorkoutDetails(type: WorkoutType, settings: Settings): Pick<Workout, 'distanceMiles' | 'paceMinPerMile' | 'notes'> {
+  const zone = Object.entries(settings.paceZones).find(([key]) => key === type)?.[1] ?? settings.paceZones.easy;
+  return {
+    distanceMiles: ['crossTraining', 'rest'].includes(type) ? 0 : type === 'track' ? 4 : 5,
+    paceMinPerMile: { ...zone },
+    notes: type === 'track'
+      ? '4 miles total, including 1 mile easy warm-up. Choose the main set and cool-down within the remaining 3 miles; adjust pace to the session.'
+      : type === 'crossCountry' ? '5 miles cross country. Run by effort on changing terrain; adjust pace to conditions.' : '',
+  };
+}
 export const LABELS: Record<WorkoutType, string> = {
   easy: 'Easy run', long: 'Long run', threshold: 'Threshold',
   marathonPace: 'Marathon pace', strides: 'Strides', parkrun: 'Parkrun',
+  track: 'Track', crossCountry: 'Cross Country',
   crossTraining: 'Cross training', rest: 'Rest day', race: 'Race day',
 };
 export const PLAN_START = '2026-10-26';
@@ -67,7 +78,7 @@ export const dateKey = (date: Date) => format(date, 'yyyy-MM-dd');
 export const weekKey = (date: string | Date) => dateKey(startOfWeek(typeof date === 'string' ? parseISO(date) : date, { weekStartsOn: 1 }));
 export const dayOffset = (date: string, days: number) => dateKey(addDays(parseISO(date), days));
 export const isRun = (w: Workout) => w.type !== 'crossTraining' && w.type !== 'rest';
-export const isHard = (w: Workout) => ['threshold', 'marathonPace', 'race'].includes(w.type)
+export const isHard = (w: Workout) => ['threshold', 'marathonPace', 'track', 'crossCountry', 'race'].includes(w.type)
   || (w.type === 'parkrun' && w.paceMinPerMile.min < 9)
   || (w.type === 'long' && !!w.marathonFinish);
 export const workoutLabel = (w: Workout) => w.type === 'crossTraining' && w.activity

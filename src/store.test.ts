@@ -4,6 +4,7 @@ import baseline from './default-plan.json';
 import { thresholdSession } from './threshold';
 import { addCompletedStrength, completedStrengthWorkout, generateStrengthWorkout } from './random-strength';
 import { exportICS } from './files';
+import { newWorkoutDetails, isHard, weekStats } from './model';
 
 let store: typeof import('./store');
 const storage = new Map<string, string>();
@@ -19,6 +20,27 @@ beforeEach(() => {
   store.usePlanner.setState({ plan: createDefaultPlan(), past: [], future: [], error: null });
 });
 describe('import validation', () => {
+  it('supports Track and Cross Country defaults, hard-day counts and legacy settings migration', () => {
+    const plan = store.validatePlan(structuredClone(baseline));
+    expect(plan.settings.defaultDays.track).toBeNull();
+    expect(plan.settings.defaultDays.crossCountry).toBeNull();
+    expect(plan.settings.trainingZones.hrTargets.track).toBe(4);
+    expect(plan.settings.trainingZones.hrTargets.crossCountry).toBe(4);
+    const runs = (['track', 'crossCountry'] as const).map((type, index) => ({
+      id: type, date: `2026-11-0${index + 2}`, type, completed: false,
+      ...newWorkoutDetails(type, plan.settings),
+    }));
+    expect(runs.map(run => run.distanceMiles)).toEqual([4, 5]);
+    expect(runs[0].notes).toContain('including 1 mile easy warm-up');
+    expect(runs.every(isHard)).toBe(true);
+    expect(weekStats(runs)).toEqual({ miles: 9, runDays: 2, hardDays: 2 });
+    const updated = { ...plan, workouts: [...plan.workouts, ...runs] };
+    expect(store.validatePlan(JSON.parse(JSON.stringify(updated)))).toEqual(updated);
+    expect(exportICS(updated)).toContain('Cross Country');
+    const invalid = structuredClone(updated);
+    Reflect.set(invalid.settings.trainingZones.hrTargets, 'track', 9);
+    expect(() => store.validatePlan(invalid)).toThrow('Invalid HR');
+  });
   it('refines baseline thresholds on import and persists an idempotent round trip', () => {
     const plan = store.validatePlan(structuredClone(baseline));
     expect(plan.workouts.filter(workout => thresholdSession(workout))).toHaveLength(11);

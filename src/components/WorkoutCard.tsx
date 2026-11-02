@@ -18,7 +18,7 @@ import { strengthSummary } from '../strength-guide';
 export function WorkoutIcon({ workout, size = 16 }: { workout: Workout; size?: number }) {
   const Icon = workout.type === 'crossTraining' ? workout.activity === 'swim' ? Waves : Dumbbell
     : workout.type === 'rest' ? Coffee : workout.type === 'race' ? Flag
-      : ['threshold', 'marathonPace', 'strides'].includes(workout.type) ? Zap : Footprints;
+      : ['threshold', 'marathonPace', 'strides', 'track', 'crossCountry'].includes(workout.type) ? Zap : Footprints;
   return <Icon size={size} strokeWidth={1.7} aria-hidden="true" />;
 }
 
@@ -50,6 +50,8 @@ export function CardContent({ workout: w, settings, compact = false }: { workout
         {targets && <span className="zone-badges"><span>Pace {targets.paceZone}</span><span>HR Z{targets.hrZone}</span></span>}
         {targets && <span className="workout-meta"><Heart size={12} />{targets.hrRange}</span>}
         {w.qualityStyle && <span className="workout-meta">Quality session · hard day</span>}
+        {w.type === 'track' && <span className="workout-meta">Track session · hard day</span>}
+        {w.type === 'crossCountry' && <span className="workout-meta">Off-road · hard day</span>}
         {w.marathonFinish && <span className="workout-meta">MP finish · hard day</span>}
       </>
       {threshold && <span className="threshold-breakdown" aria-label="Threshold session breakdown">{thresholdSummary(w, settings).map((text, index) => <span key={index}>{text}</span>)}</span>}

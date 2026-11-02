@@ -59,6 +59,21 @@ function assertValidPlan(value: unknown): asserts value is Plan {
   if (value.qualityVarietyVersion !== undefined && value.qualityVarietyVersion !== 1) throw new Error('Invalid quality variety version.');
 }
 export function validatePlan(value: unknown): Plan {
+  if (object(value) && object(value.settings)) {
+    const settings = { ...value.settings };
+    if (object(settings.defaultDays)) {
+      settings.defaultDays = {
+        track: null, crossCountry: null, ...settings.defaultDays,
+      };
+    }
+    if (object(settings.trainingZones) && object(settings.trainingZones.hrTargets)) {
+      settings.trainingZones = {
+        ...settings.trainingZones,
+        hrTargets: { track: 4, crossCountry: 4, ...settings.trainingZones.hrTargets },
+      };
+    }
+    value = { ...value, settings };
+  }
   assertValidPlan(value);
   const needsStrength = value.settings.strengthDays === undefined;
   const plan: Plan = { ...value, settings: {

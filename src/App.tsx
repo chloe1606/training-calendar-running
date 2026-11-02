@@ -14,7 +14,7 @@ import {
 import { usePlanner, validatePlan } from './store';
 import {
   allWeeks, dateKey, dayOffset, formatPace, inUnits, phaseForWeek, weekKey, weekStats,
-  workoutLabel, type Workout, type Settings, type WorkoutType, type Activity, LABELS,
+  workoutLabel, newWorkoutDetails, type Workout, type Settings, type WorkoutType, type Activity, LABELS,
 } from './model';
 import { createDefaultPlan, planWeekNumber } from './seed';
 import { getWarnings, warningsForWeek } from './rules';
@@ -147,10 +147,10 @@ export default function App() {
   const navigate = (date: string) => { setEditingId(null); setWeek(weekKey(date)); setMonth(dateKey(startOfMonth(parseISO(date)))); };
   const addWorkout = (date: string, type: WorkoutType = 'easy', activity?: Activity) => {
     const id = crypto.randomUUID();
-    const zone = Object.entries(plan.settings.paceZones).find(([key]) => key === type)?.[1] ?? plan.settings.paceZones.easy;
     change(p => ({ ...p, workouts: [...p.workouts, {
-      id, date, type, activity, distanceMiles: ['crossTraining', 'rest'].includes(type) ? 0 : 5, paceMinPerMile: { ...zone },
-      hrCapBpm: ['easy', 'long'].includes(type) ? p.settings.maxEasyHR : undefined, notes: '', completed: false,
+      id, date, type, activity, ...newWorkoutDetails(type, p.settings),
+      hrCapBpm: ['easy', 'long'].includes(type) ? p.settings.maxEasyHR : undefined,
+      completed: false,
     }] }));
     navigate(date);
     setModal(null);
@@ -238,7 +238,7 @@ export default function App() {
             {active && <div className="drag-tip">Moving {workoutLabel(active).toLowerCase()} <MoveRight size={14} /> Drop on any day, or on a navigation arrow to move one week.</div>}
             {view !== 'month' ? <WeekBoard agenda={view === 'agenda'} week={week} workouts={plan.workouts} settings={plan.settings} warningDates={warningDates} editingId={editingId} setEditingId={setEditingId} onAdd={addWorkout} />
               : <MonthOverview month={month} workouts={plan.workouts} settings={plan.settings} warningDates={warningDates} editingId={editingId} setEditingId={setEditingId} onAdd={addWorkout} />}
-            <footer className="calendar-footer"><div className="legend">{(['easy', 'long', 'threshold', 'marathonPace', 'parkrun', 'crossTraining', 'rest', 'race'] as const).map(t => <span key={t}><i className={`type-dot type-${t}`} />{LABELS[t]}</span>)}</div><span className="drag-caption">Drag to rearrange. Click to make it yours.</span></footer>
+            <footer className="calendar-footer"><div className="legend">{(['easy', 'long', 'threshold', 'marathonPace', 'parkrun', 'track', 'crossCountry', 'crossTraining', 'rest', 'race'] as const).map(t => <span key={t}><i className={`type-dot type-${t}`} />{LABELS[t]}</span>)}</div><span className="drag-caption">Drag to rearrange. Click to make it yours.</span></footer>
           </section>
           <DragOverlay dropAnimation={null}>{active && <div className={`workout-card drag-overlay type-${active.type}`}><CardContent workout={active} settings={plan.settings} /></div>}</DragOverlay>
         </DndContext>
