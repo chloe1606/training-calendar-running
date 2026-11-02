@@ -235,7 +235,7 @@ export function WorkoutCard({ workout, settings, compact, editingId, setEditingI
     id: workout.id, data: { date: workout.date }, disabled: editing,
   });
   return <article ref={setNodeRef} style={{ transform: CSS.Transform.toString(transform), transition }}
-    className={`workout-card type-${workout.type} ${compact ? 'compact-card' : ''} ${workout.completed ? 'is-completed' : ''} ${isDragging ? 'is-dragging' : ''} ${editing ? 'is-editing' : ''}`}>
+    className={`workout-card type-${workout.type} ${workout.type === 'crossTraining' && workout.activity ? `activity-${workout.activity}` : ''} ${compact ? 'compact-card' : ''} ${workout.completed ? 'is-completed' : ''} ${isDragging ? 'is-dragging' : ''} ${editing ? 'is-editing' : ''}`}>
     <div className="card-controls">
       <button className={`completion-button ${workout.completed ? 'checked' : ''}`} aria-label={`${workout.completed ? 'Mark incomplete' : 'Complete'}: ${workoutLabel(workout)} on ${workout.date}`} aria-pressed={workout.completed}
         onClick={() => change(p => ({ ...p, workouts: p.workouts.map(w => w.id === workout.id ? { ...w, completed: !w.completed } : w) }))}>{workout.completed && <Check size={11} />}</button>

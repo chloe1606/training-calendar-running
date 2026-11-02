@@ -20,7 +20,7 @@ beforeEach(() => {
   store.usePlanner.setState({ plan: createDefaultPlan(), past: [], future: [], error: null });
 });
 describe('import validation', () => {
-  it('supports Track and Cross Country defaults, hard-day counts and legacy settings migration', () => {
+  it('supports Track and Cross country defaults, hard-day counts and legacy settings migration', () => {
     const plan = store.validatePlan(structuredClone(baseline));
     expect(plan.settings.defaultDays.track).toBeNull();
     expect(plan.settings.defaultDays.crossCountry).toBeNull();
@@ -36,7 +36,7 @@ describe('import validation', () => {
     expect(weekStats(runs)).toEqual({ miles: 9, runDays: 2, hardDays: 2 });
     const updated = { ...plan, workouts: [...plan.workouts, ...runs] };
     expect(store.validatePlan(JSON.parse(JSON.stringify(updated)))).toEqual(updated);
-    expect(exportICS(updated)).toContain('Cross Country');
+    expect(exportICS(updated)).toContain('Cross country');
     const invalid = structuredClone(updated);
     Reflect.set(invalid.settings.trainingZones.hrTargets, 'track', 9);
     expect(() => store.validatePlan(invalid)).toThrow('Invalid HR');

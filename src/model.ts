@@ -67,7 +67,7 @@ export function newWorkoutDetails(type: WorkoutType, settings: Settings): Pick<W
 export const LABELS: Record<WorkoutType, string> = {
   easy: 'Easy run', long: 'Long run', threshold: 'Threshold',
   marathonPace: 'Marathon pace', strides: 'Strides', parkrun: 'Parkrun',
-  track: 'Track', crossCountry: 'Cross Country',
+  track: 'Track', crossCountry: 'Cross country',
   crossTraining: 'Cross training', rest: 'Rest day', race: 'Race day',
 };
 export const PLAN_START = '2026-10-26';

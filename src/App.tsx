@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import {
   DndContext, DragOverlay, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors,
   useDroppable, pointerWithin, rectIntersection, closestCenter, type CollisionDetection,
@@ -103,6 +103,9 @@ export default function App() {
   const [notice, setNotice] = useState('');
   const [mobileNav, setMobileNav] = useState(false);
   const [page, setPage] = useState<Page>(pageFromHash);
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [page]);
   useEffect(() => {
     const onHashChange = () => {
       if (['', '#calendar', '#strength', '#insights', '#mileage'].includes(window.location.hash)) setPage(pageFromHash());
@@ -173,16 +176,25 @@ export default function App() {
     setNotice(`${workoutLabel(item)} moved to ${format(parseISO(date), 'EEEE d MMMM')}.`);
   }
   const toggleUnits = (units: Settings['units']) => change(p => ({ ...p, settings: { ...p.settings, units } }));
+  function openPage(event: MouseEvent<HTMLAnchorElement>, destination: Page) {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    const hash = `#${destination}`;
+    if (window.location.hash !== hash) window.history.pushState(null, '', hash);
+    setPage(destination);
+    setMobileNav(false);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
   return <div className="app-shell">
     <a className="skip-link" href="#main">Skip to {page === 'strength' ? 'strength workouts' : page === 'insights' ? 'plan insights' : 'calendar'}</a>
     <aside className={`sidebar ${mobileNav ? 'mobile-open' : ''}`}>
-      <a href="#calendar" className="brand" aria-label="Marathon Planner home" onClick={() => { setPage('calendar'); setMobileNav(false); }}><span className="brand-mark"><Footprints size={22} strokeWidth={2.1} /></span><span>marathon<span className="brand-secondary">planner<span className="brand-period">.</span></span></span></a>
+      <a href="#calendar" className="brand" aria-label="Marathon Planner home" onClick={event => openPage(event, 'calendar')}><span className="brand-mark"><Footprints size={22} strokeWidth={2.1} /></span><span>marathon<span className="brand-secondary">planner<span className="brand-period">.</span></span></span></a>
       <button className="mobile-close icon-button" onClick={() => setMobileNav(false)} aria-label="Close navigation"><X size={20} /></button>
       <div className="sidebar-label">YOUR WORKSPACE</div>
       <nav aria-label="Main navigation">
-        <a href="#calendar" className={`nav-item ${page === 'calendar' ? 'active' : ''}`} aria-current={page === 'calendar' ? 'page' : undefined} onClick={() => { setPage('calendar'); setMobileNav(false); }}><CalendarDays size={18} />Training calendar{page === 'calendar' && <span className="nav-active-dot" />}</a>
-        <a href="#insights" className={`nav-item ${page === 'insights' ? 'active' : ''}`} aria-current={page === 'insights' ? 'page' : undefined} onClick={() => { setPage('insights'); setMobileNav(false); }}><ChartNoAxesCombined size={18} />Plan insights{page === 'insights' && <span className="nav-active-dot" />}</a>
-        <a href="#strength" className={`nav-item ${page === 'strength' ? 'active' : ''}`} aria-current={page === 'strength' ? 'page' : undefined} onClick={() => { setPage('strength'); setMobileNav(false); }}><Dumbbell size={18} />Strength workouts{page === 'strength' && <span className="nav-active-dot" />}</a>
+        <a href="#calendar" className={`nav-item ${page === 'calendar' ? 'active' : ''}`} aria-current={page === 'calendar' ? 'page' : undefined} onClick={event => openPage(event, 'calendar')}><CalendarDays size={18} />Training calendar{page === 'calendar' && <span className="nav-active-dot" />}</a>
+        <a href="#insights" className={`nav-item ${page === 'insights' ? 'active' : ''}`} aria-current={page === 'insights' ? 'page' : undefined} onClick={event => openPage(event, 'insights')}><ChartNoAxesCombined size={18} />Plan insights{page === 'insights' && <span className="nav-active-dot" />}</a>
+        <a href="#strength" className={`nav-item ${page === 'strength' ? 'active' : ''}`} aria-current={page === 'strength' ? 'page' : undefined} onClick={event => openPage(event, 'strength')}><Dumbbell size={18} />Strength workouts{page === 'strength' && <span className="nav-active-dot" />}</a>
         <button className="nav-item" onClick={() => { setModal('settings'); setMobileNav(false); }}><Settings2 size={18} />Settings</button>
       </nav>
       <div className="sidebar-plan"><span className="sidebar-label">THE CURRENT CHAPTER</span><span className="chapter-icon"><Leaf size={19} /></span><strong>Building the foundation</strong><p>Easy miles today.<br />A stronger runner tomorrow.</p><div className="chapter-progress"><span /></div><div className="chapter-caption"><span>Base phase</span><span>Until 13 Dec</span></div></div>
@@ -240,7 +252,7 @@ export default function App() {
               : <MonthOverview month={month} workouts={plan.workouts} settings={plan.settings} warningDates={warningDates} editingId={editingId} setEditingId={setEditingId} onAdd={addWorkout} />}
             <footer className="calendar-footer"><div className="legend">{(['easy', 'long', 'threshold', 'marathonPace', 'parkrun', 'track', 'crossCountry', 'crossTraining', 'rest', 'race'] as const).map(t => <span key={t}><i className={`type-dot type-${t}`} />{LABELS[t]}</span>)}</div><span className="drag-caption">Drag to rearrange. Click to make it yours.</span></footer>
           </section>
-          <DragOverlay dropAnimation={null}>{active && <div className={`workout-card drag-overlay type-${active.type}`}><CardContent workout={active} settings={plan.settings} /></div>}</DragOverlay>
+          <DragOverlay dropAnimation={null}>{active && <div className={`workout-card drag-overlay type-${active.type} ${active.type === 'crossTraining' && active.activity ? `activity-${active.activity}` : ''}`}><CardContent workout={active} settings={plan.settings} /></div>}</DragOverlay>
         </DndContext>
         <div className="calendar-checks"><a href="#insights" className="secondary-button" onClick={() => setPage('insights')}><ChartNoAxesCombined size={16} />Explore planned vs completed mileage</a><RuleWarnings warnings={selectedWarnings} onNavigate={navigate} /></div>
         <footer className="page-footer"><span><Leaf size={14} />Progress isn't always a straight line. Keep going.</span><div><button disabled={!past.length} onClick={undo} title="Undo (Cmd/Ctrl+Z)" aria-label="Undo last change"><Undo2 size={15} />Undo</button><button disabled={!future.length} onClick={redo} title="Redo (Cmd/Ctrl+Shift+Z)" aria-label="Redo last change"><Redo2 size={15} />Redo</button><i /><button onClick={() => setModal('reset')}><RotateCcw size={14} />Reset to default plan</button></div></footer>
