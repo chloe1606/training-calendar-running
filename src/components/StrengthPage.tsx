@@ -5,7 +5,7 @@ import { MOVE_GUIDES, MOVE_PROGRESSIONS, bodyAreas, moveCategory, moveDifficulty
 import { initialRestTimer, restTimerLabel, restTimerReducer, restStepDurations, validRestSeconds, type RestTimerState, type RestTimerAction } from '../rest-timer';
 import { initialStopwatch, stopwatchLabel, stopwatchReducer } from '../stopwatch';
 import { dateKey, weekKey, type Workout } from '../model';
-import { generateStrengthWorkout, strengthPoolGroups, strengthPoolCoverage, completedStrengthWorkout, type GeneratedStrength, type StrengthIntensity } from '../random-strength';
+import { generateStrengthWorkout, strengthPoolGroups, completedStrengthWorkout, type GeneratedStrength, type StrengthIntensity } from '../random-strength';
 
 function EquipmentIcon({ kind }: { kind: EquipmentKind }) {
   if (kind === 'dumbbell') return <Dumbbell size={14} aria-hidden="true" />;
@@ -224,7 +224,7 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
     }),
   }));
   const visiblePoolIds = filteredPoolGroups.flatMap(group => group.candidates.map(item => item.id));
-  const missingGroups = strengthPoolCoverage(intensity, pool[intensity]);
+  const emptyPool = pool[intensity].length === 0;
   const savedWorkout = savedId ? allWorkouts.find(w => w.id === savedId) : undefined;
   function generate() {
     setGeneratorError('');
@@ -271,7 +271,7 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
       <label className="strength-picker">Workout intensity<select value={intensity} onChange={event => setIntensity(event.target.value === 'heavy' ? 'heavy' : 'light')}>
         <option value="light">Light: core and mobility</option><option value="heavy">Heavy: main strength session</option>
       </select></label>
-      <p>Pick a pool of main exercises; generate one per group, plus warm-up and cool-down. Heavy allows at most one Hard move. Light uses gentle bodyweight doses only.</p>
+      <p>Generate up to five Heavy or four Light exercises from your selected pool, plus warm-up and cool-down. No muscle-group requirements or limit on Hard moves. Light uses gentle bodyweight doses only.</p>
       <details className="strength-pool">
         <summary>Choose exercises ({pool[intensity].length} selected)</summary>
         <label>Search exercise pool<input type="search" value={poolSearch} onChange={event => setPoolSearch(event.target.value)} placeholder="Name, equipment, body area…" /></label>
@@ -297,9 +297,9 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
           })}
         </fieldset>)}</div>
       </details>
-      {missingGroups.length > 0 && <p role="status">Select at least one exercise in: {missingGroups.join(', ')}.</p>}
+      {emptyPool && <p role="status">Select at least one exercise in the pool.</p>}
       {generatorError && <p role="alert" className="form-error">{generatorError}</p>}
-      <button className="primary-button" disabled={missingGroups.length > 0} onClick={generate}>Generate workout</button>
+      <button className="primary-button" disabled={emptyPool} onClick={generate}>Generate workout</button>
       <p>Pool selections and unsaved previews reset on reload. Saved workouts persist in the calendar and completed history.</p>
     </section>
     <div className="strength-layout"><div className="strength-panel">

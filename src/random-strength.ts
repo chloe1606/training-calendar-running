@@ -1,6 +1,6 @@
 import { isValid, parseISO } from 'date-fns';
 import { dateKey, type Plan, type Workout } from './model';
-import { MOVE_GUIDES, moveDifficulty } from './strength-guide';
+import { MOVE_GUIDES } from './strength-guide';
 
 export type StrengthIntensity = 'light' | 'heavy';
 export interface GeneratedStrength {
@@ -94,37 +94,25 @@ export function strengthPoolGroups(intensity: StrengthIntensity): StrengthPoolGr
     ] }));
 }
 
-export function strengthPoolCoverage(intensity: StrengthIntensity, selectedIds: readonly string[]): string[] {
-  const groups = strengthPoolGroups(intensity);
-  const allowed = new Set(groups.flatMap(group => group.candidates.map(item => item.id)));
-  if (selectedIds.some(id => !allowed.has(id))) throw new Error('The pool includes an exercise that is not suitable for this intensity.');
-  return groups.filter(group => !group.candidates.some(item => selectedIds.includes(item.id))).map(group => group.label);
-}
-
 export function generateStrengthWorkout(intensity: StrengthIntensity, random: () => number = Math.random, selectedIds?: readonly string[]): GeneratedStrength {
-  const groups = strengthPoolGroups(intensity);
-  const pool = selectedIds ?? groups.flatMap(group => group.candidates.map(item => item.id));
-  const missing = strengthPoolCoverage(intensity, pool);
-  if (missing.length) throw new Error(`Choose at least one exercise for: ${missing.join(', ')}.`);
-  const slots = groups.map(group => group.candidates.filter(item => pool.includes(item.id)));
-  const isDemanding = (item: Candidate) => moveDifficulty(MOVE_GUIDES.find(move => move.id === item.id)!) === 'Hard';
-  if (slots.filter(slot => slot.every(isDemanding)).length > 1) {
-    throw new Error('Choose Medium/Easy alternatives in more groups. A generated workout includes at most one Hard exercise.');
-  }
-  let hardChosen = false;
-  const chosen = slots.map((slot, index) => {
-    const hardNeededLater = slots.slice(index + 1).some(later => later.every(isDemanding));
-    const available = hardChosen || hardNeededLater ? slot.filter(item => !isDemanding(item)) : slot;
+  const candidates = strengthPoolGroups(intensity).flatMap(group => group.candidates);
+  const pool = selectedIds ?? candidates.map(item => item.id);
+  if (pool.some(id => !candidates.some(item => item.id === id))) throw new Error('The pool includes an exercise that is not suitable for this intensity.');
+  const available = candidates.filter(item => pool.includes(item.id));
+  if (!available.length) throw new Error('Choose at least one exercise in the pool.');
+  const heavy = intensity === 'heavy';
+  const count = Math.min(heavy ? 5 : 4, available.length);
+  const chosen: Candidate[] = [];
+  while (chosen.length < count) {
     const sample = random();
     if (!Number.isFinite(sample) || sample < 0 || sample >= 1) throw new Error('Random sample must be between 0 (inclusive) and 1 (exclusive).');
-    const selected = available[Math.floor(sample * available.length)];
-    if (isDemanding(selected)) hardChosen = true;
-    return selected;
-  });
-  const heavy = intensity === 'heavy';
-  const title = heavy ? 'Generated heavy: legs, posterior chain, calves, upper body and core' : 'Generated light: core, hips, ankles and mobility';
+    chosen.push(...available.splice(Math.floor(sample * available.length), 1));
+  }
+  const title = heavy ? 'Generated heavy: custom strength workout' : 'Generated light: custom strength workout';
   const notes = [
-    `Warm-up: ${heavy ? '5' : '3'} min easy walking.`,
+    heavy
+      ? 'Warm-up: 5 min easy walking. Alternatives: replace part of the walking with 6-8 comfortable bodyweight squats or sit-to-stands, 6-8 small mini-band lateral walk steps each way, or 6 small mini-band diagonal walk steps forward and back. Use a light band above the knees. Choose one option within the same 5 min, not all of them; keep the effort easy and avoid fatigue.'
+      : 'Warm-up: 3 min easy walking. Alternatives: replace part of the walking with 4-6 shallow bodyweight squats or supported sit-to-stands, gentle side steps, or seated heel lifts. Choose one option within the same 3 min, not all of them; stay bodyweight-only and keep the effort easy.',
     ...chosen.map(item => {
       const move = MOVE_GUIDES.find(move => move.id === item.id);
       if (!move) throw new Error(`Unknown generated movement: ${item.id}`);

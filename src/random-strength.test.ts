@@ -1,10 +1,29 @@
 import { describe, expect, it } from 'vitest';
-import { addCompletedStrength, completedStrengthWorkout, generateStrengthWorkout, strengthPoolCoverage, strengthPoolGroups } from './random-strength';
-import { bodyAreas, equipmentTags, guidesForNotes, moveDifficulty, MOVE_GUIDES, strengthDurationLabel, workoutFlowSteps, strengthSummary } from './strength-guide';
+import { addCompletedStrength, completedStrengthWorkout, generateStrengthWorkout, strengthPoolGroups } from './random-strength';
+import { equipmentTags, guidesForNotes, moveDifficulty, MOVE_GUIDES, strengthDurationLabel, workoutFlowSteps, strengthSummary } from './strength-guide';
 import { createDefaultPlan } from './seed';
 import { weekStats } from './model';
 
-describe('balanced random strength workouts', () => {
+describe('custom random strength workouts', () => {
+  it('offers optional warm-up alternatives without adding main exercises or duplicate suggestions', () => {
+    for (const intensity of ['light', 'heavy'] as const) {
+      const workout = generateStrengthWorkout(intensity, () => 0);
+      const warmup = workoutFlowSteps(workout.notes)[0];
+      expect(warmup.text).toContain('bodyweight squats');
+      expect(warmup.text).toContain('Choose one option within the same');
+      expect(warmup.text.match(/Alternatives:/g)).toHaveLength(1);
+      expect(warmup.moves.some(move => move.id === 'squat')).toBe(true);
+      expect(strengthSummary(workout.notes).some(line => line.startsWith('Warm-up:'))).toBe(false);
+      if (intensity === 'heavy') {
+        expect(warmup.text).toContain('mini-band lateral walk');
+        expect(warmup.text).toContain('mini-band diagonal walk');
+        expect(warmup.moves.some(move => move.id === 'band-lateral')).toBe(true);
+      } else {
+        expect(warmup.text).not.toContain('mini-band');
+        expect(warmup.text).toContain('bodyweight-only');
+      }
+    }
+  });
   it('creates varied, unique combinations with valid flowchart and diagram links', () => {
     for (const intensity of ['light', 'heavy'] as const) {
       const combinations = new Set<string>();
@@ -20,7 +39,7 @@ describe('balanced random strength workouts', () => {
         const steps = workoutFlowSteps(workout.notes);
         expect(steps[0].text).toMatch(/^Warm-up:/);
         for (const id of workout.movementIds) {
-          const movementSteps = steps.filter(step => !step.text.startsWith('Cool-down:') && step.moves.some(move => move.id === id));
+          const movementSteps = steps.filter(step => !/^(?:Warm-up|Cool-down):/.test(step.text) && step.moves.some(move => move.id === id));
           const dose = workout.notes.split('\n').find(line => line.startsWith(`${MOVE_GUIDES.find(move => move.id === id)!.name}:`))!;
           expect(movementSteps).toHaveLength(Number(dose.match(/(\d+) sets? x/)![1]));
           for (const step of movementSteps) expect(step.text).toMatch(/set/i);
@@ -29,12 +48,7 @@ describe('balanced random strength workouts', () => {
         expect(steps.filter(step => step.text.startsWith('Cool-down:'))).toHaveLength(1);
         expect(strengthDurationLabel(workout.notes)).toBe(intensity === 'heavy' ? 'Approx. 25–45 min' : 'Approx. 12–15 min');
         const moves = workout.movementIds.map(id => MOVE_GUIDES.find(move => move.id === id)!);
-        if (intensity === 'heavy') {
-          const areas = new Set(moves.flatMap(bodyAreas));
-          for (const area of ['Legs', 'Calves', 'Core'] as const) expect(areas.has(area)).toBe(true);
-          expect(bodyAreas(moves[3]).some(area => ['Chest', 'Back', 'Arms', 'Shoulders'].includes(area))).toBe(true);
-          expect(moves.filter(move => moveDifficulty(move) === 'Hard').length).toBeLessThanOrEqual(1);
-        } else {
+        if (intensity === 'light') {
           expect(moves.flatMap(equipmentTags).some(tag => ['dumbbell', 'band', 'kettlebell'].includes(tag.kind))).toBe(false);
           expect(workout.notes).toContain('Bodyweight only, no heavy leg work');
         }
@@ -44,18 +58,21 @@ describe('balanced random strength workouts', () => {
     }
   });
   it('selects both ends of each pool and rejects invalid random samples', () => {
-    expect(generateStrengthWorkout('heavy', () => 0).movementIds).toEqual(['split', 'rdl', 'calf', 'db-row', 'deadbug']);
-    expect(generateStrengthWorkout('heavy', () => 0.99999).movementIds).toEqual(['offset-squat', 'hinge-drive', 'wall-soleus', 'band-rotation', 'wall-march-hold']);
+    const candidates = strengthPoolGroups('heavy').flatMap(group => group.candidates.map(item => item.id));
+    expect(generateStrengthWorkout('heavy', () => 0).movementIds).toEqual(candidates.slice(0, 5));
+    expect(generateStrengthWorkout('heavy', () => 0.99999).movementIds).toEqual(candidates.slice(-5).reverse());
     for (const sample of [-1, 1, NaN, Infinity]) expect(() => generateStrengthWorkout('light', () => sample)).toThrow('Random sample');
   });
-  it('uses only the selected pool and requires every balance group', () => {
+  it('uses only the selected pool without requiring every muscle group', () => {
     for (const intensity of ['light', 'heavy'] as const) {
       const groups = strengthPoolGroups(intensity);
       const selected = groups.map(group => group.candidates[0].id);
-      expect(strengthPoolCoverage(intensity, selected)).toEqual([]);
-      expect(generateStrengthWorkout(intensity, () => 0.5, selected).movementIds).toEqual(selected);
-      expect(strengthPoolCoverage(intensity, selected.slice(1))).toEqual([groups[0].label]);
-      expect(() => generateStrengthWorkout(intensity, () => 0, selected.slice(1))).toThrow('Choose at least one exercise');
+      expect(generateStrengthWorkout(intensity, () => 0, selected).movementIds).toEqual(selected);
+      expect(generateStrengthWorkout(intensity, () => 0, selected.slice(1)).movementIds).toEqual(selected.slice(1));
+      const focused = groups[0].candidates.slice(0, 3).map(item => item.id);
+      expect(generateStrengthWorkout(intensity, () => 0, focused).movementIds).toEqual(focused);
+      expect(generateStrengthWorkout(intensity, () => 0, [selected[0], selected[0]]).movementIds).toEqual([selected[0]]);
+      expect(() => generateStrengthWorkout(intensity, () => 0, [])).toThrow('Choose at least one exercise');
       expect(() => generateStrengthWorkout(intensity, () => 0, [...selected, 'unknown'])).toThrow('not suitable');
       expect(new Set(groups.flatMap(group => group.candidates.map(item => item.id))).size)
         .toBe(groups.flatMap(group => group.candidates).length);
@@ -69,7 +86,7 @@ describe('balanced random strength workouts', () => {
       const groups = strengthPoolGroups(intensity);
       for (let index = 0; index < groups.length; index++) {
         for (const candidate of groups[index].candidates) {
-          const ids = groups.map((group, i) => i === index ? candidate.id : group.candidates[0].id);
+          const ids = [candidate.id];
           const workout = generateStrengthWorkout(intensity, () => 0, ids);
           expect(workout.movementIds).toContain(candidate.id);
           expect(workout.notes).toContain(candidate.dose);
@@ -81,13 +98,12 @@ describe('balanced random strength workouts', () => {
       }
     }
   });
-  it('avoids multiple hard movements and gives a clear error for an impossible selected pool', () => {
-    const ids = ['rear-elevated-split', 'single-slider', 'calf', 'db-row', 'deadbug'];
-    expect(() => generateStrengthWorkout('heavy', () => 0, ids)).toThrow('at most one Hard');
-    const possible = ['rear-elevated-split', 'rdl', 'calf', 'db-row', 'deadbug', 'hip-airplane'];
-    const generated = generateStrengthWorkout('heavy', () => 0.999, possible);
-    expect(generated.movementIds).toContain('rear-elevated-split');
-    expect(generated.movementIds).not.toContain('hip-airplane');
+  it('allows an all-Hard pool with multiple Hard movements in one workout', () => {
+    const ids = strengthPoolGroups('heavy').flatMap(group => group.candidates)
+      .filter(item => moveDifficulty(MOVE_GUIDES.find(move => move.id === item.id)!) === 'Hard')
+      .map(item => item.id);
+    expect(ids.length).toBeGreaterThanOrEqual(5);
+    expect(generateStrengthWorkout('heavy', () => 0, ids).movementIds).toEqual(ids.slice(0, 5));
   });
   it('builds a dated completed strength entry without altering running mileage or existing sessions', () => {
     const plan = createDefaultPlan();

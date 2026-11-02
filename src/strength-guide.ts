@@ -673,7 +673,7 @@ export function workoutFlowSteps(notes: string): { text: string; moves: MoveGuid
     text = text.replace(/\bBodyweight only[;.]?\s*|\bNo heavy leg work\.\s*|\bWith Pilates, use one set or mobility only\.\s*/gi, '').trim();
     if (!text) continue;
     if (/^Warm-up:/i.test(text)) {
-      steps.push({ text: `${text} Alternatives: gentle side steps or seated heel lifts for the same time.`, moves: guidesForNotes(text) });
+      steps.push({ text: /alternatives?:/i.test(text) ? text : `${text} Alternatives: gentle side steps or seated heel lifts for the same time.`, moves: guidesForNotes(text) });
       continue;
     }
     const moves = guidesForNotes(text);
