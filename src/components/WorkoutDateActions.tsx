@@ -18,7 +18,7 @@ export function WorkoutDateActions({ workout, close }: { workout: Workout; close
   }
   return <section className="workout-editor" aria-label="Move or copy workout">
     <label>Destination date<input type="date" min="2020-01-01" max="2100-12-31" required value={date} onChange={event => setDate(event.target.value)} /></label>
-    <p className="field-help">Uses the saved workout, not unsaved edits above. A copy starts incomplete; moving keeps completion status.</p>
+    <p className="field-help">Uses the saved workout, not unsaved edits above. A copy starts incomplete with no fuelling log; moving keeps completion status and fuelling.</p>
     {error && <p role="alert" className="form-error">{error}</p>}
     <div className="editor-actions"><button type="button" onClick={() => apply(false)}>Move to date</button><button type="button" onClick={() => apply(true)}>Copy to date</button></div>
   </section>;

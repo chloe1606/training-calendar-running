@@ -13,6 +13,17 @@ beforeAll(async () => {
 });
 
 describe('long-run pace split', () => {
+  it('offers the fuelling editor on long runs only, retaining logs after a type change', () => {
+    const plan = createDefaultPlan();
+    const run = plan.workouts.find(workout => workout.type === 'long')!;
+    const render = (workout: typeof run) => renderToStaticMarkup(createElement(WorkoutCard, {
+      workout, settings: plan.settings, editingId: workout.id, setEditingId: () => undefined,
+    }));
+    expect(render(run)).toContain('Long-run fuelling log');
+    expect(render({ ...run, type: 'easy' })).not.toContain('Long-run fuelling log');
+    expect(render({ ...run, type: 'easy', fuellingLog: { entries: [], notes: 'Felt good.' } })).toContain('Long-run fuelling log');
+    expect(render(run)).toContain('Save fuelling log');
+  });
   it('keeps Track sessions simple and offers move/copy actions', () => {
     const plan = createDefaultPlan();
     const workout = { ...plan.workouts[0], type: 'track' as const, notes: '1 mi warm-up, 6 x 400 m, easy cool-down.' };

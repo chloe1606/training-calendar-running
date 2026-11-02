@@ -15,6 +15,8 @@ import { thresholdSummary, thresholdSession, thresholdNotes } from '../threshold
 import { mainSetMiles, qualityDetails, qualityDuration, qualityNotes } from '../quality';
 import { strengthSummary } from '../strength-guide';
 import { WorkoutDateActions } from './WorkoutDateActions';
+import { FuellingLogEditor } from './FuellingLogEditor';
+import { fuellingDetails } from '../fuelling';
 
 export function WorkoutIcon({ workout, size = 16 }: { workout: Workout; size?: number }) {
   const Icon = workout.type === 'crossTraining' ? workout.activity === 'swim' ? Waves : Dumbbell
@@ -117,6 +119,7 @@ function SessionExplanation({ workout: w, settings }: { workout: Workout; settin
       }}>
       <strong>{workoutLabel(w)}</strong>
       {qualityDetails(w, settings).map(detail => <p key={detail}>{detail}</p>)}
+      {w.fuellingLog && fuellingDetails(w.fuellingLog).map((detail, index) => <p key={`fuel-${index}`}>{detail}</p>)}
       {qualityMiles !== null && <p>Main-set quality: {formatDistance(inUnits(qualityMiles, settings.units))} {settings.units}.</p>}
       {w.marathonFinish && <>
         <p><strong>Long run with marathon-pace finish</strong></p>
@@ -241,13 +244,14 @@ export function WorkoutCard({ workout, settings, compact, editingId, setEditingI
     <div className="card-controls">
       <button className={`completion-button ${workout.completed ? 'checked' : ''}`} aria-label={`${workout.completed ? 'Mark incomplete' : 'Complete'}: ${workoutLabel(workout)} on ${workout.date}`} aria-pressed={workout.completed}
         onClick={() => change(p => ({ ...p, workouts: p.workouts.map(w => w.id === workout.id ? { ...w, completed: !w.completed } : w) }))}>{workout.completed && <Check size={11} />}</button>
-      {(workout.activity === 'strength' ? workout.completed && workout.notes.trim() : workout.notes || workout.qualityStyle || workout.marathonFinish) && <SessionExplanation workout={workout} settings={settings} />}
+      {(workout.activity === 'strength' ? workout.completed && workout.notes.trim() : workout.notes || workout.qualityStyle || workout.marathonFinish || workout.fuellingLog) && <SessionExplanation workout={workout} settings={settings} />}
       <button className="drag-handle" {...attributes} {...listeners} aria-label={`Drag ${workoutLabel(workout)} on ${workout.date}`}><GripVertical size={14} /></button>
     </div>
     <button className="card-main" onClick={() => setEditingId(editing ? null : workout.id)} aria-expanded={editing} aria-label={`Edit ${workoutLabel(workout)} on ${workout.date}`}>
       <CardContent workout={workout} settings={settings} compact={compact} />
     </button>
     {editing && <><WorkoutEditor key={`${workout.id}-${settings.units}`} workout={workout} settings={settings} close={() => setEditingId(null)} />
-      <WorkoutDateActions key={workout.id} workout={workout} close={() => setEditingId(null)} /></>}
+      {(workout.type === 'long' || workout.fuellingLog) && <FuellingLogEditor key={`fuel-${workout.id}`} workout={workout} />}
+      <WorkoutDateActions key={`date-${workout.id}`} workout={workout} close={() => setEditingId(null)} /></>}
   </article>;
 }

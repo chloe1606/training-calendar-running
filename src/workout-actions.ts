@@ -10,7 +10,8 @@ export function rescheduleWorkout(plan: Plan, id: string, date: string, copyId?:
   if (copyId !== undefined) {
     if (!copyId || plan.workouts.some(item => item.id === copyId)) throw new Error('The copied workout needs a unique ID.');
     if (plan.workouts.length >= 10000) throw new Error('The plan has reached the 10,000-workout limit.');
-    return { ...plan, workouts: [...plan.workouts, { ...structuredClone(workout), id: copyId, date, completed: false }] };
+    const { fuellingLog: _fuellingLog, ...copy } = structuredClone(workout);
+    return { ...plan, workouts: [...plan.workouts, { ...copy, id: copyId, date, completed: false }] };
   }
   return { ...plan, workouts: plan.workouts.map(item => item.id === id ? { ...item, date } : item) };
 }

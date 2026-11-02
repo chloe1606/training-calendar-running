@@ -6,6 +6,7 @@ import { createDefaultPlan } from './seed';
 import { addMarathonFinishes } from './finishes';
 import { addQualityVariety } from './quality';
 import { refineThresholdPlan } from './threshold';
+import { validFuellingLog } from './fuelling';
 
 const STORAGE_KEY = 'marathon-planner-v1';
 const validDate = (v: unknown): v is string => typeof v === 'string'
@@ -50,6 +51,7 @@ function assertValidPlan(value: unknown): asserts value is Plan {
       throw new Error('Invalid workout or duplicate workout ID in plan file.');
     }
     ids.add(w.id);
+    if (w.fuellingLog !== undefined && !validFuellingLog(w.fuellingLog)) throw new Error('Invalid fuelling log. Check entry times, carbs, fluids and notes.');
     if (w.qualityStyle !== undefined && (w.type !== 'threshold' || (w.qualityStyle !== 'hills' && w.qualityStyle !== 'progression'))) throw new Error('Invalid quality session style.');
     if (w.marathonFinish !== undefined && (w.type !== 'long' || !object(w.marathonFinish)
       || !number(w.marathonFinish.distanceMiles, 0.001, w.distanceMiles)

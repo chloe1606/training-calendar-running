@@ -3,6 +3,7 @@ import { dayOffset, formatPace, isRun, workoutLabel, type Plan } from './model';
 import { hrRangeLabel, runTargets } from './zones';
 import { mainSetMiles, qualityDetails } from './quality';
 import { formatDistance } from './distance';
+import { fuellingDetails } from './fuelling';
 
 export function download(contents: string, filename: string, type: string) {
   const url = URL.createObjectURL(new Blob([contents], { type }));
@@ -30,6 +31,7 @@ export function exportICS(plan: Plan, now = new Date()): string {
       isRun(w) ? `${formatDistance(w.distanceMiles)} miles; ${w.qualityStyle === 'hills' ? 'Flat-equivalent reference: ' : w.qualityStyle === 'progression' ? 'Threshold portion: ' : (mainSetMiles(w) ?? 0) > 0 ? 'Work portion: ' : ''}${formatPace(w.paceMinPerMile.min)}–${formatPace(w.paceMinPerMile.max)}/mi` : 'Non-running session',
       ...(targets ? [`Pace ${targets.paceZone}; HR Z${targets.hrZone}: ${targets.hrRange}`] : []),
       ...qualityDetails(w, plan.settings),
+      ...(w.fuellingLog ? fuellingDetails(w.fuellingLog) : []),
       ...(w.marathonFinish ? [`MP finish (hard day): first ${formatDistance(w.distanceMiles - w.marathonFinish.distanceMiles)} mi easy, last ${formatDistance(w.marathonFinish.distanceMiles)} mi at ${formatPace(w.marathonFinish.paceMinPerMile.min)}–${formatPace(w.marathonFinish.paceMinPerMile.max)}/mi. Easy HR above applies before the finish; finish HR Z${plan.settings.trainingZones.hrTargets.marathonPace}.`] : []),
       ...(w.marathonFinish ? [`Finish HR: ${hrRangeLabel(plan.settings.trainingZones.hrTargets.marathonPace, plan.settings.trainingZones.hrBoundaries)}`] : []),
       ...(w.hrCapBpm ? [`${w.marathonFinish ? 'Easy portion: ' : ''}HR under ${w.hrCapBpm} bpm`] : []), w.completed ? 'Completed' : 'Planned', w.notes,

@@ -1,4 +1,5 @@
 import { addDays, differenceInCalendarDays, format, parseISO, startOfWeek } from 'date-fns';
+import type { FuellingLog } from './fuelling';
 
 export const TYPES = ['easy', 'long', 'threshold', 'marathonPace', 'strides', 'parkrun', 'track', 'crossCountry', 'crossTraining', 'rest', 'race'] as const;
 export type WorkoutType = typeof TYPES[number];
@@ -40,6 +41,7 @@ export interface Workout {
   activity?: Activity;
   notes: string;
   completed: boolean;
+  fuellingLog?: FuellingLog;
 }
 export type ZoneKey = 'easy' | 'long' | 'marathonPace' | 'threshold' | 'parkrun';
 export interface Settings {

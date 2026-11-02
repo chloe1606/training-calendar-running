@@ -20,6 +20,26 @@ beforeEach(() => {
   store.usePlanner.setState({ plan: createDefaultPlan(), past: [], future: [], error: null });
 });
 describe('import validation', () => {
+  it('persists fuelling, round-trips JSON/ICS, supports undo/redo and rejects invalid logs', () => {
+    const plan = createDefaultPlan();
+    const run = plan.workouts.find(workout => workout.type === 'long')!;
+    const log = { entries: [{ minute: 30, product: 'Gel', carbsGrams: 25, fluidsMl: 200 }], notes: 'Worked well.' };
+    store.usePlanner.getState().change(current => ({ ...current, workouts: current.workouts.map(workout =>
+      workout.id === run.id ? { ...workout, fuellingLog: log } : workout) }));
+    const saved = store.usePlanner.getState().plan;
+    expect(saved.workouts.find(workout => workout.id === run.id)?.completed).toBe(run.completed);
+    expect(store.validatePlan(JSON.parse(storage.get('marathon-planner-v1')!))).toEqual(saved);
+    const ics = exportICS(saved).replace(/\r\n /g, '');
+    expect(ics).toContain('Fuelling log: 25 g carbs');
+    expect(ics).toContain('30 min from start: Gel');
+    store.usePlanner.getState().undo();
+    expect(store.usePlanner.getState().plan.workouts.find(workout => workout.id === run.id)?.fuellingLog).toBeUndefined();
+    store.usePlanner.getState().redo();
+    expect(store.usePlanner.getState().plan).toEqual(saved);
+    const invalid = structuredClone(saved);
+    invalid.workouts.find(workout => workout.id === run.id)!.fuellingLog!.entries[0].fluidsMl = -1;
+    expect(() => store.validatePlan(invalid)).toThrow('Invalid fuelling log');
+  });
   it('supports Track and Cross country defaults, hard-day counts and legacy settings migration', () => {
     const plan = store.validatePlan(structuredClone(baseline));
     expect(plan.settings.defaultDays.track).toBeNull();

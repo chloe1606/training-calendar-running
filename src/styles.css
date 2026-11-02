@@ -325,6 +325,10 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
 .timer-actions button { flex: 1; justify-content: center; }
 .strength-picker { display: grid; gap: 7px; font-size: 12px; font-weight: 500; }
 .strength-picker select { width: 100%; font-size: 12px; }
+.fuelling-log { margin: 10px; border: 1px solid var(--card-line); border-radius: 6px; }
+.fuelling-log > summary { padding: 10px; font-size: 12px; cursor: pointer; min-height: 44px; }
+.fuelling-entry { display: grid; gap: 8px; min-width: 0; padding: 10px; border: 1px solid var(--card-line); border-radius: 6px; }
+.fuelling-entry legend { font-size: 12px; padding-inline: 4px; }
 .strength-choice-group { margin-block: 12px; font-size: 12px; font-weight: 500; }
 .strength-choice-group > div { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 7px; }
 .strength-choice-group button { min-width: 44px; min-height: 44px; }

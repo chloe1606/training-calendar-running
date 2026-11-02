@@ -20,6 +20,10 @@ npm run preview
 
 Run unit tests with `npm test`.
 
+### Long-run fuelling log
+
+Click a long-run card, expand **Long-run fuelling log** below the workout editor, and add timed entries for product/food, carbs in grams and fluids in millilitres. Timing is minutes from the run start (negative values for pre-run intake). Totals update as you type; record stomach comfort, energy and what to repeat or change in the notes. Press **Save fuelling log** separately from the workout's Save button; it does not mark the run completed. Saved entries appear in the card's info tooltip, local storage, JSON backups and ICS descriptions, and support Undo/Redo. Moving a run preserves its log; copying starts with an empty log so actual intake is not duplicated. Fuelling entries are personal observations, not recommended intake targets.
+
 - Track uses simple **Session notes** for warm-up, reps, recoveries and cool-down. Enter the total distance separately; notes do not calculate it automatically.
 - In Strength studio, intensity buttons choose **Light**, **Medium** or **Heavy**. **Number of main exercises** offers buttons for **3, 4, 5 or 6**, defaulting to three Light, four Medium and five Heavy. Pools and counts are kept separately per intensity during the session. Medium uses Easy/Medium-rated exercises from the Heavy pool with unchanged starting doses. A smaller pool uses every selected exercise once. Warm-up and cool-down are extra and do not count toward that number; duration depends on the selected count, sets and rest.
 - Click a calendar card to find **Move to date** and **Copy to date** beneath the editor. These use the saved workout, so save edits first. Moving keeps completion status; a copy has a new ID and starts incomplete. Both save locally and support Undo/Redo.
