@@ -65,7 +65,7 @@ export function validatePlan(value: unknown): Plan {
     const settings = { ...value.settings };
     if (object(settings.defaultDays)) {
       settings.defaultDays = {
-        track: null, crossCountry: null, ...settings.defaultDays,
+        track: null, crossCountry: null, mobility: null, ...settings.defaultDays,
       };
     }
     if (object(settings.trainingZones) && object(settings.trainingZones.hrTargets)) {

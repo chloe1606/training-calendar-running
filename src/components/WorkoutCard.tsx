@@ -2,7 +2,7 @@ import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Check, GripVertical, Timer, Heart, Trash2, Footprints, Waves, Dumbbell, Coffee, Flag, Zap, Info } from 'lucide-react';
+import { Check, GripVertical, Timer, Heart, Trash2, Footprints, Waves, Dumbbell, Coffee, Flag, Zap, Info, Activity as ActivityIcon } from 'lucide-react';
 import {
   ACTIVITIES, TYPES, LABELS, workoutLabel, inUnits, fromUnits, paceInUnits,
   formatPace, parsePace, workoutDuration, formatDuration, isRun,
@@ -19,7 +19,7 @@ import { FuellingLogEditor } from './FuellingLogEditor';
 import { fuellingDetails } from '../fuelling';
 
 export function WorkoutIcon({ workout, size = 16 }: { workout: Workout; size?: number }) {
-  const Icon = workout.type === 'crossTraining' ? workout.activity === 'swim' ? Waves : Dumbbell
+  const Icon = workout.type === 'crossTraining' ? workout.activity === 'swim' ? Waves : workout.activity === 'mobility' ? ActivityIcon : Dumbbell
     : workout.type === 'rest' ? Coffee : workout.type === 'race' ? Flag
       : ['threshold', 'marathonPace', 'strides', 'track', 'crossCountry'].includes(workout.type) ? Zap : Footprints;
   return <Icon size={size} strokeWidth={1.7} aria-hidden="true" />;
@@ -62,7 +62,7 @@ export function CardContent({ workout: w, settings, compact = false }: { workout
         <span className="workout-meta"><Timer size={12} />{w.qualityStyle === 'hills' ? 'Rough moving-time estimate: ' : ''}{formatDuration(duration.min)}{Math.round(duration.max) !== Math.round(duration.min) && `–${formatDuration(duration.max)}`}</span>
         {w.hrCapBpm && <span className="workout-meta" title="Additional heart-rate ceiling. Follow the lower limit if the target zone is lower.">{w.marathonFinish ? 'Easy cap' : 'Cap'}: under {w.hrCapBpm} bpm</span>}
       </>}
-    </> : !compact && <span className="cross-note">{w.type === 'rest' ? 'Recover & recharge' : w.activity === 'swim' ? 'Active recovery' : w.activity === 'badminton' ? 'Light evening session' : 'Strength & mobility'}</span>}
+    </> : !compact && <span className="cross-note">{w.type === 'rest' ? 'Recover & recharge' : w.activity === 'swim' ? 'Active recovery' : w.activity === 'badminton' ? 'Light evening session' : w.activity === 'mobility' ? 'Mobility & balance' : w.activity === 'pilates' ? 'Pilates session' : 'Strength & mobility'}</span>}
   </>;
 }
 

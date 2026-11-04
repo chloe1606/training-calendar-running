@@ -1,11 +1,12 @@
 import { useEffect, useId, useReducer, useRef, useState, type Dispatch } from 'react';
+import { format, parseISO, subDays } from 'date-fns';
 import { Dumbbell, Pause, Play, RotateCcw, Timer, PersonStanding, Armchair, BrickWall, Hand } from 'lucide-react';
 import routines from '../strength-routines.json';
 import { MOVE_GUIDES, MOVE_PROGRESSIONS, bodyAreas, moveCategory, moveDifficulty, guidesForNotes, equipmentTags, workoutFlowSteps, strengthSummary, strengthDurationLabel, type EquipmentKind, type MoveGuide, type ExercisePose } from '../strength-guide';
 import { initialRestTimer, restTimerLabel, restTimerReducer, restStepDurations, validRestSeconds, type RestTimerState, type RestTimerAction } from '../rest-timer';
 import { initialStopwatch, stopwatchLabel, stopwatchReducer } from '../stopwatch';
-import { dateKey, weekKey, type Workout } from '../model';
-import { generateStrengthWorkout, strengthPoolGroups, completedStrengthWorkout, DEFAULT_EXERCISE_COUNTS, type GeneratedStrength, type StrengthIntensity } from '../random-strength';
+import { dateKey, weekKey, workoutLabel, type Workout } from '../model';
+import { generateStrengthWorkout, strengthPoolGroups, completedStrengthWorkout, DEFAULT_EXERCISE_COUNTS, type GeneratedWorkout, type WorkoutCategory } from '../random-strength';
 
 function EquipmentIcon({ kind }: { kind: EquipmentKind }) {
   if (kind === 'dumbbell') return <Dumbbell size={14} aria-hidden="true" />;
@@ -170,24 +171,28 @@ export function WorkoutSummary({ notes, title }: { notes: string; title: string 
   </details>;
 }
 
-export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selectedWeek, onWeekChange, onSaveWorkout }: {
-  workouts: Workout[]; allWorkouts?: Workout[]; weeks: string[]; selectedWeek: string; onWeekChange: (week: string) => void;
+export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, onWeekChange, onSaveWorkout }: {
+  workouts: Workout[]; allWorkouts?: Workout[]; selectedWeek: string; onWeekChange: (week: string) => void;
   onSaveWorkout?: (workout: Workout) => string | null;
 }) {
-  const scheduled = workouts.filter(w => w.activity === 'strength');
-  const [selection, setSelection] = useState('week');
+  const guideActivities = ['mobility', 'pilates', 'strength'];
+  const scheduled = workouts.filter(w => guideActivities.includes(w.activity ?? ''));
+  const [selection, setSelection] = useState('library');
   const [search, setSearch] = useState('');
-  const [intensity, setIntensity] = useState<StrengthIntensity>('light');
-  const [generated, setGenerated] = useState<GeneratedStrength | null>(null);
-  const [pool, setPool] = useState<Record<StrengthIntensity, string[]>>(() => ({
-    light: strengthPoolGroups('light').flatMap(group => group.candidates.map(item => item.id)),
-    medium: strengthPoolGroups('medium').flatMap(group => group.candidates.map(item => item.id)),
-    heavy: strengthPoolGroups('heavy').flatMap(group => group.candidates.map(item => item.id)),
+  const [category, setCategory] = useState<WorkoutCategory>('mobility');
+  const [generated, setGenerated] = useState<GeneratedWorkout | null>(null);
+  const [pool, setPool] = useState<Record<WorkoutCategory, string[]>>(() => ({
+    mobility: strengthPoolGroups('mobility').flatMap(group => group.candidates.map(item => item.id)),
+    pilates: strengthPoolGroups('pilates').flatMap(group => group.candidates.map(item => item.id)),
+    strength: strengthPoolGroups('strength').flatMap(group => group.candidates.map(item => item.id)),
   }));
   const [poolSearch, setPoolSearch] = useState('');
   const [exerciseCounts, setExerciseCounts] = useState({ ...DEFAULT_EXERCISE_COUNTS });
   const [generatorError, setGeneratorError] = useState('');
   const [completionDate, setCompletionDate] = useState(() => dateKey(new Date()));
+  const currentDate = new Date();
+  const today = dateKey(currentDate);
+  const historyStart = dateKey(subDays(currentDate, 29));
   const [savedId, setSavedId] = useState<string | null>(null);
   const [saveError, setSaveError] = useState('');
   const [saveMessage, setSaveMessage] = useState('');
@@ -202,22 +207,21 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
     element.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'center' });
   }
   useEffect(() => {
-    if (selection.startsWith('workout:') && !allWorkouts.some(w => w.activity === 'strength' && `workout:${w.id}` === selection)) setSelection('week');
+    if (selection.startsWith('workout:') && !allWorkouts.some(w => guideActivities.includes(w.activity ?? '') && `workout:${w.id}` === selection)) setSelection('library');
   }, [selection, allWorkouts]);
-  const history = allWorkouts.filter(w => w.activity === 'strength' && w.completed)
+  const history = allWorkouts.filter(w => guideActivities.includes(w.activity ?? '') && w.completed && w.date >= historyStart && w.date <= today)
     .sort((a, b) => b.date.localeCompare(a.date));
-  const selectedWorkout = allWorkouts.find(w => w.activity === 'strength' && `workout:${w.id}` === selection);
+  const selectedWorkout = allWorkouts.find(w => guideActivities.includes(w.activity ?? '') && `workout:${w.id}` === selection);
   const routineIndex = Number(selection.replace('routine:', ''));
   const routine = selection.startsWith('routine:') ? routines.routines[routineIndex] : undefined;
-  const weekWorkout = selection === 'week' ? scheduled.find(item => item.completed) : undefined;
-  const workout = selectedWorkout ?? weekWorkout;
+  const workout = selectedWorkout;
   const notes = selection === 'generated' && generated ? generated.notes : workout?.notes ?? (routine ? routine.exercises.join('\n\n') : '');
   const title = selection === 'generated' && generated ? generated.title : workout ? `${workout.date}: ${workout.notes.split('\n')[0] || 'Strength slot — no workout assigned'}` : routine?.title ?? 'Choose your strength workout';
   useEffect(() => {
     if (selection === 'generated' && generated) generatedHeading.current?.focus({ preventScroll: true });
   }, [selection, generated]);
   const library = selection === 'library';
-  const poolGroups = strengthPoolGroups(intensity);
+  const poolGroups = strengthPoolGroups(category);
   const filteredPoolGroups = poolGroups.map(group => ({
     ...group,
     candidates: group.candidates.filter(item => {
@@ -226,19 +230,19 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
     }),
   }));
   const visiblePoolIds = filteredPoolGroups.flatMap(group => group.candidates.map(item => item.id));
-  const emptyPool = pool[intensity].length === 0;
+  const emptyPool = pool[category].length === 0;
   const savedWorkout = savedId ? allWorkouts.find(w => w.id === savedId) : undefined;
   function generate() {
     setGeneratorError('');
     try {
-      const next = generateStrengthWorkout(intensity, Math.random, pool[intensity], exerciseCounts[intensity]);
+      const next = generateStrengthWorkout(category, Math.random, pool[category], exerciseCounts[category]);
       setGenerated(next);
       setSavedId(null);
       setSaveMessage('');
       setSaveError('');
       setSelection('generated');
     } catch (error) {
-      console.error('Unable to generate strength workout', error);
+      console.error('Unable to generate workout', error);
       setGeneratorError(error instanceof Error ? error.message : 'Unable to generate workout. Review the exercise pool and try again.');
     }
   }
@@ -256,50 +260,57 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
         setSaveMessage('Saved to calendar. Existing sessions were kept. You can edit, delete or undo this entry in the calendar.');
       }
     } catch (error) {
-      console.error('Unable to save completed strength workout', error);
+      console.error('Unable to save completed workout', error);
       setSaveError(error instanceof Error ? error.message : 'Unable to save this workout. Please try again.');
     }
   }
   const moves = library ? MOVE_GUIDES.filter(move => `${move.name} ${move.equipment ?? ''} ${equipmentTags(move).map(tag => tag.label).join(' ')} ${bodyAreas(move).join(' ')} ${moveCategory(move)} ${moveDifficulty(move)} ${move.cue}`.toLowerCase().includes(search.trim().toLowerCase())) : guidesForNotes(notes);
-  return <section className="strength-page" aria-label="Strength workout guide">
+  return <section className="strength-page" aria-label="Strength, Pilates and mobility workout guide">
     <header className="page-heading"><div><span className="eyebrow muted-eyebrow">STRONGER, ONE REP AT A TIME</span><h1><Dumbbell size={26} />Strength studio<span>.</span></h1><p>Build your own balanced workouts, browse the library and log what you complete.</p></div>
-      <label className="strength-week">Training week<select aria-label="Strength workout week" value={selectedWeek} onChange={event => onWeekChange(event.target.value)}>
-        {!weeks.includes(selectedWeek) && <option value={selectedWeek}>{selectedWeek}</option>}
-        {weeks.map(week => <option key={week} value={week}>Week of {week}</option>)}
-      </select></label>
+      <section className="strength-week-summary" aria-label="Planned strength, Pilates and mobility sessions">
+        <h2>Planned this week</h2>
+        {scheduled.length ? <ul>{scheduled.map(item => {
+          const isToday = item.date === today;
+          return <li className={isToday ? 'strength-planned-today' : undefined} aria-current={isToday ? 'date' : undefined} key={item.id}>
+            <span>{format(parseISO(item.date), 'EEE d MMM')}</span>
+            <span>{workoutLabel(item)}{item.completed ? ' · Completed' : ''}</span>
+            {isToday && <span className="strength-today-badge">Today</span>}
+          </li>;
+        })}</ul> : <p>No strength, Pilates or mobility sessions planned for this week.</p>}
+      </section>
     </header>
     <section className="random-workout strength-generator" aria-label="Random workout generator">
       <h3><Dumbbell size={16} aria-hidden="true" />Mix up your workout</h3>
-      <div className="strength-choice-group" role="group" aria-label="Workout intensity">
-        <span>Workout intensity</span>
-        <div>{(['light', 'medium', 'heavy'] as const).map(value => <button key={value} type="button" className="secondary-button" aria-pressed={intensity === value} onClick={() => {
-          setIntensity(value);
+      <div className="strength-choice-group" role="group" aria-label="Workout type">
+        <span>Workout type</span>
+        <div>{(['mobility', 'pilates', 'strength'] as const).map(value => <button key={value} type="button" className="secondary-button" aria-pressed={category === value} onClick={() => {
+          setCategory(value);
           setGeneratorError('');
         }}>{value.charAt(0).toUpperCase() + value.slice(1)}</button>)}</div>
       </div>
       <div className="strength-choice-group" role="group" aria-label="Number of main exercises">
-        <span>Number of main exercises</span>
-        <div>{[3, 4, 5, 6].map(count => <button key={count} type="button" className="secondary-button" aria-pressed={exerciseCounts[intensity] === count}
-          onClick={() => setExerciseCounts(previous => ({ ...previous, [intensity]: count }))}>{count}</button>)}</div>
+        <span>Number of exercises</span>
+        <div>{[3, 4, 5, 6].map(count => <button key={count} type="button" className="secondary-button" aria-pressed={exerciseCounts[category] === count}
+          onClick={() => setExerciseCounts(previous => ({ ...previous, [category]: count }))}>{count}</button>)}</div>
       </div>
       <details className="strength-pool">
-        <summary>Choose exercises ({pool[intensity].length} selected)</summary>
+        <summary>Choose exercises ({pool[category].length} selected)</summary>
         <label>Search exercise pool<input type="search" value={poolSearch} onChange={event => setPoolSearch(event.target.value)} placeholder="Name, equipment, body area…" /></label>
         <div className="workout-summary-actions">
           <button type="button" className="secondary-button" disabled={visiblePoolIds.length === 0} onClick={() => {
-            setPool(previous => ({ ...previous, [intensity]: [...new Set([...previous[intensity], ...visiblePoolIds])] }));
+            setPool(previous => ({ ...previous, [category]: [...new Set([...previous[category], ...visiblePoolIds])] }));
             setGeneratorError('');
           }}>{poolSearch.trim() ? 'Select all results' : 'Select all'}</button>
-          <button type="button" className="secondary-button" onClick={() => setPool(previous => ({ ...previous, [intensity]: [] }))}>Clear pool</button>
+          <button type="button" className="secondary-button" onClick={() => setPool(previous => ({ ...previous, [category]: [] }))}>Clear pool</button>
         </div>
         <div className="strength-pool-options">{filteredPoolGroups.map(group => <fieldset key={group.label}>
-          <legend>{group.label} ({poolGroups.find(item => item.label === group.label)!.candidates.filter(item => pool[intensity].includes(item.id)).length} selected)</legend>
+          <legend>{group.label} ({poolGroups.find(item => item.label === group.label)!.candidates.filter(item => pool[category].includes(item.id)).length} selected)</legend>
           {group.candidates.map(item => {
             const move = MOVE_GUIDES.find(move => move.id === item.id)!;
             return <label className="strength-pool-choice" key={item.id}>
-              <input type="checkbox" checked={pool[intensity].includes(item.id)} onChange={event => {
+              <input type="checkbox" checked={pool[category].includes(item.id)} onChange={event => {
                 const checked = event.target.checked;
-                setPool(previous => ({ ...previous, [intensity]: checked ? [...previous[intensity], item.id] : previous[intensity].filter(id => id !== item.id) }));
+                setPool(previous => ({ ...previous, [category]: checked ? [...previous[category], item.id] : previous[category].filter(id => id !== item.id) }));
                 setGeneratorError('');
               }} />
               <span>{move.name}<span className="move-category">{moveCategory(move)}</span><span className={`move-difficulty difficulty-${moveDifficulty(move).toLowerCase()}`}>{moveDifficulty(move)}</span><small>{move.equipment ?? 'Bodyweight'}</small><small>{item.dose}</small></span>
@@ -313,17 +324,15 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
       <p>Pool selections and unsaved previews reset on reload. Saved workouts persist in the calendar and completed history.</p>
     </section>
     <div className="strength-layout"><div className="strength-panel">
-    <label className="strength-picker">Workout or movement library
+    <label className="strength-picker">Workout library
       <select value={selection} onChange={event => {
         const next = event.target.value;
         const selected = allWorkouts.find(item => `workout:${item.id}` === next);
         if (selected) onWeekChange(weekKey(selected.date));
         setSelection(next);
       }}>
-        <option value="week">This week</option>
         {generated && <option value="generated">{generated.title}</option>}
-        {scheduled.map(w => <option key={w.id} value={`workout:${w.id}`}>{w.date}: {w.notes.split('\n')[0] || 'Strength slot — no workout assigned'}{w.notes ? ` · ${strengthDurationLabel(w.notes)}` : ''}</option>)}
-        <optgroup label="Completed strength history">{history.filter(w => !scheduled.some(item => item.id === w.id)).map(w =>
+        <optgroup label="Completed workouts (last 30 days)">{history.filter(w => !scheduled.some(item => item.id === w.id)).map(w =>
           <option key={w.id} value={`workout:${w.id}`}>{w.date}: {w.notes.split('\n')[0]}</option>)}</optgroup>
         <optgroup label="Five heavy / five light routines">{routines.routines.map((item, index) => <option key={item.title} value={`routine:${index}`}>{item.title} · {strengthDurationLabel(item.exercises.join('\n\n'))}</option>)}</optgroup>
         <option value="library">All moves ({MOVE_GUIDES.length})</option>
@@ -336,19 +345,21 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
     <div className="strength-guide-content" key={`${selection}:${workouts.map(w => w.id).join(',')}`}>
       {!library && <>
         <h3 ref={generatedHeading} tabIndex={-1}>{title}</h3>
-        {selection === 'generated' && <p>{savedWorkout ? `${savedWorkout.completed ? 'Logged as completed' : 'Saved (currently marked incomplete)'} on ${savedWorkout.date}.` : 'Preview only until saved. Use instead of a suitable strength session, not as extra training; keep recovery and taper days light.'}</p>}
+        {selection === 'generated' && <p>{savedWorkout ? `${savedWorkout.completed ? 'Logged as completed' : 'Saved (currently marked incomplete)'} on ${savedWorkout.date}.` : `Preview only until saved. Use this ${category} session instead of adding extra training; keep recovery and taper days light.`}</p>}
         {notes ? <>
           <p className="strength-duration"><Timer size={15} aria-hidden="true" />{strengthDurationLabel(notes)}</p>
           <WorkoutFlow key={`${selection}:${selectedWeek}:${notes}`} notes={notes} onMovement={showMovement} onRest={seconds => restDispatch({ type: 'restart', seconds, now: Date.now() })} />
         </> : <p>No specific workout assigned. Choose exercises in the generator or browse a reference routine. After doing your workout, save it with the date completed in Strength studio.</p>}
       </>}
       {!library && notes && <WorkoutSummary key={`summary:${selection}:${notes}`} notes={notes} title={title} />}
-      {selection === 'generated' && generated && onSaveWorkout && <section className="strength-log" aria-label="Save completed strength workout">
+      {selection === 'generated' && generated && onSaveWorkout &&       <section className="strength-log" aria-label={`Save completed ${generated.category} workout`}>
         <h3>Log this workout</h3>
-        <label>Date completed<input aria-label="Date strength workout completed" type="date" min="2020-01-01" max={dateKey(new Date())}
+        <label>Date completed<input aria-label={`Date ${generated.category} workout completed`} type="date" min="2020-01-01" max={dateKey(new Date())}
           value={completionDate} disabled={!!savedWorkout} onChange={event => { setCompletionDate(event.target.value); setSaveError(''); }} /></label>
         <button type="button" className="primary-button" disabled={!!savedWorkout} onClick={saveGenerated}>{savedWorkout ? 'Saved to calendar' : 'Save as completed'}</button>
-        <p className="field-help">Marks an empty strength slot on this date as completed, or adds a new completed strength activity if there is no empty slot. Completed and customised sessions are kept. Save only after doing the workout.</p>
+        <p className="field-help">{generated.category === 'strength'
+          ? 'Marks an empty strength slot on this date as completed, or adds a new completed strength activity if there is no empty slot.'
+          : `Adds a completed ${generated.category} activity to the calendar.`} Completed and customised sessions are kept. Save only after doing the workout.</p>
         {saveMessage && savedWorkout?.completed && <p role="status">{saveMessage}</p>}
         {saveError && <p role="alert" className="form-error">{saveError}</p>}
       </section>}
@@ -359,11 +370,11 @@ export function StrengthPage({ workouts, allWorkouts = workouts, weeks, selected
       {!moves.length && <p>{library ? 'No moves match your search. Try another name or equipment type.' : 'No matching illustrations for this custom workout. Choose All moves to browse the full library.'}</p>}
     </div>
     </div><aside className="strength-tools" aria-label="Workout tools"><Stopwatch /><RestTimer state={restState} dispatch={restDispatch} />
-      <section className="random-workout" aria-label="Completed strength history">
-        <h3>Completed strength history</h3>
+      <section className="random-workout" aria-label="Completed workout history">
+        <h3>Completed workout history · last 30 days</h3>
         {history.length ? <ul className="strength-history">{history.map(item => <li key={item.id}>
           <button type="button" className="secondary-button" onClick={() => { onWeekChange(weekKey(item.date)); setSelection(`workout:${item.id}`); }}>{item.date}: {item.notes.split('\n')[0]}</button>
-        </li>)}</ul> : <p>No completed strength workouts yet.</p>}
+        </li>)}</ul> : <p>No completed workouts in the last 30 days.</p>}
       </section>
     </aside></div>
   </section>;

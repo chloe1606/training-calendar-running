@@ -1,10 +1,12 @@
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { subDays } from 'date-fns';
 import { describe, expect, it } from 'vitest';
 import routines from './strength-routines.json';
 import { bodyAreas, moveCategory, moveDifficulty, equipmentTags, guidesForNotes, MOVE_GUIDES, MOVE_PROGRESSIONS, workoutFlowSteps, strengthSummary, strengthDurationLabel } from './strength-guide';
 import { StrengthPage, ExerciseDiagram, EquipmentLabels, WorkoutFlow, WorkoutSummary } from './components/StrengthPage';
 import { strengthNotes } from './strength';
+import { dateKey, dayOffset, weekKey, type Workout } from './model';
 
 describe('illustrated strength guide', () => {
   it('shows each movement difficulty on flowchart steps without rating rest steps', () => {
@@ -17,16 +19,17 @@ describe('illustrated strength guide', () => {
     expect(html).toContain('Rest 30s between sets.');
   });
   it('categorises all exercises and shows pink category badges in the library and flow', () => {
-    const categories = ['Strength', 'Mobility', 'Stretch', 'Balance & control', 'Warm-up'];
+    const categories = ['Strength', 'Mobility', 'Stretch', 'Balance & control', 'Warm-up', 'Pilates'];
     for (const move of MOVE_GUIDES) expect(categories).toContain(moveCategory(move));
     for (const [id, category] of [['hip-stretch', 'Stretch'], ['ankle-rock', 'Mobility'], ['balance', 'Balance & control'], ['walk', 'Warm-up'], ['kneeling-step-drive', 'Strength']]) {
       expect(moveCategory(MOVE_GUIDES.find(move => move.id === id)!)).toBe(category);
     }
-    const page = renderToStaticMarkup(createElement(StrengthPage, { workouts: [], weeks: ['2026-10-26'], selectedWeek: '2026-10-26', onWeekChange: () => undefined }));
+    const page = renderToStaticMarkup(createElement(StrengthPage, { workouts: [], selectedWeek: '2026-10-26', onWeekChange: () => undefined }));
     expect(page).toContain('class="move-category"');
-    expect(page).toContain('No specific workout assigned.');
+    expect(page).toContain(`All moves (${MOVE_GUIDES.length})`);
+    expect(page).toContain('Find a move');
     const flow = renderToStaticMarkup(createElement(WorkoutFlow, { notes: 'Dead bug: 2 sets x 6 reps.', onMovement: () => undefined }));
-    expect(flow).toContain('class="move-category" aria-label="Category: Strength"');
+    expect(flow).toContain('class="move-category" aria-label="Category: Pilates"');
     expect(() => moveCategory({ ...MOVE_GUIDES[0], id: 'unknown' })).toThrow('Missing exercise category');
   });
   it('offers manual Strava logging only when there are exercise summary notes', () => {
@@ -187,7 +190,7 @@ describe('illustrated strength guide', () => {
     expect(steps.map(step => step.text).join('\n')).not.toMatch(/Bodyweight only|No heavy leg work|With Pilates/);
   });
   it('covers every prescribed movement line across all ten routines and mobility', () => {
-    expect(MOVE_GUIDES).toHaveLength(100);
+    expect(MOVE_GUIDES).toHaveLength(124);
     expect(new Set(MOVE_GUIDES.map(m => m.id)).size).toBe(MOVE_GUIDES.length);
     expect(routines.routines).toHaveLength(10);
     for (const routine of routines.routines) {
@@ -202,7 +205,7 @@ describe('illustrated strength guide', () => {
   it('adds 32 distinct equipment-appropriate options with explicit starting doses', () => {
     const additions = MOVE_GUIDES.slice(29, 61);
     expect(additions).toHaveLength(32);
-    expect(new Set(MOVE_GUIDES.map(move => move.name)).size).toBe(100);
+    expect(new Set(MOVE_GUIDES.map(move => move.name)).size).toBe(124);
     for (const move of additions) {
       expect(move.equipment).toBeTruthy();
       expect(move.prescription).toMatch(/set|carr/);
@@ -216,7 +219,7 @@ describe('illustrated strength guide', () => {
     expect(additions.filter(move => /dumbbell/i.test(move.equipment ?? '')).length).toBeGreaterThanOrEqual(10);
   });
   it('adds exactly 39 medium/hard running-focused alternatives without changing scheduled routines', () => {
-    const additions = MOVE_GUIDES.slice(61);
+    const additions = MOVE_GUIDES.slice(61, 100);
     expect(additions).toHaveLength(39);
     expect(additions.filter(move => moveCategory(move) === 'Strength')).toHaveLength(38);
     expect(additions.some(move => moveDifficulty(move) === 'Medium')).toBe(true);
@@ -240,6 +243,11 @@ describe('illustrated strength guide', () => {
         expect(guidesForNotes(routine.exercises.join('\n'))).not.toContain(move);
       }
     }
+    expect(MOVE_GUIDES.slice(100, 110)).toHaveLength(10);
+    for (const move of MOVE_GUIDES.slice(100, 110)) expect(moveCategory(move)).toBe('Pilates');
+    expect(MOVE_GUIDES.slice(110)).toHaveLength(14);
+    expect(MOVE_GUIDES.slice(110, 121).every(move => moveCategory(move) === 'Mobility')).toBe(true);
+    expect(MOVE_GUIDES.slice(121).every(move => moveCategory(move) === 'Pilates')).toBe(true);
   });
   it('renders two labelled original diagrams and a technique cue for every move', () => {
     for (const move of MOVE_GUIDES) {
@@ -261,33 +269,81 @@ describe('illustrated strength guide', () => {
     }
     expect(MOVE_PROGRESSIONS.plank.title).toBe('Side plank from feet');
     expect(MOVE_PROGRESSIONS.plank.pose).toBeDefined();
-    expect(MOVE_GUIDES).toHaveLength(100);
+    expect(MOVE_GUIDES).toHaveLength(124);
   });
   it('renders a dedicated page without requiring scheduled sessions', () => {
-    const html = renderToStaticMarkup(createElement(StrengthPage, { workouts: [], weeks: ['2026-10-26'], selectedWeek: '2026-10-26', onWeekChange: () => undefined }));
+    const html = renderToStaticMarkup(createElement(StrengthPage, { workouts: [], selectedWeek: '2026-10-26', onWeekChange: () => undefined }));
     expect(html).toContain('<h1>');
     expect(html).toContain('Strength studio');
-    expect(html).toContain('Strength workout week');
-    expect(html).toContain('No specific workout assigned.');
+    expect(html).toContain('Planned this week');
+    expect(html).toContain('No strength, Pilates or mobility sessions planned for this week.');
+    expect(html).not.toContain('Training week');
+    expect(html).not.toContain('No specific workout assigned.');
     expect(html).not.toContain('Step-by-step workout');
     expect(html).toContain('Rest timer');
     expect(html).toContain(`All moves (${MOVE_GUIDES.length})`);
-    expect(html).toContain('Choose exercises (20 selected)');
+    expect(html).toContain('aria-label="Workout type"');
+    expect(html).toContain('>Mobility</button>');
+    expect(html).toContain('>Pilates</button>');
+    expect(html).toContain('>Strength</button>');
+    expect(html).toContain('Choose exercises (');
     expect(html).toContain('Search exercise pool');
     expect(html).toContain('Clear pool');
-    expect(html).toContain('Completed strength history');
-    expect(html.indexOf('aria-label="Random workout generator"')).toBeLessThan(html.indexOf('Workout or movement library'));
+    expect(html).toContain('Completed workout history');
+    expect(html).not.toContain('This week</option>');
+    expect(html).not.toContain('Strength slot — no workout assigned');
+    expect(html).toContain('Find a move');
+    expect(html.indexOf('aria-label="Random workout generator"')).toBeLessThan(html.indexOf('Workout library'));
+  });
+  it('lists planned category sessions and highlights a session scheduled for today', () => {
+    const today = dateKey(new Date());
+    const makeWorkout = (id: string, date: string, activity: 'mobility' | 'pilates' | 'strength'): Workout => ({
+      id, date, type: 'crossTraining', activity, distanceMiles: 0,
+      paceMinPerMile: { min: 9, max: 9.75 }, completed: false, notes: `${activity} session`,
+    });
+    const html = renderToStaticMarkup(createElement(StrengthPage, {
+      workouts: [makeWorkout('today-mobility', today, 'mobility'), makeWorkout('planned-pilates', dayOffset(weekKey(today), 1), 'pilates')],
+      selectedWeek: weekKey(today), onWeekChange: () => undefined,
+    }));
+    expect(html).toContain('aria-label="Planned strength, Pilates and mobility sessions"');
+    expect(html).toContain('<li class="strength-planned-today" aria-current="date">');
+    expect(html).toContain('>Today</span>');
+    expect(html).toContain('Mobility</span>');
+    expect(html).toContain('Pilates</span>');
   });
   it('makes completed generated sessions discoverable outside the selected week', () => {
+    const today = new Date();
+    const makeWorkout = (id: string, date: string): Workout => ({
+      id, date, type: 'crossTraining', activity: 'strength', distanceMiles: 0,
+      paceMinPerMile: { min: 9, max: 9.75 }, completed: true, notes: `${id} workout`,
+    });
     const logged = {
-      id: 'strength-log-history', date: '2026-10-20', type: 'crossTraining' as const, activity: 'strength' as const,
-      distanceMiles: 0, paceMinPerMile: { min: 9, max: 9.75 }, completed: true,
-      notes: 'Generated light: custom pool\n\nDead bug: 1 set x 4 reps per side.',
+      ...makeWorkout('strength-log-history', dateKey(subDays(today, 15))),
+      notes: 'Generated strength: custom strength workout\n\nDead bug: 1 set x 4 reps per side.',
     };
     const html = renderToStaticMarkup(createElement(StrengthPage, {
-      workouts: [], allWorkouts: [logged], weeks: ['2026-10-26'], selectedWeek: '2026-10-26', onWeekChange: () => undefined,
+      workouts: [], allWorkouts: [logged], selectedWeek: weekKey(today), onWeekChange: () => undefined,
     }));
-    expect(html).toContain('2026-10-20: Generated light: custom pool');
+    expect(html).toContain(`${logged.date}: Generated strength: custom strength workout`);
     expect(html).toContain('value="workout:strength-log-history"');
+  });
+  it('limits completed workout history to the last 30 days', () => {
+    const today = new Date();
+    const makeWorkout = (id: string, date: string): Workout => ({
+      id, date, type: 'crossTraining', activity: 'strength', distanceMiles: 0,
+      paceMinPerMile: { min: 9, max: 9.75 }, completed: true, notes: `${id} workout`,
+    });
+    const workouts = [
+      makeWorkout('on-cutoff', dateKey(subDays(today, 29))),
+      makeWorkout('too-old', dateKey(subDays(today, 30))),
+      makeWorkout('future', dateKey(subDays(today, -1))),
+    ];
+    const html = renderToStaticMarkup(createElement(StrengthPage, {
+      workouts: [], allWorkouts: workouts, selectedWeek: weekKey(today), onWeekChange: () => undefined,
+    }));
+    expect(html).toContain('on-cutoff workout');
+    expect(html).not.toContain('too-old workout');
+    expect(html).not.toContain('future workout');
+    expect(html).toContain('Completed workout history · last 30 days');
   });
 });

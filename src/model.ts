@@ -16,7 +16,7 @@ export const DEFAULT_TRAINING_ZONES: TrainingZones = {
   paceBoundaries: [8.9833, 7.7333, 6.9333, 6.5, 6.1],
   hrTargets: { easy: 2, long: 2, threshold: 4, marathonPace: 3, strides: 5, parkrun: 3, track: 4, crossCountry: 4, race: 3 },
 };
-export const ACTIVITIES = ['swim', 'ride', 'pilates', 'strength', 'badminton'] as const;
+export const ACTIVITIES = ['swim', 'ride', 'mobility', 'pilates', 'strength', 'badminton'] as const;
 export type Activity = typeof ACTIVITIES[number];
 export const SCHEDULE_TYPES = ['easy', 'long', 'threshold', 'marathonPace', 'strides', 'parkrun', 'track', 'crossCountry', 'rest', ...ACTIVITIES] as const;
 export type ScheduleType = typeof SCHEDULE_TYPES[number];
@@ -25,7 +25,7 @@ export type DefaultDays = Record<ScheduleType, Weekday | null>;
 export const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as const;
 export const DEFAULT_DAYS: DefaultDays = {
   easy: null, long: 6, threshold: 3, marathonPace: 3, strides: null, parkrun: 5, track: null, crossCountry: null, rest: null,
-  swim: 0, ride: null, pilates: 4, strength: 1, badminton: 2,
+  swim: 0, ride: null, mobility: null, pilates: 4, strength: 1, badminton: 2,
 };
 export interface PaceRange { min: number; max: number }
 export interface Workout {

@@ -210,7 +210,7 @@ export default function App() {
       </header>
       <div className="main-content">
         {error && <div className="error-banner" role="alert">{error}<button onClick={retrySave}>Retry saving</button></div>}
-        <div hidden={page !== 'strength'} id="strength"><StrengthPage workouts={weeklyWorkouts} allWorkouts={plan.workouts} weeks={weeks} selectedWeek={week} onWeekChange={navigate}
+        <div hidden={page !== 'strength'} id="strength"><StrengthPage workouts={weeklyWorkouts} allWorkouts={plan.workouts} selectedWeek={week} onWeekChange={navigate}
           onSaveWorkout={workout => {
             change(current => addCompletedStrength(current, workout));
             return usePlanner.getState().error;

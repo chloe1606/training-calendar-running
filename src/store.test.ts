@@ -160,7 +160,7 @@ describe('import validation', () => {
 describe('history and persistence', () => {
   it('persists generated completion dates and notes, with undo, redo, JSON and ICS support', () => {
     const original = store.usePlanner.getState().plan;
-    const generated = generateStrengthWorkout('heavy', () => 0);
+    const generated = generateStrengthWorkout('strength', () => 0);
     const logged = completedStrengthWorkout(generated, '2026-10-29', '2026-10-30', 'strength-log-persistence');
     store.usePlanner.getState().change(plan => addCompletedStrength(plan, logged));
     const saved = JSON.parse(storage.get('marathon-planner-v1')!);
@@ -169,7 +169,8 @@ describe('history and persistence', () => {
     const ics = exportICS({ ...saved, workouts: [logged] }).replace(/\r\n /g, '');
     expect(ics).toContain('DTSTART;VALUE=DATE:20261029');
     expect(ics).toContain('Completed');
-    expect(ics).toContain('Supported split squat: 2 sets x 8 reps per side');
+    expect(ics).toContain('Warm-up: 5 min easy walking.');
+    expect(ics).toContain('Cool-down: 2 min easy walking.');
     store.usePlanner.getState().undo();
     expect(store.usePlanner.getState().plan).toEqual(original);
     expect(JSON.parse(storage.get('marathon-planner-v1')!).workouts.some((workout: { id: string }) => workout.id === logged.id)).toBe(false);

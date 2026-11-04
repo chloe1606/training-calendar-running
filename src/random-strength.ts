@@ -1,10 +1,11 @@
 import { isValid, parseISO } from 'date-fns';
 import { dateKey, type Plan, type Workout } from './model';
-import { MOVE_GUIDES, moveDifficulty } from './strength-guide';
+import { bodyAreas, MOVE_GUIDES, moveCategory, type MoveCategory } from './strength-guide';
 
-export type StrengthIntensity = 'light' | 'medium' | 'heavy';
-export const DEFAULT_EXERCISE_COUNTS = { light: 3, medium: 4, heavy: 5 };
-export interface GeneratedStrength {
+export type WorkoutCategory = 'mobility' | 'pilates' | 'strength';
+export const DEFAULT_EXERCISE_COUNTS: Record<WorkoutCategory, number> = { mobility: 4, pilates: 4, strength: 4 };
+export interface GeneratedWorkout {
+  category: WorkoutCategory;
   title: string;
   notes: string;
   movementIds: string[];
@@ -69,78 +70,95 @@ function libraryCandidate(id: string): Candidate {
   return { id, dose };
 }
 
-export function strengthPoolGroups(intensity: StrengthIntensity): StrengthPoolGroup[] {
-  if (intensity === 'light') return [
-    { label: 'Gentle core', candidates: [...LIGHT_SLOTS[0],
-      { id: 'deadbug', dose: '1 set x 4 gentle bent-knee reps per side; rest 30 s.' },
-      { id: 'bird', dose: '1 set x 4 small reaches per side; rest 30 s.' },
-      { id: 'tap', dose: '1 set x 4 gentle heel taps per side; rest 30 s.' }] },
-    { label: 'Hips and balance', candidates: [...LIGHT_SLOTS[1],
-      { id: 'balance', dose: '1 set x 10 s per side with hand support; rest 15 s between sides, then 30 s.' }] },
-    { label: 'Feet and ankles', candidates: [...LIGHT_SLOTS[2],
-      { id: 'toe-yoga', dose: '1 set x 6 gentle alternations per foot, seated; rest 20 s.' },
-      { id: 'tibialis', dose: '1 set x 6 gentle reps close to the wall; rest 20 s.' }] },
-    { label: 'Mobility and stretch', candidates: [...LIGHT_SLOTS[3],
-      { id: 'hip-stretch', dose: '1 set x 15 s gentle stretch per side; rest 15 s between sides, then 20 s.' },
-      { id: 'calf-stretch', dose: '1 set x 15 s gentle stretch per side; rest 15 s between sides, then 20 s.' }] },
-  ];
-  const extra: Candidate[][] = [
-    [{ id: 'squat', dose: '2 sets x 8 reps; rest 75 s between sets.' }],
-    [{ id: 'staggered', dose: '2 sets x 8 reps per side; rest 30 s between sides and 75 s between sets.' }],
-    [], [], [],
-  ];
-  return ['Legs and single-leg control', 'Posterior chain and hips', 'Calves and soleus', 'Upper body', 'Core and runner control']
-    .map((label, index) => ({ label, candidates: [
-      ...HEAVY_SLOTS[index], ...extra[index], ...HEAVY_ADDITIONS[index].map(libraryCandidate),
-    ].filter(item => intensity !== 'medium' || moveDifficulty(MOVE_GUIDES.find(move => move.id === item.id)!) !== 'Hard') }));
+const existingDoses = new Map([
+  ...LIGHT_SLOTS.flat(),
+  ...HEAVY_SLOTS.flat(),
+  { id: 'squat', dose: '2 sets x 8 reps; rest 75 s between sets.' },
+  { id: 'staggered', dose: '2 sets x 8 reps per side; rest 30 s between sides and 75 s between sets.' },
+  ...HEAVY_ADDITIONS.flatMap(group => group.map(libraryCandidate)),
+].map(item => [item.id, item.dose] as const));
+
+const CATEGORY_MOVES: Record<WorkoutCategory, MoveCategory[]> = {
+  mobility: ['Mobility', 'Balance & control'],
+  pilates: ['Pilates'],
+  strength: ['Strength'],
+};
+
+function defaultDose(category: WorkoutCategory): string {
+  if (category === 'mobility') return '1 set x 6 gentle reps per side; rest 20 s.';
+  if (category === 'pilates') return '1 set x 8 controlled reps per side; rest 30 s.';
+  return '2 sets x 8 controlled reps; rest 60 s between sets.';
 }
 
-export function generateStrengthWorkout(intensity: StrengthIntensity, random: () => number = Math.random, selectedIds?: readonly string[], exerciseCount = DEFAULT_EXERCISE_COUNTS[intensity]): GeneratedStrength {
+export function strengthPoolGroups(category: WorkoutCategory): StrengthPoolGroup[] {
+  const grouped = new Map<string, Candidate[]>();
+  for (const move of MOVE_GUIDES) {
+    const moveType = moveCategory(move);
+    if (!CATEGORY_MOVES[category].includes(moveType)) continue;
+    const label = category === 'mobility' ? moveType : category === 'pilates' ? 'Pilates' : bodyAreas(move)[0];
+    const candidates = grouped.get(label) ?? [];
+    candidates.push({ id: move.id, dose: existingDoses.get(move.id) ?? (move.prescription ? libraryCandidate(move.id).dose : defaultDose(category)) });
+    grouped.set(label, candidates);
+  }
+  return [...grouped].map(([label, candidates]) => ({ label, candidates }));
+}
+
+export function generateStrengthWorkout(category: WorkoutCategory, random: () => number = Math.random, selectedIds?: readonly string[], exerciseCount = DEFAULT_EXERCISE_COUNTS[category]): GeneratedWorkout {
   if (!Number.isInteger(exerciseCount) || exerciseCount < 3 || exerciseCount > 6) throw new Error('Choose 3–6 main exercises.');
-  const candidates = strengthPoolGroups(intensity).flatMap(group => group.candidates);
+  const candidates = strengthPoolGroups(category).flatMap(group => group.candidates);
   const pool = selectedIds ?? candidates.map(item => item.id);
-  if (pool.some(id => !candidates.some(item => item.id === id))) throw new Error('The pool includes an exercise that is not suitable for this intensity.');
+  if (pool.some(id => !candidates.some(item => item.id === id))) throw new Error(`The pool includes an exercise that is not suitable for ${category}.`);
   const available = candidates.filter(item => pool.includes(item.id));
   if (!available.length) throw new Error('Choose at least one exercise in the pool.');
-  const heavy = intensity !== 'light';
   const count = Math.min(exerciseCount, available.length);
   const chosen: Candidate[] = [];
+  const representedAreas = new Set<string>();
+  const representedCategories = new Set<MoveCategory>();
   while (chosen.length < count) {
     const sample = random();
     if (!Number.isFinite(sample) || sample < 0 || sample >= 1) throw new Error('Random sample must be between 0 (inclusive) and 1 (exclusive).');
-    chosen.push(...available.splice(Math.floor(sample * available.length), 1));
+    const scored = available.map(item => {
+      const move = MOVE_GUIDES.find(candidate => candidate.id === item.id);
+      if (!move) throw new Error(`Unknown generated movement: ${item.id}`);
+      const areas = bodyAreas(move);
+      const category = moveCategory(move);
+      const newAreas = areas.filter(area => !representedAreas.has(area)).length;
+      const newCategory = representedCategories.has(category) ? 0 : 1;
+      return { item, areas, category, score: newAreas * 2 + newCategory };
+    });
+    const bestScore = Math.max(...scored.map(candidate => candidate.score));
+    const best = scored.filter(candidate => candidate.score === bestScore);
+    const selected = best[Math.floor(sample * best.length)];
+    chosen.push(selected.item);
+    selected.areas.forEach(area => representedAreas.add(area));
+    representedCategories.add(selected.category);
+    available.splice(available.indexOf(selected.item), 1);
   }
-  const title = `Generated ${intensity}: custom strength workout`;
-  let notes = [
-    heavy
+  const title = `Generated ${category}: custom ${category} workout`;
+  const notes = [
+    category === 'strength'
       ? 'Warm-up: 5 min easy walking. Alternatives: replace part of the walking with 6-8 comfortable bodyweight squats or sit-to-stands, 6-8 small mini-band lateral walk steps each way, or 6 small mini-band diagonal walk steps forward and back. Use a light band above the knees. Choose one option within the same 5 min, not all of them; keep the effort easy and avoid fatigue.'
-      : 'Warm-up: 3 min easy walking. Alternatives: replace part of the walking with 4-6 shallow bodyweight squats or supported sit-to-stands, gentle side steps, or seated heel lifts. Choose one option within the same 3 min, not all of them; stay bodyweight-only and keep the effort easy.',
+      : 'Warm-up: 2 min of easy, comfortable movement.',
     ...chosen.map(item => {
       const move = MOVE_GUIDES.find(move => move.id === item.id);
       if (!move) throw new Error(`Unknown generated movement: ${item.id}`);
       return `${move.name}: ${item.dose}`;
     }),
-    heavy
-      ? 'Rest 60-90 s when changing exercises.\n\nCool-down: 2 min easy walking.\n\nAbout 25-45 min total, depending on selected doses. Use the equipment and technique cues for each selected move. Heavy means the main resistance session, not maximal lifting. Leave 2-3 reps in reserve. Start with one set if unfamiliar; replace a comparable exercise rather than adding volume. Avoid new demanding eccentric work near key runs or races; keep recovery and taper days light.'
-      : 'Cool-down: 3-5 min gentle calf and hip-flexor stretches, 20 s per side.\n\nAbout 12-15 min total. Bodyweight only, no heavy leg work or effort to fatigue. Finish fresher than you started.',
+    category === 'strength'
+      ? `Rest 60-90 s when changing exercises.\n\nCool-down: 2 min easy walking.\n\n${count === DEFAULT_EXERCISE_COUNTS.strength ? 'About 25-45 min total, depending on selected doses.' : `Duration varies with these ${count} main exercises, prescribed sets and rest; use the stopwatch to log actual time.`} Use the equipment and technique cues for each selected move. Leave 2-3 reps in reserve. Start with one set if unfamiliar; avoid new demanding eccentric work near key runs or races.`
+      : `Cool-down: 2 min of relaxed breathing and comfortable movement.\n\n${count === DEFAULT_EXERCISE_COUNTS[category] ? 'About 12-20 min total, depending on selected doses.' : `Duration varies with these ${count} exercises and prescribed doses; use the stopwatch to log actual time.`} Move gently and finish feeling comfortable.`,
   ].join('\n\n');
-  if (intensity === 'medium') {
-    notes = notes.replace('Heavy means the main resistance session, not maximal lifting.', 'Medium uses Easy and Medium-rated movements with their starting doses, not maximal lifting.');
-  }
-  if (intensity === 'medium' || count !== (heavy ? 5 : 4)) {
-    notes = notes.replace(/About \d+-\d+ min total[^.]*\./, `Duration varies with these ${count} main exercises, prescribed sets and rest; use the stopwatch to log actual time.`);
-  }
-  return { title, notes, movementIds: chosen.map(item => item.id) };
+  return { category, title, notes, movementIds: chosen.map(item => item.id) };
 }
 
-export function completedStrengthWorkout(generated: GeneratedStrength, date: string, today: string, id: string): Workout {
+export function completedStrengthWorkout(generated: GeneratedWorkout, date: string, today: string, id: string): Workout {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !isValid(parseISO(date)) || dateKey(parseISO(date)) !== date
     || date < '2020-01-01' || date > '2100-12-31' || date > today) {
     throw new Error('Choose a valid completion date from 2020 up to today.');
   }
   if (!id || !generated.movementIds.length || !generated.notes.trim()) throw new Error('Generate a workout before saving.');
   return {
-    id, date, type: 'crossTraining', activity: 'strength', distanceMiles: 0,
+    id, date, type: 'crossTraining', activity: generated.category, distanceMiles: 0,
     paceMinPerMile: { min: 9, max: 9.75 }, completed: true,
     notes: `${generated.title}\n\n${generated.notes}`,
   };
@@ -148,8 +166,10 @@ export function completedStrengthWorkout(generated: GeneratedStrength, date: str
 
 export function addCompletedStrength(plan: Plan, workout: Workout): Plan {
   if (plan.workouts.some(item => item.id === workout.id)) throw new Error('This generated workout has already been saved. Generate another workout to log a different session.');
-  const placeholder = plan.workouts.find(item => item.type === 'crossTraining' && item.activity === 'strength'
-    && !item.completed && !item.notes.trim() && item.date === workout.date);
+  const placeholder = workout.activity === 'strength'
+    ? plan.workouts.find(item => item.type === 'crossTraining' && item.activity === 'strength'
+      && !item.completed && !item.notes.trim() && item.date === workout.date)
+    : undefined;
   if (placeholder) return { ...plan, workouts: plan.workouts.map(item => item.id === placeholder.id ? workout : item) };
   if (plan.workouts.length >= 10000) throw new Error('The plan has reached the 10,000-workout limit. Export a backup and remove old entries before saving more.');
   return { ...plan, workouts: [...plan.workouts, workout] };

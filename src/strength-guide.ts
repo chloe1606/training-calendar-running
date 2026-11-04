@@ -18,16 +18,16 @@ export interface MoveGuide {
 export type EquipmentKind = 'bodyweight' | 'band' | 'dumbbell' | 'kettlebell' | 'step' | 'support' | 'chair' | 'wall';
 export interface EquipmentTag { kind: EquipmentKind; label: string }
 export type MoveDifficulty = 'Easy' | 'Medium' | 'Hard';
-export type MoveCategory = 'Strength' | 'Mobility' | 'Stretch' | 'Balance & control' | 'Warm-up';
+export type MoveCategory = 'Strength' | 'Mobility' | 'Stretch' | 'Balance & control' | 'Warm-up' | 'Pilates';
 const MOVE_CATEGORIES: Record<string, MoveCategory> = {
   walk: 'Warm-up', squat: 'Strength', hinge: 'Strength', calf: 'Strength', split: 'Strength',
   step: 'Strength', bridge: 'Strength', rdl: 'Strength', kickstand: 'Strength',
-  staggered: 'Strength', goblet: 'Strength', deadbug: 'Strength', bird: 'Strength',
-  clam: 'Strength', 'ankle-rock': 'Mobility', cat: 'Mobility', 'hip-stretch': 'Stretch',
-  'calf-stretch': 'Stretch', plank: 'Strength', slide: 'Balance & control',
+  staggered: 'Strength', goblet: 'Strength', deadbug: 'Pilates', bird: 'Pilates',
+  clam: 'Pilates', 'ankle-rock': 'Mobility', cat: 'Pilates', 'hip-stretch': 'Stretch',
+  'calf-stretch': 'Stretch', plank: 'Strength', slide: 'Pilates',
   'leg-raise': 'Strength', 'open-book': 'Mobility', 'seated-hip': 'Mobility',
-  'ankle-circle': 'Mobility', tap: 'Balance & control', reach: 'Mobility',
-  'hip-circle': 'Mobility', balance: 'Balance & control', tilt: 'Mobility',
+  'ankle-circle': 'Mobility', tap: 'Pilates', reach: 'Mobility',
+  'hip-circle': 'Mobility', balance: 'Balance & control', tilt: 'Pilates',
   'bent-calf': 'Strength', 'seated-calf': 'Strength', tibialis: 'Strength',
   'short-foot': 'Strength', 'toe-yoga': 'Balance & control', 'band-lateral': 'Strength',
   monster: 'Strength', 'band-extension': 'Strength', 'band-abduction': 'Strength',
@@ -52,6 +52,16 @@ const MOVE_CATEGORIES: Record<string, MoveCategory> = {
   'bear-crawl': 'Strength', 'loaded-deadbug': 'Strength', 'quadruped-row': 'Strength',
   'suitcase-march': 'Strength', 'rack-march': 'Strength', 'offset-squat': 'Strength',
   'hinge-drive': 'Strength', 'hip-airplane': 'Balance & control', 'wall-march-hold': 'Strength',
+  'hundred-prep': 'Pilates', 'single-leg-stretch': 'Pilates', 'leg-circles': 'Pilates',
+  'shoulder-bridge': 'Pilates', 'side-kick': 'Pilates', 'prone-swimming': 'Pilates',
+  'swan-prep': 'Pilates', 'spine-twist': 'Pilates', mermaid: 'Pilates', 'roll-down': 'Pilates',
+  'knee-to-wall-glide': 'Mobility', 'ankle-dorsiflexion-sweep': 'Mobility',
+  'hip-flexor-rock': 'Mobility', 'adductor-rock-back': 'Mobility',
+  'hamstring-floss': 'Mobility', 'figure-four-hinge': 'Mobility',
+  'quad-hip-flexor-glide': 'Mobility', 'thoracic-reach-through': 'Mobility',
+  'seated-hip-rotation': 'Mobility', 'toe-extension-rock': 'Mobility',
+  'calf-wall-glide': 'Mobility', 'pilates-bridge-march': 'Pilates',
+  'pilates-inner-thigh-lift': 'Pilates', 'supine-knee-fold': 'Pilates',
 };
 export function moveCategory(move: MoveGuide): MoveCategory {
   const category = MOVE_CATEGORIES[move.id];
@@ -88,6 +98,16 @@ const MOVE_DIFFICULTIES: Record<string, MoveDifficulty> = {
   'bear-crawl': 'Hard', 'loaded-deadbug': 'Medium', 'quadruped-row': 'Hard',
   'suitcase-march': 'Medium', 'rack-march': 'Medium', 'offset-squat': 'Medium',
   'hinge-drive': 'Hard', 'hip-airplane': 'Hard', 'wall-march-hold': 'Medium',
+  'hundred-prep': 'Medium', 'single-leg-stretch': 'Medium', 'leg-circles': 'Easy',
+  'shoulder-bridge': 'Medium', 'side-kick': 'Medium', 'prone-swimming': 'Medium',
+  'swan-prep': 'Easy', 'spine-twist': 'Easy', mermaid: 'Easy', 'roll-down': 'Easy',
+  'knee-to-wall-glide': 'Easy', 'ankle-dorsiflexion-sweep': 'Easy',
+  'hip-flexor-rock': 'Easy', 'adductor-rock-back': 'Easy', 'hamstring-floss': 'Easy',
+  'figure-four-hinge': 'Easy', 'quad-hip-flexor-glide': 'Easy',
+  'thoracic-reach-through': 'Easy', 'seated-hip-rotation': 'Easy',
+  'toe-extension-rock': 'Easy', 'calf-wall-glide': 'Easy',
+  'pilates-bridge-march': 'Medium', 'pilates-inner-thigh-lift': 'Easy',
+  'supine-knee-fold': 'Easy',
 };
 export function moveDifficulty(move: MoveGuide): MoveDifficulty {
   const difficulty = MOVE_DIFFICULTIES[move.id];
@@ -176,6 +196,24 @@ const BODY_AREAS: Record<string, BodyArea[]> = {
   'suitcase-march': ['Core', 'Hips', 'Arms'], 'rack-march': ['Core', 'Hips', 'Shoulders'],
   'offset-squat': ['Legs', 'Glutes', 'Core'], 'hinge-drive': ['Hamstrings', 'Glutes', 'Hips'],
   'hip-airplane': ['Hips', 'Glutes', 'Core'], 'wall-march-hold': ['Hips', 'Core', 'Calves'],
+  'hundred-prep': ['Core', 'Hips'], 'single-leg-stretch': ['Core', 'Hips'], 'leg-circles': ['Hips', 'Core'],
+  'shoulder-bridge': ['Glutes', 'Hamstrings', 'Back'], 'side-kick': ['Glutes', 'Hips', 'Core'],
+  'prone-swimming': ['Back', 'Glutes', 'Shoulders'], 'swan-prep': ['Back', 'Shoulders'],
+  'spine-twist': ['Back', 'Core'], mermaid: ['Back', 'Core', 'Shoulders'], 'roll-down': ['Back', 'Hamstrings'],
+  'knee-to-wall-glide': ['Feet & ankles', 'Calves'],
+  'ankle-dorsiflexion-sweep': ['Feet & ankles', 'Calves'],
+  'hip-flexor-rock': ['Hips', 'Legs'],
+  'adductor-rock-back': ['Hips', 'Legs'],
+  'hamstring-floss': ['Hamstrings', 'Hips'],
+  'figure-four-hinge': ['Hips', 'Glutes'],
+  'quad-hip-flexor-glide': ['Hips', 'Legs'],
+  'thoracic-reach-through': ['Back', 'Shoulders'],
+  'seated-hip-rotation': ['Hips'],
+  'toe-extension-rock': ['Feet & ankles'],
+  'calf-wall-glide': ['Calves', 'Feet & ankles'],
+  'pilates-bridge-march': ['Core', 'Glutes', 'Hips'],
+  'pilates-inner-thigh-lift': ['Hips', 'Legs'],
+  'supine-knee-fold': ['Core', 'Hips'],
 };
 export function bodyAreas(move: MoveGuide): BodyArea[] {
   const areas = BODY_AREAS[move.id];
@@ -252,6 +290,13 @@ const weights = 'M59 74H72M89 74H102';
 const bandKnees = 'M65 90Q82 82 100 90Q82 98 65 90Z';
 const tallStep: ExercisePose = { ...stand, legs: 'M80 70L80 85L80 95M80 70L103 90L109 115', equipment: 'M60 118V96H92V118' };
 const row: ExercisePose = { ...hinge, arms: 'M103 57L83 75L103 80M99 58L78 75L94 80', equipment: 'M97 81H109M88 81H100' };
+
+// Pilates mat poses
+const tabletopLegs = 'M102 104L104 72L139 72M102 104L93 78L125 78';
+const curlUp: ExercisePose = { head: [44, 84], body: 'M53 93L76 100L102 104', arms: 'M58 95L92 97L124 99', legs: tabletopLegs };
+const proneLie: ExercisePose = { head: [150, 100], body: 'M138 104L92 106', arms: 'M138 104L162 108L184 110', legs: 'M92 106L52 110L12 112' };
+const floorSit: ExercisePose = { head: [80, 28], body: 'M80 39L80 100', arms: 'M80 48L60 72L56 98M80 48L100 72L104 98', legs: 'M80 100L58 116M80 100L102 116' };
+const legCircle = 'M129 30Q129 35 125 39Q121 43 116 43Q111 43 107 39Q103 35 103 30Q103 25 107 21Q111 17 116 17Q121 17 125 21Q129 25 129 30';
 
 export const MOVE_GUIDES: MoveGuide[] = [
   { id: 'walk', name: 'Walking / marching', match: /walking|marching|walk[,.;]/i, cue: 'Stay relaxed and upright. Use comfortable steps and an easy arm swing.', labels: ['Step', 'Alternate sides'], poses: [stand, { ...stand, arms: 'M80 40L60 57L52 46M80 40L101 50L109 70', legs: 'M80 70L102 74L104 96M80 70L73 93L65 116' }] },
@@ -639,6 +684,261 @@ export const MOVE_GUIDES: MoveGuide[] = [
     labels: ['Hands on wall, small body lean', 'Lift one knee and hold alignment'],
     poses: [{ ...stand, head: [100, 20], body: 'M96 31L80 70', arms: 'M93 40L121 44L150 44', legs: 'M80 70L69 93L60 116M80 70L90 93L95 116', equipment: 'M150 5V120' }, { ...stand, head: [100, 20], body: 'M96 31L80 70', arms: 'M93 40L121 44L150 44', legs: 'M80 70L69 93L60 116M80 70L110 70L110 94', equipment: 'M150 5V120' }],
   },
+  {
+    id: 'hundred-prep', name: 'Hundred prep', match: /^hundred prep(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1-2 sets of 5 breath cycles; rest 45 s between sets.',
+    cue: 'Lie on your back with knees over hips in a tabletop position. Exhale as you curl the head and shoulders just off the mat, reach the arms long beside your hips and pump them in small beats for 5 counts, then inhale for 5 counts. This builds trunk endurance and breathing control. Keep the lower back quiet and ribs soft; leave the head on the mat or place the feet on the floor if the neck or back tires.',
+    labels: ['Tabletop legs, head down', 'Curl up and pump arms'],
+    poses: [{ ...deadbug, arms: back.arms }, curlUp],
+  },
+  {
+    id: 'single-leg-stretch', name: 'Single-leg stretch', match: /^single-leg stretch(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1-2 sets of 6-8 reps per leg; rest 45 s between sets.',
+    cue: 'Lie on your back with head and shoulders lightly curled and one knee drawn towards the chest, hands on that shin. Extend the other leg at a comfortable angle, then switch legs smoothly, exhaling on each switch. Keep the pelvis still and the lower back down. Lower the head to the mat or keep the extended leg higher if the back arches or the neck strains.',
+    labels: ['Tabletop, hands on one shin', 'Extend one leg, then switch'],
+    poses: [{ ...curlUp, arms: 'M58 95L84 86L100 76' }, { ...curlUp, arms: 'M58 95L76 86L88 80', legs: 'M102 104L86 78L112 76M102 104L142 94L178 84' }],
+  },
+  {
+    id: 'leg-circles', name: 'Supine leg circles', match: /^supine leg circles(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1 set of 5 small circles each direction per leg; rest 30 s between sides and 60 s between sets.',
+    cue: 'Lie on your back with one leg reaching towards the ceiling, knee slightly soft, and the other leg long or bent with the foot planted. Draw a small controlled circle from the hip, then reverse direction. Keep the pelvis still and the lower back gently heavy on the mat. This trains hip mobility with pelvic stability. Keep the circles small and bend the supporting knee if the hamstrings or back feel tense.',
+    labels: ['One leg towards ceiling', 'Small circle from the hip'],
+    poses: [
+      { ...back, legs: 'M102 104L103 66L104 32M102 104L142 110L180 114' },
+      { ...back, legs: 'M102 104L112 68L124 36M102 104L142 110L180 114', equipment: legCircle },
+    ],
+  },
+  {
+    id: 'shoulder-bridge', name: 'Shoulder bridge', match: /^shoulder bridge(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1-2 sets of 6 slow reps; rest 60 s between sets.',
+    cue: 'Lie on your back with knees bent and feet hip-width apart. Exhale, tuck the pelvis and peel the spine off the mat one vertebra at a time until hips are in line with shoulders and knees. Pause, then lower slowly from the upper back down to the pelvis. Keep the ribs soft rather than arching. Use a smaller lift if the hamstrings cramp or the back feels pinched.',
+    labels: ['Ribs and pelvis on mat', 'Peel up one vertebra at a time'],
+    poses: [back, { ...bridge, body: 'M48 101Q74 100 100 77' }],
+  },
+  {
+    id: 'side-kick', name: 'Side-lying side kick', match: /^side-lying side kick(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1-2 sets of 8 kicks per side; rest 30 s between sides and 60 s between sets.',
+    cue: 'Lie on your side with hips stacked, head resting on your lower arm and the bottom knee slightly bent. Lift the top leg to hip height, kick it gently forward with a flexed foot, then reach it long behind you without arching the back or rolling the pelvis. This works the glutes and hip flexors with trunk control. Keep the range small and stop for pinching at the front of the hip.',
+    labels: ['Top leg at hip height', 'Kick forward, reach long behind'],
+    poses: [
+      { ...side, legs: 'M101 98L130 108L160 110M101 98L135 98L170 98' },
+      { ...side, legs: 'M101 98L130 108L160 110M101 98L134 84L166 72' },
+    ],
+  },
+  {
+    id: 'prone-swimming', name: 'Prone swimming', match: /^prone swimming(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1-2 sets of 10-15 s of alternating lifts; rest 45 s between sets.',
+    cue: 'Lie face down with arms reaching forward and legs long. Gently draw the abdomen in, lift one arm and the opposite leg a short distance, then alternate slowly with steady breathing. This strengthens the back extensors and glutes. Keep the neck long and the lifts small; rest the head and lift only the legs, or stop, if the lower back feels compressed.',
+    labels: ['Arms and legs long, face down', 'Lift opposite arm and leg'],
+    poses: [
+      proneLie,
+      { head: [150, 94], body: 'M138 100L92 106', arms: 'M138 100L164 108L186 110M138 100L166 82L186 76', legs: 'M92 106L52 110L12 112M92 106L54 96L14 86' },
+    ],
+  },
+  {
+    id: 'swan-prep', name: 'Swan prep', match: /^swan prep(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1-2 sets of 5 slow lifts; rest 45 s between sets.',
+    cue: 'Lie face down with hands beside the chest, elbows bent and legs long. Draw the navel gently away from the mat, lift the chest a short distance by extending the upper back, keep the shoulders away from the ears, then lower slowly. This opens the chest and trains upper-back extension for upright running posture. Keep the neck long and lift less if the lower back pinches.',
+    labels: ['Hands beside chest, face down', 'Lift chest, lengthen forward'],
+    poses: [
+      { ...proneLie, arms: 'M136 104L120 112L132 116' },
+      { head: [160, 78], body: 'M148 88L92 106', arms: 'M146 90L128 106L142 116', legs: 'M92 106L52 110L12 112' },
+    ],
+  },
+  {
+    id: 'spine-twist', name: 'Seated spine twist', match: /^seated spine twist(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1-2 sets of 4-5 slow rotations per side; rest 30 s between sets.',
+    cue: 'Sit tall with legs long or crossed and arms reaching out to the sides at shoulder height. Inhale to grow taller, exhale and rotate the ribcage around the spine, keeping both sitting bones evenly down. Return to centre and alternate. This builds upper-back rotation for arm swing. Keep the turn small and slow; sit on a folded towel or bend the knees if the back rounds or the hamstrings feel tight.',
+    labels: ['Sit tall, arms out', 'Rotate ribs, hips stay still'],
+    poses: [
+      { ...floorSit, arms: 'M80 48L38 48M80 48L122 48' },
+      { ...floorSit, arms: 'M80 48L56 42M80 48L104 56', equipment: 'M52 72Q80 86 108 72M108 72L99 72M108 72L106 81' },
+    ],
+  },
+  {
+    id: 'mermaid', name: 'Mermaid side stretch', match: /^mermaid side stretch(?=:|$)/im,
+    equipment: 'Bodyweight and mat, chair if preferred',
+    prescription: '1-2 sets of 4 breaths per side; rest 30 s between sets.',
+    cue: 'Sit tall on a mat with legs crossed comfortably, or on a chair, one hand resting by your side. Reach the other arm overhead and lengthen up, then bend sideways away from the supporting hand, keeping both sitting bones down and ribs facing forward. Return to centre with control and switch. This opens the side body for deeper breathing. Take a small range and skip the overhead reach if the shoulder hurts.',
+    labels: ['Sit tall, one arm reaching up', 'Side-bend over, hips down'],
+    poses: [
+      floorSit,
+      { head: [104, 34], body: 'M80 100Q84 66 98 46', arms: 'M96 50L118 84L128 108M96 50L82 22L108 12', legs: 'M80 100L58 116M80 100L102 116' },
+    ],
+  },
+  {
+    id: 'roll-down', name: 'Standing roll-down', match: /^standing roll-down(?=:|$)/im,
+    equipment: 'Bodyweight, stable support if needed',
+    prescription: '1-2 sets of 5 slow roll-downs; rest 30 s between sets.',
+    cue: 'Stand tall with feet hip-width apart and knees soft. Nod the chin and roll down one vertebra at a time with arms hanging and hips staying over the heels. Stop when the spine is comfortably rounded, breathe, then stack back up from the hips with the head last. This mobilises the spine and hamstrings. Bend the knees more or hold a stable support if you feel dizzy or stiff; skip the lowest range if the hamstrings pull sharply.',
+    labels: ['Stand tall, knees soft', 'Round down, vertebra by vertebra'],
+    poses: [
+      { head: [80, 20], body: 'M80 31L80 70', arms: 'M80 40L66 58L64 76M80 40L94 58L96 76', legs: 'M80 70L78 93L78 116M80 70L82 93L82 116' },
+      { head: [112, 84], body: 'M70 70Q66 50 84 52Q104 56 107 74', arms: 'M96 56L106 88L108 108', legs: 'M70 70L72 93L70 116M70 70L68 93L66 116' },
+    ],
+  },
+  {
+    id: 'knee-to-wall-glide', name: 'Supported knee-to-wall ankle glide', match: /^supported knee-to-wall ankle glide(?=:|$)/im,
+    equipment: 'Bodyweight and solid wall or stable support',
+    prescription: '1 set of 8 gentle glides per side; rest 20 s between sides.',
+    cue: 'Face a wall in a short split stance with the front foot flat and toes a few centimetres from the wall. Keeping the heel down, gently move the front knee towards the wall in line with the second toe, then return. Adjust the foot distance so the motion stays comfortable. This gives runners a controlled ankle dorsiflexion movement; do not force the heel up or push into pain.',
+    labels: ['Short split stance, heel down', 'Gently glide knee forward'],
+    poses: [
+      { ...split, equipment: 'M38 5V118' },
+      { ...split, head: [97, 35], body: 'M97 46L87 77', legs: 'M87 77L116 91L109 116M87 77L59 94L47 116', equipment: 'M38 5V118' },
+    ],
+  },
+  {
+    id: 'ankle-dorsiflexion-sweep', name: 'Seated ankle dorsiflexion sweep', match: /^seated ankle dorsiflexion sweep(?=:|$)/im,
+    equipment: 'Bodyweight and chair',
+    prescription: '1 set of 8 slow reps per side; rest 20 s between sides.',
+    cue: 'Sit near the front of a stable chair with one heel on the floor and toes relaxed. Keeping the heel grounded, draw the front of the foot up towards the shin, then lower gently. Use a small smooth range and keep the knee still. This is a low-load ankle movement for warm-up or recovery; stop if it causes pain, tingling or cramping.',
+    labels: ['Sit tall, heel planted', 'Lift toes, then lower'],
+    poses: [
+      { ...floorSit, legs: 'M80 100L58 116M80 100L102 116', equipment: 'M43 83H116V116M49 116H110' },
+      { ...floorSit, legs: 'M80 100L58 116M80 100L102 108L125 108', equipment: 'M43 83H116V116M49 116H110' },
+    ],
+  },
+  {
+    id: 'hip-flexor-rock', name: 'Half-kneeling hip-flexor rock', match: /^half-kneeling hip-flexor rock(?=:|$)/im,
+    equipment: 'Bodyweight and mat or padding',
+    prescription: '1 set of 6 gentle rocks per side; rest 20 s between sides.',
+    cue: 'Kneel on padding with one foot forward and both hips facing ahead. Gently tuck the pelvis, keep the trunk tall and shift the body a short distance forward, then return. Feel a mild stretch at the front of the rear hip, not a pinch in the low back. This helps runners practise comfortable hip extension; use a smaller range or hold a chair if balance is uncertain.',
+    labels: ['Half-kneeling, trunk tall', 'Small forward hip shift'],
+    poses: [
+      { ...split, legs: 'M80 70L80 96L80 116M80 70L107 91L115 116' },
+      { ...split, head: [90, 31], body: 'M90 42L88 76', legs: 'M88 76L90 99L90 116M88 76L110 91L118 116' },
+    ],
+  },
+  {
+    id: 'adductor-rock-back', name: 'Quadruped adductor rock-back', match: /^quadruped adductor rock-back(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1 set of 6 gentle rocks per side; rest 20 s between sides.',
+    cue: 'Start on hands and knees, then extend one leg out to the side with the foot flat and toes facing forward. Keep your back long and slowly shift your hips towards the bent knee, then return before the stretch becomes strong. This moves the inner thigh through a comfortable range useful for stride and lateral control. Keep the range modest and stop for groin pain.',
+    labels: ['Hands and knees, one leg extended', 'Rock hips back gently'],
+    poses: [
+      { ...table, legs: 'M77 62L77 91L70 116M77 62L105 63L138 64' },
+      { ...table, body: 'M128 62L104 70L78 62', legs: 'M78 62L78 91L70 116M78 62L107 68L143 74' },
+    ],
+  },
+  {
+    id: 'hamstring-floss', name: 'Supine hamstring floss', match: /^supine hamstring floss(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1 set of 6 easy reps per side; rest 20 s between sides.',
+    cue: 'Lie on your back and hold behind one thigh with the hip comfortably bent. Slowly straighten that knee only until you feel a light stretch, then bend it again; keep the ankle relaxed. This is a gentle mobility drill, not a long hamstring stretch or strength set. Keep the other leg comfortable on the floor and stop if you feel nerve-like tingling or sharp pain.',
+    labels: ['Hold thigh, knee softly bent', 'Gently straighten and re-bend'],
+    poses: [
+      { ...back, legs: 'M102 104L125 76L147 116M102 104L130 74L132 38' },
+      { ...back, arms: 'M55 101L112 78L133 74M55 101L115 82L134 78', legs: 'M102 104L125 76L147 116M102 104L132 76L157 60' },
+    ],
+  },
+  {
+    id: 'figure-four-hinge', name: 'Seated figure-four hip hinge', match: /^seated figure-four hip hinge(?=:|$)/im,
+    equipment: 'Stable chair',
+    prescription: '1 set of 4 gentle breaths per side; rest 20 s between sides.',
+    cue: 'Sit on a stable chair and rest one ankle across the opposite thigh only if the knee is comfortable. Keep the spine long and hinge forward a few centimetres from the hips, then sit tall. The sensation should stay mild around the outer hip; do not press the knee down. This offers a supported hip-rotation option for runners; keep both feet on the floor if the crossed position pinches.',
+    labels: ['Sit tall, ankle comfortably crossed', 'Small hip hinge forward'],
+    poses: [
+      { ...floorSit, legs: 'M80 100L58 116M80 100L91 79L119 105' },
+      { head: [116, 48], body: 'M105 58L80 83', arms: 'M98 63L84 86L80 104M98 63L116 76L124 94', legs: 'M80 83L58 116M80 83L91 79L119 105', equipment: 'M43 83H116V116M49 116H110' },
+    ],
+  },
+  {
+    id: 'quad-hip-flexor-glide', name: 'Supported standing quad and hip-flexor glide', match: /^supported standing quad and hip-flexor glide(?=:|$)/im,
+    equipment: 'Bodyweight and stable support',
+    prescription: '1 set of 5 easy reps per side; rest 20 s between sides.',
+    cue: 'Stand beside a stable support and take a short split stance. Keep the rear heel lifted only as needed, gently bend the rear knee and tuck the pelvis a little, then release to upright. Avoid pulling the foot or arching the back. This gives the front of the hip and thigh a small dynamic range for runners; keep the movement pain-free and use a shorter stance if the knee is sensitive.',
+    labels: ['Short supported split stance', 'Small rear-knee bend and hip glide'],
+    poses: [
+      { ...stand, equipment: 'M135 40V118' },
+      { ...stand, legs: 'M80 70L76 93L76 116M80 70L108 83L116 102', equipment: 'M135 40V118' },
+    ],
+  },
+  {
+    id: 'thoracic-reach-through', name: 'Quadruped thoracic reach-through', match: /^quadruped thoracic reach-through(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1 set of 5 slow reaches per side; rest 20 s between sides.',
+    cue: 'Start on hands and knees with hips over knees. Place one hand lightly behind the head, rotate that elbow towards the supporting wrist, then turn the chest gently open. Keep hips mostly still and let the movement come from the upper back. This supports relaxed trunk rotation and arm swing while running; use a small range and do not pull on the neck.',
+    labels: ['Hands and knees, hand behind head', 'Rotate upper back open'],
+    poses: [
+      { ...table, arms: 'M124 62L123 87L123 116M124 62L105 87L105 110' },
+      { ...table, arms: 'M124 62L123 87L123 116M124 62L98 72L101 47M101 47L118 38' },
+    ],
+  },
+  {
+    id: 'seated-hip-rotation', name: 'Seated 90/90 hip rotation switch', match: /^seated 90\/90 hip rotation switch(?=:|$)/im,
+    equipment: 'Bodyweight and mat or stable chair',
+    prescription: '1 set of 4 slow switches each way; rest 30 s.',
+    cue: 'Sit on a mat with knees bent and feet wider than hips, using hands behind you for support, or sit on a chair and rotate one thigh at a time gently inward and outward. On the floor, let both knees move side to side only through a comfortable range without forcing them down. This explores hip rotation used in running stance and swing; stay tall, move slowly and choose the chair option if the floor position pinches.',
+    labels: ['Sit supported, knees comfortably bent', 'Let knees rotate gently side to side'],
+    poses: [
+      { ...floorSit, legs: 'M80 100L62 116L52 99M80 100L98 116L108 99' },
+      { ...floorSit, legs: 'M80 100L62 116L76 96M80 100L98 116L84 96' },
+    ],
+  },
+  {
+    id: 'toe-extension-rock', name: 'Supported toe-extension rock', match: /^supported toe-extension rock(?=:|$)/im,
+    equipment: 'Bodyweight and stable support',
+    prescription: '1 set of 5 gentle rocks per side; rest 20 s between sides.',
+    cue: 'Hold a stable support and place one foot behind with the toes resting on the floor and heel lifted. Shift a small amount of weight forward until you feel a mild stretch under the toes, then ease back. Keep the ankle comfortable and avoid collapsing onto the foot. This gently moves the forefoot and toes, which take repeated load during running; skip it if the toe joints are painful.',
+    labels: ['Support held, toes resting behind', 'Small forward weight shift'],
+    poses: [
+      { ...stand, equipment: 'M135 40V118' },
+      { ...stand, body: 'M80 40L80 70', legs: 'M80 70L76 93L76 116M80 70L105 86L126 105', equipment: 'M135 40V118' },
+    ],
+  },
+  {
+    id: 'calf-wall-glide', name: 'Wall-supported calf and ankle glide', match: /^wall-supported calf and ankle glide(?=:|$)/im,
+    equipment: 'Bodyweight and solid wall',
+    prescription: '1 set of 6 easy pulses per side; rest 20 s between sides.',
+    cue: 'Place both hands on a wall and step one foot back with toes pointing forward. Keep the rear heel heavy and gently bend the front knee, shifting forward until the back calf feels a mild stretch, then ease off. Keep the back leg only as straight as comfortable and avoid bouncing. This is a short dynamic calf-and-ankle movement; shorten the stance or stop if the Achilles or calf hurts.',
+    labels: ['Hands on wall, one foot back', 'Gentle forward shift, rear heel heavy'],
+    poses: [
+      { ...stand, equipment: 'M145 5V120' },
+      { ...stand, head: [100, 23], body: 'M97 34L79 73', arms: 'M94 42L117 48L145 48', legs: 'M79 73L103 94L107 116M79 73L55 95L35 116', equipment: 'M145 5V120' },
+    ],
+  },
+  {
+    id: 'pilates-bridge-march', name: 'Shoulder bridge march', match: /^shoulder bridge march(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1 set of 5 slow marches per side; rest 45 s.',
+    cue: 'Lie on your back with knees bent and lift into a small shoulder bridge, keeping ribs relaxed and hips level. Float one foot just clear of the mat, replace it quietly, then alternate. Keep the lift low enough that the pelvis does not tip or the back arch. This Pilates variation links trunk control with single-leg support for running; return to a two-foot bridge if hamstrings cramp.',
+    labels: ['Low bridge, both feet planted', 'Float one foot, keep hips level'],
+    poses: [
+      { ...back, legs: 'M102 104L128 77L147 116M102 104L145 88L174 116' },
+      { ...bridge, legs: 'M100 77L128 77L147 116M100 77L116 52L139 50' },
+    ],
+  },
+  {
+    id: 'pilates-inner-thigh-lift', name: 'Side-lying inner-thigh lift', match: /^side-lying inner-thigh lift(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1 set of 6 small lifts per side; rest 30 s between sides.',
+    cue: 'Lie on one side with the bottom leg long and the top foot placed on the floor in front for support. Lift the bottom leg a small distance without rolling the pelvis, then lower slowly. Keep the toes relaxed and the trunk still. This Pilates inner-thigh exercise adds hip control for runners; use a very small range and stop if the groin pinches.',
+    labels: ['Side-lying, top foot planted', 'Lift bottom leg a small amount'],
+    poses: [
+      { ...side, legs: 'M101 98L130 108L160 110M101 98L124 80L153 108' },
+      { ...side, legs: 'M101 98L130 95L160 97M101 98L124 80L153 108' },
+    ],
+  },
+  {
+    id: 'supine-knee-fold', name: 'Supine single-leg knee fold', match: /^supine single-leg knee fold(?=:|$)/im,
+    equipment: 'Bodyweight and mat',
+    prescription: '1 set of 6 slow folds per side; rest 30 s.',
+    cue: 'Lie on your back with knees bent and feet planted, keeping the pelvis level and ribs relaxed. Gently float one knee towards tabletop without changing the curve of the lower back, then lower the foot quietly and alternate. This Pilates control drill trains the trunk to stay steady as the legs move in a running-like pattern. Lift only as far as you can without rocking the pelvis or arching the back.',
+    labels: ['Lie on back, feet planted', 'Float one knee, keep pelvis still'],
+    poses: [
+      { ...back, legs: 'M102 104L125 76L147 116M102 104L145 88L174 116' },
+      { ...back, legs: 'M102 104L125 76L147 116M102 104L104 72L139 72' },
+    ],
+  },
 ];
 
 export function guidesForNotes(notes: string): MoveGuide[] {
@@ -656,7 +956,7 @@ export function guidesForNotes(notes: string): MoveGuide[] {
 
 export function workoutFlowSteps(notes: string): { text: string; moves: MoveGuide[] }[] {
   const lines = notes.split(/\n\s*\n|\n/).map(text => text.trim()).filter(text =>
-    text && !/^(Heavy|Light) \d+:|^Generated (?:heavy|medium|light):|^Five-week rotation:|^Heavy means the main resistance session/.test(text),
+    text && !/^(Heavy|Light) \d+:|^Generated (?:mobility|pilates|strength):|^Five-week rotation:|^Heavy means the main resistance session/.test(text),
   );
   const steps: { text: string; moves: MoveGuide[] }[] = [];
   const cooldown: string[] = [];
@@ -712,7 +1012,7 @@ export function workoutFlowSteps(notes: string): { text: string; moves: MoveGuid
 
 export function strengthSummary(notes: string): string[] {
   return notes.split(/\n\s*\n|\n/).map(line => line.trim()).filter(line =>
-    line && !/^(?:Warm-up|Cool[- ]down|Rest |Finish with|(?:Heavy|Light) \d+:|Generated (?:heavy|medium|light):|Five-week rotation|Taper:)/i.test(line)
+    line && !/^(?:Warm-up|Cool[- ]down|Rest |Finish with|(?:Heavy|Light) \d+:|Generated (?:mobility|pilates|strength):|Five-week rotation|Taper:)/i.test(line)
     && guidesForNotes(line).length > 0 && /\b(?:sets?|reps|round)\b/i.test(line),
   ).map(line => {
     const firstSentence = line.split(/\.\s+/)[0].replace(/[;,.]?\s*rest\b.*$/i, '').replace(/\.$/, '');

@@ -235,6 +235,7 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
 .type-crossTraining { --card-bg: var(--cross-bg); --card-fg: var(--cross-fg); --card-line: var(--cross-line); }
 .type-crossTraining.activity-swim { --card-bg: var(--swim-bg); --card-fg: var(--swim-fg); --card-line: var(--swim-line); }
 .type-crossTraining.activity-strength { --card-bg: var(--strength-bg); --card-fg: var(--strength-fg); --card-line: var(--strength-line); }
+.type-crossTraining.activity-mobility { --card-bg: var(--easy-bg); --card-fg: var(--easy-fg); --card-line: var(--easy-line); }
 .type-rest { --card-bg: var(--rest-bg); --card-fg: var(--rest-fg); --card-line: var(--rest-line); }
 .type-race { --card-bg: var(--race-bg); --card-fg: var(--race-fg); --card-line: var(--race-line); }
 .workout-card:hover { box-shadow: 0 2px 7px #28351a0c; }
@@ -296,7 +297,15 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
 .strength-page { scroll-margin-top: 20px; }
 .strength-page h1 { display: flex; align-items: center; gap: 9px; }
 .strength-page h1 svg { color: var(--olive); flex-shrink: 0; }
-.strength-week { display: grid; gap: 7px; color: var(--subtle); font-size: 12px; }
+.strength-week-summary { min-width: min(100%, 300px); max-width: 380px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.strength-week-summary h2 { margin: 0 0 8px; font-size: 12px; }
+.strength-week-summary ul { display: grid; gap: 6px; list-style: none; padding: 0; margin: 0; }
+.strength-week-summary li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 9px; padding: 7px 8px; border-radius: 6px; font-size: 11px; }
+.strength-week-summary li > span:first-child { color: var(--subtle); font-variant-numeric: tabular-nums; }
+.strength-week-summary p { margin: 0; color: var(--subtle); font-size: 11px; line-height: 1.6; }
+.strength-week-summary .strength-planned-today { background: var(--olive-light); color: var(--olive); font-weight: 600; }
+.strength-week-summary .strength-planned-today > span:first-child { color: inherit; }
+.strength-today-badge { margin-left: auto; padding: 2px 6px; border-radius: 999px; background: var(--olive); color: var(--surface); font-size: 9px; text-transform: uppercase; letter-spacing: .04em; }
 .strength-layout { display: grid; grid-template-columns: minmax(0, 1fr) 290px; grid-template-areas: "guide tools"; gap: 24px; align-items: start; }
 .strength-panel { grid-area: guide; min-width: 0; padding: 22px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
 .strength-tools { grid-area: tools; min-width: 0; position: sticky; top: 20px; }
