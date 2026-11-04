@@ -151,7 +151,7 @@ describe('custom guide workouts', () => {
       const next = addCompletedStrength(plan, workout);
       expect(weekStats(next.workouts)).toEqual(weekStats(plan.workouts));
       expect(() => addCompletedStrength(next, workout)).toThrow('already been saved');
-      expect(() => addCompletedStrength({ ...plan, workouts: Array.from({ length: 10000 }, (_, index) => ({ ...workout, id: `existing-${index}` })) }, workout)).toThrow('10,000-workout limit');
+      expect(() => addCompletedStrength({ ...plan, workouts: Array.from({ length: 10000 }, (_, index) => ({ ...workout, id: `existing-${index}`, notes: `Existing workout ${index}` })) }, workout)).toThrow('10,000-workout limit');
     }
     const generated = generateStrengthWorkout('strength', () => 0);
     for (const date of ['', '2026-02-30', '2026-10-31', '2019-12-31', '30/10/2026']) {
@@ -159,19 +159,14 @@ describe('custom guide workouts', () => {
     }
   });
 
-  it('fills only an empty incomplete strength slot on the completion date', () => {
+  it('adds completed workouts as new entries and avoids identical duplicate sessions', () => {
     const plan = createDefaultPlan();
     const workout = completedStrengthWorkout(generateStrengthWorkout('strength', () => 0), '2026-10-30', '2026-10-30', 'strength-log-slot');
     const slot = plan.workouts.find(item => item.activity === 'strength' && item.date === workout.date)!;
     const next = addCompletedStrength(plan, workout);
-    expect(next.workouts).toHaveLength(plan.workouts.length);
-    expect(next.workouts.find(item => item.id === slot.id)).toBeUndefined();
+    expect(next.workouts).toHaveLength(plan.workouts.length + 1);
+    expect(next.workouts.find(item => item.id === slot.id)).toEqual(slot);
     expect(next.workouts.find(item => item.id === workout.id)).toEqual(workout);
-    for (const custom of [{ ...slot, completed: true }, { ...slot, notes: 'Custom plan notes' }]) {
-      const protectedPlan = { ...plan, workouts: plan.workouts.map(item => item.id === slot.id ? custom : item) };
-      const added = addCompletedStrength(protectedPlan, workout);
-      expect(added.workouts).toHaveLength(plan.workouts.length + 1);
-      expect(added.workouts.find(item => item.id === custom.id)).toEqual(custom);
-    }
+    expect(addCompletedStrength(next, { ...workout, id: 'duplicate-workout' })).toBe(next);
   });
 });

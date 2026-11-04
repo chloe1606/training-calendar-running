@@ -252,6 +252,12 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
     setSaveMessage('');
     try {
       const completed = completedStrengthWorkout(generated, completionDate, dateKey(new Date()), savedId ?? `strength-log-${crypto.randomUUID()}`);
+      const existing = allWorkouts.find(item => item.date === completed.date && item.activity === completed.activity && item.notes === completed.notes);
+      if (existing) {
+        setSavedId(existing.id);
+        setSaveMessage('This workout is already in the calendar.');
+        return;
+      }
       const error = onSaveWorkout(completed);
       setSavedId(completed.id);
       if (error) {
@@ -353,13 +359,11 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
       </>}
       {!library && notes && <WorkoutSummary key={`summary:${selection}:${notes}`} notes={notes} title={title} />}
       {selection === 'generated' && generated && onSaveWorkout &&       <section className="strength-log" aria-label={`Save completed ${generated.category} workout`}>
-        <h3>Log this workout</h3>
-        <label>Date completed<input aria-label={`Date ${generated.category} workout completed`} type="date" min="2020-01-01" max={dateKey(new Date())}
+        <h3>Save workout</h3>
+        <label>Workout date<input aria-label={`Date ${generated.category} workout`} type="date" min="2020-01-01" max={dateKey(new Date())}
           value={completionDate} disabled={!!savedWorkout} onChange={event => { setCompletionDate(event.target.value); setSaveError(''); }} /></label>
-        <button type="button" className="primary-button" disabled={!!savedWorkout} onClick={saveGenerated}>{savedWorkout ? 'Saved to calendar' : 'Save as completed'}</button>
-        <p className="field-help">{generated.category === 'strength'
-          ? 'Marks an empty strength slot on this date as completed, or adds a new completed strength activity if there is no empty slot.'
-          : `Adds a completed ${generated.category} activity to the calendar.`} Completed and customised sessions are kept. Save only after doing the workout.</p>
+        <button type="button" className="primary-button" disabled={!!savedWorkout} onClick={saveGenerated}>{savedWorkout ? 'Saved to calendar' : 'Save workout'}</button>
+        <p className="field-help">Adds this completed workout as a new calendar entry. Existing sessions are kept; an identical workout already on this date will not be added again.</p>
         {saveMessage && savedWorkout?.completed && <p role="status">{saveMessage}</p>}
         {saveError && <p role="alert" className="form-error">{saveError}</p>}
       </section>}

@@ -5,14 +5,24 @@ import { createDefaultPlan } from '../seed';
 
 let CardContent: typeof import('./WorkoutCard')['CardContent'];
 let WorkoutCard: typeof import('./WorkoutCard')['WorkoutCard'];
+let WorkoutIcon: typeof import('./WorkoutCard')['WorkoutIcon'];
 beforeAll(async () => {
   vi.stubGlobal('localStorage', { getItem: () => null, setItem: () => undefined });
   const module = await import('./WorkoutCard');
   CardContent = module.CardContent;
   WorkoutCard = module.WorkoutCard;
+  WorkoutIcon = module.WorkoutIcon;
 });
 
 describe('long-run pace split', () => {
+  it('uses a reformer icon for Pilates workouts', () => {
+    const plan = createDefaultPlan();
+    const workout = { ...plan.workouts.find(item => item.activity === 'strength')!, activity: 'pilates' as const };
+    const html = renderToStaticMarkup(createElement(WorkoutIcon, { workout }));
+    expect(html).toContain('<svg');
+    expect(html).toContain('M2 18h20');
+    expect(html).toContain('aria-hidden="true"');
+  });
   it('offers the fuelling editor on long runs only, retaining logs after a type change', () => {
     const plan = createDefaultPlan();
     const run = plan.workouts.find(workout => workout.type === 'long')!;

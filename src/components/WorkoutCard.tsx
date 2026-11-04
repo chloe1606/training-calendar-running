@@ -13,12 +13,15 @@ import { usePlanner } from '../store';
 import { formatDistance } from '../distance';
 import { thresholdSummary, thresholdSession, thresholdNotes } from '../threshold';
 import { mainSetMiles, qualityDetails, qualityDuration, qualityNotes } from '../quality';
-import { strengthSummary } from '../strength-guide';
 import { WorkoutDateActions } from './WorkoutDateActions';
 import { FuellingLogEditor } from './FuellingLogEditor';
 import { fuellingDetails } from '../fuelling';
 
 export function WorkoutIcon({ workout, size = 16 }: { workout: Workout; size?: number }) {
+  if (workout.type === 'crossTraining' && workout.activity === 'pilates') return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M2 18h20M4 18v3m16-3v3M5 15h10a2 2 0 0 1 2 2v1H5zM4 14V9h2v5m12-5v5m-2-9h3l2 5h-3z" />
+    <path d="M7 17v1m8-1v1M6 9h11m-8 0V7m5 2V7" />
+  </svg>;
   const Icon = workout.type === 'crossTraining' ? workout.activity === 'swim' ? Waves : workout.activity === 'mobility' ? ActivityIcon : Dumbbell
     : workout.type === 'rest' ? Coffee : workout.type === 'race' ? Flag
       : ['threshold', 'marathonPace', 'strides', 'track', 'crossCountry'].includes(workout.type) ? Zap : Footprints;
@@ -73,7 +76,6 @@ function SessionExplanation({ workout: w, settings }: { workout: Workout; settin
   const tooltip = useRef<HTMLDivElement>(null);
   const id = useId();
   const qualityMiles = mainSetMiles(w);
-  const strengthLines = w.activity === 'strength' ? strengthSummary(w.notes) : [];
   useLayoutEffect(() => {
     if (!open || !trigger.current || !tooltip.current) return;
     const rect = trigger.current.getBoundingClientRect();
@@ -128,10 +130,7 @@ function SessionExplanation({ workout: w, settings }: { workout: Workout; settin
         <p>Finish pace zone: {paceZoneLabel({ ...w, paceMinPerMile: w.marathonFinish.paceMinPerMile }, settings.trainingZones)}.</p>
         <p>Finish HR Z{settings.trainingZones.hrTargets.marathonPace}: {hrRangeLabel(settings.trainingZones.hrTargets.marathonPace, settings.trainingZones.hrBoundaries)}.</p>
       </>}
-      {strengthLines.length > 0 ? <>
-        <p><strong>Summary notes</strong></p>
-        <ul>{strengthLines.map((line, index) => <li key={index}>{line}</li>)}</ul>
-      </> : w.notes && <p className="session-notes">{w.notes}</p>}
+      {w.notes && <p className="session-notes">{w.notes}</p>}
     </div>, document.body)}
   </>;
 }

@@ -166,11 +166,7 @@ export function completedStrengthWorkout(generated: GeneratedWorkout, date: stri
 
 export function addCompletedStrength(plan: Plan, workout: Workout): Plan {
   if (plan.workouts.some(item => item.id === workout.id)) throw new Error('This generated workout has already been saved. Generate another workout to log a different session.');
-  const placeholder = workout.activity === 'strength'
-    ? plan.workouts.find(item => item.type === 'crossTraining' && item.activity === 'strength'
-      && !item.completed && !item.notes.trim() && item.date === workout.date)
-    : undefined;
-  if (placeholder) return { ...plan, workouts: plan.workouts.map(item => item.id === placeholder.id ? workout : item) };
+  if (plan.workouts.some(item => item.date === workout.date && item.activity === workout.activity && item.notes === workout.notes)) return plan;
   if (plan.workouts.length >= 10000) throw new Error('The plan has reached the 10,000-workout limit. Export a backup and remove old entries before saving more.');
   return { ...plan, workouts: [...plan.workouts, workout] };
 }
