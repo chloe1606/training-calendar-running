@@ -9,6 +9,15 @@ import { strengthNotes } from './strength';
 import { dateKey, dayOffset, weekKey, type Workout } from './model';
 
 describe('illustrated strength guide', () => {
+  it('shows swap icons only on eligible generated exercise steps', () => {
+    const notes = 'Warm-up: 2 min easy movement.\n\nDead bug: 1 set x 6 reps.\n\nCool-down: 2 min relaxed breathing.';
+    const render = (enabled: boolean) => renderToStaticMarkup(createElement(WorkoutFlow, {
+      notes, onMovement: () => undefined, onSwap: enabled ? () => undefined : undefined, swappableIds: ['deadbug'],
+    }));
+    expect(render(true)).toContain('aria-label="Swap Dead bug"');
+    expect(render(true).match(/class="flow-swap"/g)).toHaveLength(1);
+    expect(render(false)).not.toContain('class="flow-swap"');
+  });
   it('shows each movement difficulty on flowchart steps without rating rest steps', () => {
     const notes = 'Glute bridges: 1 set x 12 reps.\nDead bug: 1 set x 6 reps.\nHalf-kneeling to step-up with knee drive: 1 set x 4 reps per side.\nRest 30s between sets.';
     const html = renderToStaticMarkup(createElement(WorkoutFlow, { notes, onMovement: () => undefined }));

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addCompletedStrength, completedStrengthWorkout, generateStrengthWorkout, strengthPoolGroups } from './random-strength';
+import { addCompletedStrength, completedStrengthWorkout, generateStrengthWorkout, strengthPoolGroups, swapGeneratedExercise } from './random-strength';
 import { bodyAreas, guidesForNotes, moveCategory, MOVE_GUIDES, strengthDurationLabel, workoutFlowSteps, strengthSummary } from './strength-guide';
 import { createDefaultPlan } from './seed';
 import { weekStats } from './model';
@@ -7,6 +7,21 @@ import { weekStats } from './model';
 const categories = ['mobility', 'pilates', 'strength'] as const;
 
 describe('custom guide workouts', () => {
+  it('swaps just one generated exercise using the selected pool without duplicates', () => {
+    for (const category of categories) {
+      const workout = generateStrengthWorkout(category, () => 0);
+      const pool = strengthPoolGroups(category).flatMap(group => group.candidates.map(item => item.id));
+      const replacementId = pool.find(id => !workout.movementIds.includes(id))!;
+      const swapped = swapGeneratedExercise(workout, workout.movementIds[0], [replacementId], () => 0);
+      expect(swapped.movementIds).toEqual([replacementId, ...workout.movementIds.slice(1)]);
+      expect(swapped.category).toBe(category);
+      expect(swapped.title).toBe(workout.title);
+      expect(swapped.notes.split('\n\n').slice(2)).toEqual(workout.notes.split('\n\n').slice(2));
+      expect(new Set(swapped.movementIds).size).toBe(workout.movementIds.length);
+      expect(() => swapGeneratedExercise(workout, workout.movementIds[0], workout.movementIds)).toThrow('No alternative');
+      expect(() => swapGeneratedExercise(workout, 'missing', pool)).toThrow('not part');
+    }
+  });
   it('offers the requested movement categories and keeps every pool category-specific', () => {
     for (const category of categories) {
       const groups = strengthPoolGroups(category);

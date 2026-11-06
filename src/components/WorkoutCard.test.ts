@@ -15,6 +15,19 @@ beforeAll(async () => {
 });
 
 describe('long-run pace split', () => {
+  it('does not offer exercise swaps on calendar cards', () => {
+    const plan = createDefaultPlan();
+    const original = plan.workouts.find(workout => workout.activity === 'strength')!;
+    for (const activity of ['strength', 'pilates', 'mobility', 'swim', 'ride', 'badminton'] as const) {
+      for (const compact of [false, true]) {
+        const html = renderToStaticMarkup(createElement(WorkoutCard, {
+          workout: { ...original, activity }, settings: plan.settings, compact, editingId: null, setEditingId: () => undefined,
+        }));
+        expect(html).not.toContain('class="workout-swap"');
+        expect(html).not.toContain('for a generated workout');
+      }
+    }
+  });
   it('uses a reformer icon for Pilates workouts', () => {
     const plan = createDefaultPlan();
     const workout = { ...plan.workouts.find(item => item.activity === 'strength')!, activity: 'pilates' as const };
@@ -61,7 +74,11 @@ describe('long-run pace split', () => {
       if (editing) expect(html).toContain('Strength studio');
     }
     expect(workout.notes).toBe('Dead bug: 2 sets x 6 reps.');
-    for (const other of [{ ...workout, completed: false }, { ...workout, notes: '' }]) {
+    const incompleteHtml = renderToStaticMarkup(createElement(WorkoutCard, {
+      workout: { ...workout, completed: false }, settings: plan.settings, editingId: null, setEditingId: () => undefined,
+    }));
+    expect(incompleteHtml).toContain('Session details: Strength');
+    for (const other of [{ ...workout, notes: '' }]) {
       const html = renderToStaticMarkup(createElement(WorkoutCard, {
         workout: other, settings: plan.settings, editingId: null, setEditingId: () => undefined,
       }));

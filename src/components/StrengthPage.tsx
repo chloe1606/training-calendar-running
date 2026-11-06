@@ -1,12 +1,12 @@
 import { useEffect, useId, useReducer, useRef, useState, type Dispatch } from 'react';
 import { format, parseISO, subDays } from 'date-fns';
-import { Dumbbell, Pause, Play, RotateCcw, Timer, PersonStanding, Armchair, BrickWall, Hand } from 'lucide-react';
+import { Dumbbell, Pause, Play, RotateCcw, Timer, PersonStanding, Armchair, BrickWall, Hand, ArrowLeftRight } from 'lucide-react';
 import routines from '../strength-routines.json';
 import { MOVE_GUIDES, MOVE_PROGRESSIONS, bodyAreas, moveCategory, moveDifficulty, guidesForNotes, equipmentTags, workoutFlowSteps, strengthSummary, strengthDurationLabel, type EquipmentKind, type MoveGuide, type ExercisePose } from '../strength-guide';
 import { initialRestTimer, restTimerLabel, restTimerReducer, restStepDurations, validRestSeconds, type RestTimerState, type RestTimerAction } from '../rest-timer';
 import { initialStopwatch, stopwatchLabel, stopwatchReducer } from '../stopwatch';
 import { dateKey, weekKey, workoutLabel, type Workout } from '../model';
-import { generateStrengthWorkout, strengthPoolGroups, completedStrengthWorkout, DEFAULT_EXERCISE_COUNTS, type GeneratedWorkout, type WorkoutCategory } from '../random-strength';
+import { generateStrengthWorkout, swapGeneratedExercise, strengthPoolGroups, completedStrengthWorkout, DEFAULT_EXERCISE_COUNTS, type GeneratedWorkout, type WorkoutCategory } from '../random-strength';
 
 function EquipmentIcon({ kind }: { kind: EquipmentKind }) {
   if (kind === 'dumbbell') return <Dumbbell size={14} aria-hidden="true" />;
@@ -54,7 +54,7 @@ export function ExerciseDiagram({ move }: { move: MoveGuide }) {
   </figure>;
 }
 
-export function WorkoutFlow({ notes, onMovement, onRest }: { notes: string; onMovement: (id: string) => void; onRest?: (seconds: number) => void }) {
+export function WorkoutFlow({ notes, onMovement, onRest, onSwap, swappableIds = [] }: { notes: string; onMovement: (id: string) => void; onRest?: (seconds: number) => void; onSwap?: (id: string) => void; swappableIds?: readonly string[] }) {
   const steps = workoutFlowSteps(notes);
   const [completed, setCompleted] = useState<number[]>([]);
   const next = steps.findIndex((_, index) => !completed.includes(index));
@@ -64,6 +64,9 @@ export function WorkoutFlow({ notes, onMovement, onRest }: { notes: string; onMo
     <ol>{steps.map((step, index) => <li className={completed.includes(index) ? 'flow-complete' : index === next ? 'flow-next' : undefined} key={`${index}:${step.text}`}>
       <span className="flow-number" aria-hidden="true">{index + 1}</span>
       <div className="flow-step" aria-current={index === next ? 'step' : undefined}>
+        {onSwap && step.moves.filter(move => swappableIds.includes(move.id)).map(move => <button key={`swap:${move.id}`} type="button" className="flow-swap" onClick={() => onSwap(move.id)} aria-label={`Swap ${move.name}`} title="Swap this exercise">
+          <ArrowLeftRight size={16} aria-hidden="true" />
+        </button>)}
         <label className="flow-check"><input type="checkbox" checked={completed.includes(index)} aria-label={`Step ${index + 1} complete`} onChange={event => setCompleted(previous => event.target.checked ? [...previous, index] : previous.filter(item => item !== index))} /><span>{step.moves.length > 0 && !/^(Warm-up|Cool-down|Mobility):/i.test(step.text) ? step.text.replace(/^((?:Set \d+ of \d+ - )?)[^:]+:\s*/, '$1') : step.text}</span></label>
         {(step.moves.length > 0 || (onRest && restStepDurations(step.text).length > 0)) && <div className="flow-links">{step.moves.map(move => <button key={move.id} type="button" onClick={() => onMovement(move.id)} aria-label={`Step ${index + 1}: view ${move.name}`}>
           {move.name}<span className="move-category" aria-label={`Category: ${moveCategory(move)}`}>{moveCategory(move)}</span><span className={`move-difficulty difficulty-${moveDifficulty(move).toLowerCase()}`} aria-label={`Difficulty: ${moveDifficulty(move)}`}>{moveDifficulty(move)}</span><span aria-hidden="true"> ↓</span>
@@ -232,6 +235,18 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
   const visiblePoolIds = filteredPoolGroups.flatMap(group => group.candidates.map(item => item.id));
   const emptyPool = pool[category].length === 0;
   const savedWorkout = savedId ? allWorkouts.find(w => w.id === savedId) : undefined;
+  function swapExercise(id: string) {
+    if (!generated) return;
+    setSaveError('');
+    try {
+      setGenerated(swapGeneratedExercise(generated, id, pool[generated.category]));
+      setSavedId(null);
+      setSaveMessage('');
+    } catch (error) {
+      console.error('Unable to swap exercise', error);
+      setSaveError(error instanceof Error ? error.message : 'Unable to swap this exercise. Please try again.');
+    }
+  }
   function generate() {
     setGeneratorError('');
     try {
@@ -354,7 +369,9 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
         {selection === 'generated' && <p>{savedWorkout ? `${savedWorkout.completed ? 'Logged as completed' : 'Saved (currently marked incomplete)'} on ${savedWorkout.date}.` : `Preview only until saved. Use this ${category} session instead of adding extra training; keep recovery and taper days light.`}</p>}
         {notes ? <>
           <p className="strength-duration"><Timer size={15} aria-hidden="true" />{strengthDurationLabel(notes)}</p>
-          <WorkoutFlow key={`${selection}:${selectedWeek}:${notes}`} notes={notes} onMovement={showMovement} onRest={seconds => restDispatch({ type: 'restart', seconds, now: Date.now() })} />
+          <WorkoutFlow key={`${selection}:${selectedWeek}:${notes}`} notes={notes} onMovement={showMovement} onRest={seconds => restDispatch({ type: 'restart', seconds, now: Date.now() })}
+            onSwap={selection === 'generated' ? swapExercise : undefined} swappableIds={generated?.movementIds} />
+          {selection === 'generated' && saveError && <p role="alert" className="form-error">{saveError}</p>}
         </> : <p>No specific workout assigned. Choose exercises in the generator or browse a reference routine. After doing your workout, save it with the date completed in Strength studio.</p>}
       </>}
       {!library && notes && <WorkoutSummary key={`summary:${selection}:${notes}`} notes={notes} title={title} />}

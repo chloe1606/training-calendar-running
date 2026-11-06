@@ -151,6 +151,23 @@ export function generateStrengthWorkout(category: WorkoutCategory, random: () =>
   return { category, title, notes, movementIds: chosen.map(item => item.id) };
 }
 
+export function swapGeneratedExercise(workout: GeneratedWorkout, movementId: string, selectedIds: readonly string[], random: () => number = Math.random): GeneratedWorkout {
+  const index = workout.movementIds.indexOf(movementId);
+  if (index < 0) throw new Error('This exercise is not part of the generated workout.');
+  const candidates = strengthPoolGroups(workout.category).flatMap(group => group.candidates)
+    .filter(item => selectedIds.includes(item.id) && !workout.movementIds.includes(item.id));
+  if (!candidates.length) throw new Error('No alternative exercises are available. Select more exercises in this workout type’s pool.');
+  const sample = random();
+  if (!Number.isFinite(sample) || sample < 0 || sample >= 1) throw new Error('Random sample must be between 0 (inclusive) and 1 (exclusive).');
+  const replacement = candidates[Math.floor(sample * candidates.length)];
+  const original = MOVE_GUIDES.find(move => move.id === movementId)!;
+  const move = MOVE_GUIDES.find(move => move.id === replacement.id)!;
+  const movementIds = [...workout.movementIds];
+  movementIds[index] = replacement.id;
+  const notes = workout.notes.split('\n').map(line => line.startsWith(`${original.name}:`) ? `${move.name}: ${replacement.dose}` : line).join('\n');
+  return { ...workout, notes, movementIds };
+}
+
 export function completedStrengthWorkout(generated: GeneratedWorkout, date: string, today: string, id: string): Workout {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !isValid(parseISO(date)) || dateKey(parseISO(date)) !== date
     || date < '2020-01-01' || date > '2100-12-31' || date > today) {
