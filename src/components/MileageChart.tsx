@@ -4,6 +4,7 @@ import { ArrowDownRight, ArrowUpRight, TrendingUp } from 'lucide-react';
 import { phaseForWeek, type Plan } from '../model';
 import { weeklyMileage } from '../insights';
 import { formatDistance } from '../distance';
+import { MileageStatus } from './MileageStatus';
 
 export function MileageChart({ plan, selectedWeek, onSelect }: { plan: Plan; selectedWeek: string; onSelect: (date: string) => void }) {
   const data = weeklyMileage(plan).map(row => ({ ...row, label: format(parseISO(row.week), 'd MMM') }));
@@ -20,7 +21,7 @@ export function MileageChart({ plan, selectedWeek, onSelect }: { plan: Plan; sel
           <YAxis tickFormatter={formatDistance} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted)' }} />
           <Tooltip content={({ active, payload }) => {
             const row = payload?.[0]?.payload as typeof data[number] | undefined;
-            return active && row ? <div className="chart-tooltip"><strong>Week of {row.label}</strong><span>Planned: {formatDistance(row.value)} {plan.settings.units}</span><span>Completed: {formatDistance(row.completed)} {plan.settings.units} · {row.status}</span><small>{row.change === null ? 'No previous nonzero week' : `${row.change > 0 ? '+' : ''}${row.change}% planned vs previous week`}</small></div> : null;
+            return active && row ? <div className="chart-tooltip"><strong>Week of {row.label}</strong><span>Planned: {formatDistance(row.value)} {plan.settings.units}</span><span>Completed: {formatDistance(row.completed)} {plan.settings.units} · <MileageStatus status={row.status} achieved={row.achieved} /></span><small>{row.change === null ? 'No previous nonzero week' : `${row.change > 0 ? '+' : ''}${row.change}% planned vs previous week`}</small></div> : null;
           }} />
           {taper && <ReferenceArea x1={taper.week} x2={data[data.length - 1].week} fill="var(--accent)" fillOpacity={0.12} />}
           <ReferenceLine x={selectedWeek} stroke="var(--accent)" strokeDasharray="4 4" />
@@ -29,7 +30,7 @@ export function MileageChart({ plan, selectedWeek, onSelect }: { plan: Plan; sel
         </ComposedChart>
       </ResponsiveContainer>
     </div>
-    <div className="chart-footer"><span>{selected ? <><strong>{formatDistance(selected.value)} {plan.settings.units}</strong> planned · <strong>{formatDistance(selected.completed)} {plan.settings.units}</strong> completed · {selected.status}</> : 'Select a week to explore the plan'}</span>
+    <div className="chart-footer"><span>{selected ? <><strong>{formatDistance(selected.value)} {plan.settings.units}</strong> planned · <strong>{formatDistance(selected.completed)} {plan.settings.units}</strong> completed · <MileageStatus status={selected.status} achieved={selected.achieved} /></> : 'Select a week to explore the plan'}</span>
       {selected && selected.change !== null && <span className={`week-change ${selected.change > 10 ? 'increase-warning' : ''}`}>{selected.change < 0 ? <ArrowDownRight size={14} /> : <ArrowUpRight size={14} />}{Math.abs(selected.change)}% vs last week</span>}
       <label className="sr-only" htmlFor="chart-week">Inspect weekly mileage</label><select id="chart-week" aria-label="Inspect weekly mileage and progression" value={selectedWeek} onChange={e => onSelect(e.target.value)}>
         {!selected && <option value={selectedWeek}>Outside plan</option>}

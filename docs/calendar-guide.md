@@ -36,6 +36,8 @@ Default HR targets: easy/long Z2, threshold Z4, marathon pace/parkrun/race Z3 an
 
 **Plan insights** (`#insights`, with legacy `#mileage` links supported) includes planned/completed mileage, selected-week totals, a weekly comparison and warnings.
 
+The marathon date and goal time come directly from saved Settings. Additional race dates/distances follow their saved calendar workouts. Week statuses use icons (history for past, clock for current, calendar-clock for upcoming), with accessible labels and hover titles. A green tick replaces the status icon when a nonzero planned mileage target is reached, using unrounded running-mile totals rather than rounded display values.
+
 - Completed mileage is the saved distance of running workouts marked complete, not separately logged actual distance. Cross-training is excluded.
 - Empty future weeks have no completed chart point and are labelled Upcoming.
 - The Long run column lists full planned long-run distances, including faster finishes; multiple runs are listed individually. Race distance stays in totals, not that column.

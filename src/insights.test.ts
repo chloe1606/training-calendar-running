@@ -2,8 +2,49 @@ import { describe, expect, it } from 'vitest';
 import { createDefaultPlan } from './seed';
 import { weeklyMileage } from './insights';
 import { inUnits, weekKey } from './model';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { InsightsPage } from './components/InsightsPage';
+import { MileageStatus } from './components/MileageStatus';
 
 describe('planned and completed mileage', () => {
+  it('only awards mileage achievement for nonzero targets reached without display rounding', () => {
+    const plan = createDefaultPlan();
+    const firstWeek = weeklyMileage(plan)[0].week;
+    for (const workout of plan.workouts) {
+      if (weekKey(workout.date) === firstWeek) workout.completed = true;
+    }
+    expect(weeklyMileage(plan)[0].achieved).toBe(true);
+    plan.settings.units = 'km';
+    expect(weeklyMileage(plan)[0].achieved).toBe(true);
+    const run = plan.workouts.find(workout => weekKey(workout.date) === firstWeek && workout.type === 'easy')!;
+    const remaining = 0.001;
+    plan.workouts.push({ ...run, id: 'remaining-mileage', distanceMiles: remaining, completed: false });
+    expect(weeklyMileage(plan)[0].achieved).toBe(false);
+    expect(weeklyMileage({ ...plan, workouts: [] })[0].achieved).toBe(false);
+  });
+  it('renders accessible status icons and an achievement tick', () => {
+    for (const status of ['Past week', 'Upcoming', 'In progress']) {
+      const html = renderToStaticMarkup(createElement(MileageStatus, { status, achieved: false }));
+      expect(html).toContain(`aria-label="${status}"`);
+      expect(html).toContain('<svg');
+      expect(html).not.toContain(`>${status}<`);
+    }
+    const html = renderToStaticMarkup(createElement(MileageStatus, { status: 'Past week', achieved: true }));
+    expect(html).toContain('aria-label="Planned mileage achieved"');
+    expect(html).toContain('lucide-circle-check');
+  });
+  it('reads the race goal directly from saved Settings on Plan insights', () => {
+    const plan = createDefaultPlan();
+    plan.settings.raceDate = '2027-05-02';
+    plan.settings.goalTime = '3:45:00';
+    const html = renderToStaticMarkup(createElement(InsightsPage, {
+      plan, selectedWeek: '2026-11-09', onSelect: () => undefined, onCalendar: () => undefined, onUnitsChange: () => undefined,
+    }));
+    expect(html).toContain('Sunday 2 May 2027');
+    expect(html).toContain('Goal time: 3:45:00');
+    expect(html).not.toContain('Goal time: 3:30:00');
+  });
   it('identifies race weeks and updates them when a race is rescheduled', () => {
     const plan = createDefaultPlan();
     const rows = weeklyMileage(plan);

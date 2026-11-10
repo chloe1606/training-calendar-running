@@ -192,6 +192,9 @@ h2 { font-size: 14px; font-weight: 600; letter-spacing: -.25px; }
 .dark .insights-page { --completed-mileage: #a4dfb6; }
 .insights-page h1 { display: flex; align-items: center; gap: 9px; }
 .insights-help { color: var(--subtle); line-height: 1.7; font-size: 12px; }
+.insights-race { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-bottom: 20px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); font-size: 12px; }
+.mileage-status { display: inline-flex; vertical-align: middle; color: var(--subtle); }
+.mileage-achieved { color: var(--completed-mileage); }
 .chart-keys { display: flex; flex-wrap: wrap; gap: 10px; }
 .completed-key i { background: var(--completed-mileage); }
 .insights-table { margin-top: 24px; }

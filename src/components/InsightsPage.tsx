@@ -6,6 +6,7 @@ import { formatDistance } from '../distance';
 import { MileageChart } from './MileageChart';
 import { RuleWarnings } from './RuleWarnings';
 import { getWarnings, warningsForWeek } from '../rules';
+import { MileageStatus } from './MileageStatus';
 
 export function InsightsPage({ plan, selectedWeek, onSelect, onCalendar, onUnitsChange }: {
   plan: Plan; selectedWeek: string; onSelect: (date: string) => void; onCalendar: (date: string) => void;
@@ -21,6 +22,11 @@ export function InsightsPage({ plan, selectedWeek, onSelect, onCalendar, onUnits
       <div className="heading-actions"><div className="unit-toggle" role="group" aria-label="Insights distance units">{(['mi', 'km'] as const).map(unit => <button key={unit} type="button" aria-pressed={plan.settings.units === unit} className={plan.settings.units === unit ? 'selected' : ''} onClick={() => onUnitsChange(unit)}>{unit}</button>)}</div>
         <button className="secondary-button" onClick={() => onCalendar(selectedWeek)}>View selected week in calendar</button></div>
     </header>
+    <section className="insights-race" aria-label="Race goal from Settings">
+      <strong>Marathon goal</strong>
+      <span>{format(parseISO(plan.settings.raceDate), 'EEEE d MMM yyyy')}</span>
+      <span>Goal time: {plan.settings.goalTime}</span>
+    </section>
     <div className="stats-row">
       <section className="stat-card"><div><span className="stat-label">Selected week · planned</span><div className="stat-value">{distance(planned)}<small>{plan.settings.units}</small></div></div></section>
       <section className="stat-card"><div><span className="stat-label">Selected week · completed</span><div className="stat-value">{distance(completed)}<small>{plan.settings.units}</small></div></div></section>
@@ -39,7 +45,7 @@ export function InsightsPage({ plan, selectedWeek, onSelect, onCalendar, onUnits
         <thead><tr><th scope="col">Week of</th><th scope="col">Planned ({plan.settings.units})</th><th scope="col">Completed ({plan.settings.units})</th><th scope="col">Long run ({plan.settings.units})</th><th scope="col">Status</th></tr></thead>
         <tbody>{rows.map(row => <tr key={row.week} className={row.races.length ? 'race-week-row' : undefined} aria-current={row.week === selectedWeek ? 'true' : undefined}>
           <th scope="row"><button onClick={() => onSelect(row.week)} aria-label={`Inspect week of ${row.week}`}>{format(parseISO(row.week), 'd MMM yyyy')}</button></th>
-          <td>{formatDistance(row.value)}</td><td>{formatDistance(row.completed)}</td><td>{row.longRuns.length ? row.longRuns.map(formatDistance).join(', ') : '—'}</td><td>{row.status}{row.races.map(race => <span className="race-week-label" key={race.id}>Race · {format(parseISO(race.date), 'd MMM')} · {formatDistance(race.distance)} {plan.settings.units}</span>)}</td>
+          <td>{formatDistance(row.value)}</td><td>{formatDistance(row.completed)}</td><td>{row.longRuns.length ? row.longRuns.map(formatDistance).join(', ') : '—'}</td><td><MileageStatus status={row.status} achieved={row.achieved} />{row.races.map(race => <span className="race-week-label" key={race.id}>Race · {format(parseISO(race.date), 'd MMM')} · {formatDistance(race.distance)} {plan.settings.units}</span>)}</td>
         </tr>)}</tbody>
       </table></div>
     </section>

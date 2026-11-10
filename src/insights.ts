@@ -14,7 +14,8 @@ export function weeklyMileage(plan: Plan, today = dateKey(new Date())) {
     const races = workouts.filter(workout => workout.type === 'race')
       .sort((a, b) => a.date.localeCompare(b.date))
       .map(workout => ({ id: workout.id, date: workout.date, distance: inUnits(workout.distanceMiles, plan.settings.units) }));
-    return { week, plannedMiles, completedMiles, value, completed, longRuns, races, status,
+    const achieved = plannedMiles > 0 && completedMiles >= plannedMiles;
+    return { week, plannedMiles, completedMiles, value, completed, longRuns, races, status, achieved,
       chartCompleted: status === 'Upcoming' && completedMiles === 0 ? null : completed };
   }).map((row, index, rows) => ({
     ...row,
