@@ -1,158 +1,76 @@
 # Marathon Planner
 
-A local-first React 18 + TypeScript training calendar for the 18 April 2027 marathon. No backend, account, API key, or external service is required.
+**Python-validated training plans, with a local-first calendar to make them your own.**
 
-## Run
+Python revises and checks the marathon plan; a React + TypeScript app lets you arrange sessions, track completion, inspect mileage and generate supporting workouts. The included plan targets the 18 April 2027 marathon.
 
-Use Node.js 22.12+, 24+, or 26+.
+No backend, account, API key or external service is required. Your calendar is saved in your browser; export JSON backups to keep a portable copy.
+
+## In pictures
+
+| Training calendar | Strength Studio |
+| --- | --- |
+| ![Responsive training calendar with weekly mileage, dated sessions and completion controls](docs/images/training-calendar.png) | ![Strength Studio generator with Mobility, Pilates and Strength choices and exercise-count controls](docs/images/strength-studio.png) |
+
+Screenshots show the responsive layout using the included plan.
+
+## The Python part
+
+The [plan revision script](scripts/revise_plan.py) uses **only the Python standard library** to:
+
+- Load an exported JSON plan and revise a copy without changing its schema.
+- Calculate weekly running mileage and main-set quality distances.
+- Apply the build, cut-backs, quality sessions, strength schedule and taper.
+- Validate dates, IDs, numeric values, mileage progression and recovery constraints.
+- Check a JSON round-trip before writing the revised plan and a detailed change log.
+
+[Python unit tests](scripts/test_revise_plan.py) cover the revision, validation failures and command-line workflow. These are personal planning checks, not a guarantee of safe training.
+
+From this directory, with Python 3 available:
+
+```sh
+# Run the Python tests; no pip install needed.
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts -v
+
+# Revise a separate original export and produce a change log.
+python3 scripts/revise_plan.py /path/to/original-plan.json marathon-plan-v2.json
+```
+
+The script is specific to the included race date and training decisions, not a general-purpose plan generator. Python runs offline during plan preparation; the browser app does not run a Python server.
+
+See [Python tooling and development](docs/python-and-development.md) for the data flow, validation rules and app-default generation.
+
+## Run the app
+
+Use Node.js 22.12+, 24+ or 26+:
 
 ```sh
 npm install
 npm run dev
 ```
 
-Open the localhost URL printed by Vite. For a production build:
+Open the localhost URL printed by Vite. Python is not needed to run the app with its checked-in plan.
 
 ```sh
-npm run build
-npm run preview
+npm test          # Browser-app unit tests
+npm run build    # Type-check and production build
+npm run preview  # Serve the production build locally
 ```
 
-Run unit tests with `npm test`.
+## What you can do
 
-### Long-run fuelling log
+- **Plan:** edit, drag, move or copy sessions in Week, Agenda and Month views.
+- **Review:** compare planned/completed mileage, pace and HR targets, and recovery warnings.
+- **Support your running:** generate Strength, Pilates and Mobility workouts, browse illustrated movements and use workout timers.
+- **Keep your data:** save locally, undo changes and import/export JSON or calendar events.
 
-Click a long-run card, expand **Long-run fuelling log** below the workout editor, and add timed entries for product/food, carbs in grams and fluids in millilitres. Timing is minutes from the run start (negative values for pre-run intake). Totals update as you type; record stomach comfort, energy and what to repeat or change in the notes. Press **Save fuelling log** separately from the workout's Save button; it does not mark the run completed. Saved entries appear in the card's info tooltip, local storage, JSON backups and ICS descriptions, and support Undo/Redo. Moving a run preserves its log; copying starts with an empty log so actual intake is not duplicated. Fuelling entries are personal observations, not recommended intake targets.
+## Detailed guides
 
-- Track uses simple **Session notes** for warm-up, reps, recoveries and cool-down. Enter the total distance separately; notes do not calculate it automatically.
-- In Strength studio, workout-type buttons choose **Mobility** (Mobility and Balance & control movements), **Pilates**, or **Strength**. **Number of exercises** offers buttons for **3, 4, 5 or 6**, defaulting to four per type. Exercise pools and counts are kept separately per type during the session. A smaller pool uses every selected exercise once. Warm-up and cool-down are extra and do not count toward that number; duration depends on the selected count, doses and rest.
-- Click a calendar card to find **Move to date** and **Copy to date** beneath the editor. These use the saved workout, so save edits first. Moving keeps completion status; a copy has a new ID and starts incomplete. Both save locally and support Undo/Redo.
+| Guide | Contents |
+| --- | --- |
+| [Python tooling and development](docs/python-and-development.md) | Revision script, tests, validation, data flow and source map |
+| [Training plan](docs/training-plan.md) | Weekly targets, quality sessions, recovery exceptions and taper |
+| [Calendar and data](docs/calendar-guide.md) | Editing, navigation, insights, zones, fuelling, settings and backups |
+| [Strength Studio](docs/strength-studio.md) | Exercise pools, library, workout flow, timers and saving |
 
-Run options include **Track** (4 miles total by default, including a 1-mile easy warm-up) and **Cross country** (5 miles by default). Both count as hard days in totals and recovery warnings, have editable distance/pace/notes, and support default weekdays and HR targets in Settings. Their initial pace is the easy-zone reference, not a prescribed interval or off-road target; adjust it to the session and terrain. Existing plans are preserved, with no new runs automatically scheduled.
-
-Generated Strength notes include optional warm-up substitutions within the existing warm-up time, not extra exercises to complete. Choose one easy bodyweight squat/sit-to-stand or light mini-band lateral/diagonal walk option and keep the effort easy.
-
-## Revised plan (v2)
-
-The app's default is the Python-validated [v2 plan](./marathon-plan-v2.json). The full [change log](./marathon-plan-v2-changes.txt) records before/after counts, every workout/setting change, weekly totals, main-set quality miles and the approved exception. Existing browser plans are **not overwritten**: import the v2 JSON to replace your saved calendar (undoable), or use the confirmed reset action to load the new default.
-
-The current revision reflects a second marathon and ten years of running, while retaining a gradual build from a 25-mile weekly baseline. It builds through 30–35-mile weeks before reaching 40–45, with cut-backs on 9/30 November, 28 December, 18 January and 22 February. Normal weeks have two hard days: short Tuesday threshold/hills and Thursday quality. On MP-finish weeks, Tuesday is easy and Thursday/Sunday are the hard days. Cut-back, half-marathon, post-half recovery and taper weeks stay lighter. The half remains **14 March**, now targeting a raced **7:20–7:30/mi** range in a **32-mile week**; start near 7:30 for the first 2–3 miles and only progress if controlled. The preceding Thursday is easy. The marathon goal remains 3:30:00. The **20-miler remains 21 March** by explicit user choice, with an easy Thursday and no fast finish. Reassess it after the harder half: shorten to 16–18 miles or rest if not recovered; do not make up missed mileage. Comfortably stopping around three hours is preferable to chasing distance.
-
-Regenerate from the original export with Python 3 (standard library only):
-
-```sh
-python3 scripts/revise_plan.py /path/to/marathon-plan.json marathon-plan-v2.json --app-default src/default-plan.json
-PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts -v
-```
-
-The script loads JSON, revises a copy, prints before/after counts, validates constraints and JSON round-trip, then writes the output and change log. Validation errors raise an exception and prevent writing. Keep the original export as the input for a meaningful before/after log.
-
-Current training decisions (supersede the original mileage/main-set prescription):
-
-- Every Saturday before a Sunday long run is easy, not a steady/hard parkrun. Saturdays retain 3.1 miles except the 2-mile race-week shakeout.
-- Weekly miles: `25, 27.5, 23, 29, 30, 26, 32, 33, 35, 30, 36, 38, 32, 40, 42.5, 45, 45, 36, 41, 32, 45, 40, 32, 24, 42.2`. The last total includes 16 pre-race miles plus the marathon. These are ceilings to work toward when recovering well, not an obligation to complete despite fatigue or pain.
-- The conditional 21 March **20-mile easy run in a 45-mile week (44.44%)** is the sole planned long-run-share exception. Notes and the warning sidebar explicitly state the recovery condition and shorter alternative.
-- Mileage increases are compared with the last non-cut-back training week. Designated cut-backs, half/marathon race weeks and three taper weeks do not lower that reference; race mileage still counts in totals and increase validation. The 10% and 40% checks are planning aids, not proof of safety.
-- Normal-week Tuesday quality alternates short threshold and hills within the existing run distance: base threshold 2 × 5 minutes, early build 2 × 6, later build 3 × 5, with 2.5-minute jog recoveries; hills are 6 × 30 seconds in base and 6 × 45 seconds in build, with full downhill recovery. Each has 1.5 miles easy warm-up and 1 mile cool-down; remaining miles stay easy. Tuesday strength follows running, not before, and can be reduced or skipped if fatigued.
-- Before MP-finish long runs, Tuesdays (26 January and 9 February) are easy; Thursdays (28 January and 11 February) have 3.5 miles continuous MP in 6 total. The half-marathon/recovery Thursdays (11/18 March) remain easy. The 25 March workout is 3 miles continuous MP; 8 April is 2 × 5 minutes threshold. Cut-back weeks reduce quality; taper weeks retain one short quality session, with Thursday MP plus Sunday marathon in race week.
-- Hills remain on 17/31 December (6 × 45 seconds each) and a progression on 14 January. The 28 January progression is replaced by controlled MP. Time-based quality miles use the threshold midpoint; recovery jog miles use 9.375 min/mi. These are estimates, especially uphill, not measured elevation-adjusted miles.
-- Monday swimming is optional easy recovery or complete rest. Strength stays submaximal; reduce sets or skip if recovery suffers. Friday remains light. Long-run notes prioritise conversational effort, familiar kit and gradually practised fuelling over forcing pace.
-
-## Use
-
-- Calendar strength activities are generic slots, with no routine assigned in advance. Exercise notes stay off the card face and editor; completed strength cards with saved notes have an info tooltip showing the same exercise summary as Strength studio (or the original notes for custom sessions without a structured summary). Hover, focus or tap the info button to view it. Defaults, reset and imported/saved legacy plans remove automatically assigned incomplete rotation notes; completed records and custom notes are preserved. Strength studio shows no default routine for an unassigned slot. Choose exercises there, then log the workout on its actual completion date. Saving fills one empty incomplete strength slot on that date, or adds an entry if none exists; generated Pilates and Mobility workouts are saved as their own calendar activities. Completed/custom entries are never overwritten. Full completed exercise details stay available in Strength studio and backups/exports.
-- Exercises have pink primary-category badges: Strength, Mobility, Stretch, Balance & control, Warm-up or Pilates. Category and Easy/Medium/Hard difficulty badges appear in workout steps and exercise headings, support dark mode, and category names are searchable in All moves. Categories describe the standard movement's main purpose, not its difficulty or calendar hard-day status.
-
-- In Strength studio, expand Summary notes and select **Copy & open Strava** to copy the workout title, exercises and reps and open Strava's manual activity form. Paste into the description, choose Weight Training or Workout, and enter the date/duration before saving. This does not submit an activity or connect your Strava account. After copying succeeds, a fallback manual-form link appears beside the copy button if the browser blocks the new tab; if copying fails, an error is shown and the notes can be copied manually.
-
-- Numeric distances display to three significant figures (for example 3.00 mi, 25.0 mi, 42.2 km); paces remain minutes:seconds. Formatting does not round stored distances, calculations or JSON backups. Saving an unchanged displayed distance preserves its original precision.
-- For the 3:30 goal, the app refines the generated baseline's 11 unmodified interval-threshold sessions into provisional exact targets: 7:30/mi for 5/6-minute reps, 7:35/mi for 8-minute reps, with 2:30 easy jogs at a 9:30/mi reference between reps only. Existing rep counts, dates, total distance and hard-day spacing stay unchanged; any remaining distance is easy. These targets supersede the baseline's 7:10–7:25 interval prescription, not hill/progression sessions or the editable global threshold zone. A goal time does not measure threshold: slow down or run easy if strained, fatigued or conditions warrant.
-- Threshold cards in Week, Agenda and Month show a compact summary: reps and target pace, between-rep recovery time, and warm-up/cool-down distances. Open the info tooltip for segment distances, extra easy running, easy-pace references and provisional-target guidance. Distances are estimates at target pace; easy segments may be slower and the set may need shortening. Paces/distances follow mi/km. Refinement is applied on defaults/reset and when loading/importing matching baseline sessions; completed, moved, custom-note/distance/pace sessions and other goal times are preserved. JSON/ICS exports include refined notes. The Python-generated files remain the baseline; the app applies this refinement on top.
-
-- Click a card to edit it inline; click the circle to complete it.
-- Hover over a card's info icon for session instructions, notes and pace/HR breakdowns without expanding the card. Keyboard focus or tapping the icon also opens the tooltip; Escape, tapping outside or moving away dismisses it. Notes remain editable on the card and are included in exports.
-- Long runs with fast finishes show both portions directly on week/month cards (for example, first 12 mi easy at 9:00–9:45/mi, last 6 mi at MP at 7:50–8:10/mi). The info tooltip repeats the numeric split with the separate HR targets; it is not necessary to infer the finish pace from notes.
-- Drag a card by its grip. Drop on a day in Week, Agenda or Month view, or on a previous/next navigation arrow to move it to the same weekday in another week.
-- **Agenda** lists the selected Monday–Sunday week vertically, with full dates and the same editing, completion, add, warning and drag controls as the week board. It is the default when opening the app at phone widths (760px or less); Week, Agenda and Month remain selectable on every screen.
-- The Insights weekly comparison includes a **Long run** column in mi/km: full planned distances for long-run sessions, including faster finishes. Multiple long runs are listed individually; weeks without one show a dash. Race distances remain in weekly totals rather than this column.
-- Race weeks are highlighted in the comparison table, with each race's date and distance in the Status column. Highlights follow added, moved or deleted race workouts; the selected-week outline remains visible.
-- **Plan insights** has its own page (`#insights`; old `#mileage` links still work), with planned and completed mileage series, selected-week totals, a weekly comparison table and planning warnings. The calendar also shows completed weekly mileage. Completed means the distance on running workouts marked complete, not separately logged actual distance; cross-training is excluded. Empty future weeks have no completed chart point and are labelled Upcoming, not missed. Chart/table selectors inspect a week without leaving Insights; **View selected week in calendar** opens that week. Both series follow the mi/km setting.
-- Keyboard: focus the grip, press Space/Enter, use left/right for days and up/down for weeks, then Space/Enter to drop or Escape to cancel. Touch: hold the grip briefly before dragging.
-- Change weeks with the arrows or calendar selector. The chart selector includes exact weekly totals and week-on-week percentage changes.
-- Settings controls race details and the HR/pace training-zone boundaries. Workout-specific target paces are edited on calendar cards, not in Settings; saving Settings preserves existing run paces. Moving the race date moves the marathon card, not the whole skeleton.
-- Settings > Additional races lets you add, edit or remove race dates and distances in your selected mi/km units, including the seeded half-marathon rehearsal. Save settings applies all race changes together; Cancel discards them. Added races become ordinary draggable race workouts, count toward mileage and warnings, and are included in backups and ICS exports. Existing sessions are not replaced. New races initially use the marathon-pace zone; edit their calendar cards for individual pace and notes.
-- Settings > Default activity days sets suggested weekdays for running types and swim, ride, mobility, pilates, strength and badminton. Choose “Any day” to leave dates flexible (the default for easy runs, strides, rides, mobility and rest). The main Add workout button suggests the chosen type/activity's weekday within the selected week; its date remains editable. Adding from a calendar day deliberately keeps that date.
-- Strength has a dedicated two-day setting, initially Tuesday/Friday. Tuesday is the main session: single-leg calf raises, split squats or step-ups, bridges and Romanian deadlifts. Friday is light core, hips and mobility only, with no heavy leg work. Alternate Friday Pilates from the exported plan is retained until the strength cutoff. No strength is scheduled after 6 April; those slots become 15-minute mobility, with rest/mobility only on race-week Friday.
-- Ten optional reference routines (**Heavy 1–5** and **Light 1–5**) remain available in Strength studio, but are not assigned to calendar days. Main references vary calf raises, split squats/step-ups, bridges, hinges and controlled squats; light references vary core control, hip activation, ankle work, balance and mobility. "Heavy" means a main resistance session with controlled loads, not maximal lifting. The Python-generated baseline retains historical rotation data; the app clears its incomplete automatic assignments when loading.
-- **Strength workouts** in the left navigation opens a dedicated page (`#strength`). Select a training week to view its actual saved strength notes (including taper adjustments), browse any of the ten reference routines, or choose **All moves (100)** for original, labelled two-position SVG diagrams and technique cues. Search by movement, equipment, body area, category or difficulty. Options include calf/foot strength, single-leg control, band hip work, step variations, carries and upper-body exercises using light dumbbells, resistance bands and a low stable step. Each additional option lists equipment and a conservative starting dose. These are alternatives, not extra scheduled work: the ten routines and saved calendar are unchanged. Introduce unfamiliar moves gradually; inspect bands and use stable support. Diagrams are schematic guidance, not a technique assessment.
-- The strength page includes a visual rest countdown with 30/45/60/75/90-second presets, custom whole-second durations from 1 to 3600, and start/pause/resume/reset controls. Changing the duration resets the countdown. It uses elapsed time, so delayed background ticks catch up. It continues when navigating back to the calendar, but resets on page reload; there is no sound or notification permission requirement.
-- Every movement displays equipment icons and text labels even when collapsed: bodyweight, resistance band, dumbbells, kettlebell alternatives, step, chair, wall or support. Optional weights are labelled explicitly. Equipment labels are included in movement search.
-- All 124 moves also show body-area labels when collapsed, including core, legs, glutes, hips, calves, feet/ankles, hamstrings, back, shoulders, chest and arms. Search includes these labels as well as movement names and equipment.
-- Every move has a searchable Easy, Medium or Hard badge for its standard version's relative balance/control demands. Actual effort varies with load, resistance and experience; progressions may be harder. These movement ratings do not change running-calendar hard-day counts.
-- At the top of Strength studio, above the workout/library selector, choose Mobility, Pilates or Strength, expand **Choose exercises**, and select a pool of movements from that category (searchable by name, equipment, body area, category or difficulty). Mobility includes 20 running-focused Mobility and Balance & control movements; Pilates includes 20 running-focused Pilates movements; Strength uses only Strength. **Select all** selects the current type's visible exercises; with a search active, **Select all results** adds only matching exercises and keeps existing hidden selections. **Clear pool** still clears the entire current type, including choices hidden by search. Each type keeps separate selections during the session. Select at least one exercise: the generator draws the requested number of unique moves, using all selected moves if the pool is smaller. Warm-up and cool-down are not included in the category pool.
-- **Generate workout** builds a fresh combination from your pool, not one of ten fixed routines. When the pool allows, selection favors movements that cover new body areas and movement categories; a small or focused pool still uses its available moves. Library starting doses are retained where available; generated exercises have reps/holds/rest and matching flowchart/diagram links. Preview and pool selections survive in-app navigation but reset on reload. Ten reference strength routines remain available and the seeded calendar is not rewritten.
-- After completing a generated workout, choose **Date completed** and **Save as completed** beneath its summary. Strength fills one empty incomplete strength slot on that date; generated Pilates and Mobility are saved as their own completed activities. Completed/custom sessions are preserved. Future/invalid dates and duplicate saves of the same preview are rejected. Saves use normal localStorage persistence, undo/redo and JSON/ICS exports. **Completed workout history** and the workout selector reopen full saved exercise details across weeks after reload; calendar cards let you change completion or delete the entry but do not expose exercise notes. History reflects calendar completion, so unmarking/deleting a session removes it from completed history. A storage failure is reported rather than claiming the entry was persisted. Saved sessions are not removed when generating another preview.
-- A separate stopwatch above the rest timer counts elapsed hours/minutes/seconds with Start, Pause/Resume and Reset. Both timers run independently and continue during in-app navigation; reloading resets them.
-- Check off workout steps to track completion and highlight the next unfinished step. Each rest step has a one-click **Start Ns rest** button that replaces and starts the sidebar countdown; ranges offer both endpoints. Rest completion is checked off manually, never automatically. Step progress stays during calendar navigation but clears when changing workouts/weeks, generating a workout or reloading, and does not change calendar completion.
-- **Summary notes**, collapsed below the workout flow, lists exercises and their prescribed sets/reps once, including alternatives and saved taper doses. It follows the selected or generated workout rather than the library's reference doses.
-- The library includes **Half-kneeling to step-up with knee drive**: start with the front foot on a low stable step and the rear knee on a mat, then rise through the planted foot and drive the rear knee up. Keep the front foot on the step while returning the rear knee to the mat. It includes diagrams, equipment/body-area labels, a Hard balance/control rating and a bodyweight starting dose. It can be selected in the Heavy generator pool but is not automatically added to scheduled sessions.
-- The guide includes 124 movements, with 20 running-focused Mobility choices and 20 running-focused Pilates choices. It also includes 39 strength options added after the original 61: unilateral squat/lunge/step variations, calf and soleus holds, slow calf lowers, heel-dig bridges and hamstring sliders, adductor/hip-flexor work, lateral-trunk and anti-rotation work, loaded marches and supported hip control. Sliders require a suitable clear floor and towels/sliders; a pillow is used for adductor squeezes. Advanced strength variants have easier alternatives in their cues. Replace a comparable strength move rather than adding volume; introduce only one unfamiliar move at a time, away from key runs and races, and avoid new demanding eccentric work during taper.
-- Exercise steps with inline rest instructions (such as rest 30 s between sides) also offer a one-click rest timer beside the movement's diagram link. Hold durations and rep tempo do not create rest buttons.
-- The flowchart expands prescribed sets into separate steps (Set 1 → Rest 60s → Set 2), keeps side-to-side rest instructions, and shows exercise-change rests and a dedicated cool-down. One-set taper sessions do not add a between-set rest. Warm-up and cool-down offer gentle side steps, walking or seated heel/ankle movements instead of marching; choose one alternative for the same time, not extra work. This is a display change, not a calendar rewrite.
-- Twelve movements have expandable optional progressions, including a diagram for side plank from feet instead of knees, single-leg bridge/deadlift options, light band/weight additions and slower pauses/holds. Progressions replace a variation rather than adding sets or exercises. They do not add separate library entries or change scheduled routines; light/recovery and taper sessions remain easy.
-- Workout prescriptions appear as a numbered vertical flowchart, from warm-up through exercises to recovery. Each step retains its exact sets, reps, rests, alternatives and saved taper instructions. Movement buttons open and scroll to the corresponding diagrams below, with keyboard focus moved to the selected movement. Multi-movement warm-ups and alternative exercises have separate buttons; they do not imply extra sets or doing both alternatives.
-- Workout titles and selector options show the approximate total duration already prescribed in the routine notes, including rests and warm-up/cool-down where specified. Taper sessions identify the standard duration as a reference and note that reduced sets take less time; custom notes without a total show “Duration not specified”.
-- Start strength with one easy set, progressing to two as tolerated, leaving 2–3 reps in reserve. Use controlled light loads, not maximum effort. Applying strength weekdays moves incomplete sessions and fills missing slots only until 12 days before the configured marathon. Completed/custom workouts and extra sessions are kept; the general weekday-apply option does not move strength.
-- Settings includes five HR zones and six running pace zones with editable shared boundaries. Defaults are HR: under 118, 118–146, 147–160, 161–175, 176+ bpm; pace boundaries (20:00 5K reference): `[8.9833, 7.7333, 6.9333, 6.5, 6.1]` min/mi. Threshold is 7.1667–7.4167 min/mi (7:10–7:25). Pace tables show both mi/km; boundaries are edited in min/mi regardless of display units. Unchanged displayed boundaries retain their original decimal precision on Settings save.
-- Every run shows its pace zone (or zone span), numeric target pace, HR zone and numeric HR range in both week and month views and in ICS exports. Pace zones are matched from the existing pace range, not forced onto workouts. Shared pace boundaries belong to the faster zone; open end zones cover all other paces. Grade-adjusted zones are a reference: elevation adjustment is not calculated, and raw pace on hills can be slower.
-- Default HR targets are easy/long Z2, threshold Z4, marathon pace/parkrun/race Z3 and strides Z5; change these by run type in Settings or override an individual run's HR zone on its card. Zone edits immediately update existing run targets without changing pace, distance or date. Easy default HR caps follow the top of Z2; explicit custom caps remain visible and unchanged. Mixed quality sessions use the zone for the work portion, not the warm-up. These are personal planning references, not medical guidance.
-- Weekday preferences do not move existing sessions unless “Apply to existing workouts” is checked. Applying moves incomplete matching sessions within their current Monday–Sunday week; completed workouts and dated races never move. Collisions are allowed and warnings update normally. Saving is one undoable change; Cancel discards edits. Preferences persist and are included in JSON backups; older backups acquire the original weekday defaults.
-- Training calendar navigation opens the top of the training page, rather than jumping straight to the board. Use **Import / Export** to restore a complete JSON backup, export JSON, or export calendar events. **Import JSON** validates and confirms replacement and can be undone. ICS exports all-day calendar events with stable IDs, pace, HR, completion and notes.
-- Undo/redo covers workout edits, moves, completion, settings, imports and resets. The last 100 edits are held in memory; history resets on reload. Cmd/Ctrl+Z undoes; Shift+Cmd/Ctrl+Z or Ctrl+Y redoes.
-- The plan and theme are saved to this browser's localStorage. Export a backup before clearing browser storage. Storage and import errors appear in the interface.
-
-## Default plan
-
-The skeleton spans 25 Monday-to-Sunday weeks from 26 October 2026. Seven base weeks lead into the 18-week plan starting 14 December. It includes the prescribed base long runs, a 14 March half-marathon rehearsal, a 20-miler on 21 March, and a three-week taper beginning 29 March.
-
-Weekly targets are running mileage; cross-training does not add running miles. Thursday notes specify warm-up, main set, recoveries, cool-down and main-set quality miles. MP work is continuous at 7:50–8:10/mi, including progression MP portions, long-run finishes and the marathon race target range; the 3:30 goal and half-marathon pace are unchanged. Threshold repetitions use 7:10–7:25 with 2.5-minute jog recoveries. Duration sums easy/work portions for structured Thursday, progression and long-finish sessions; time-based quality mileage and hill moving time remain estimates. All easy/long runs use 9:00–9:45/mi with HR cap 146.
-
-The final week includes 16 pre-race miles plus the 26.2-mile marathon (42.2 total): Tuesday 5, Wednesday 4 including 4 × 20-second strides plus an easy swim, Thursday 5 including 2 at MP, Saturday 2 including four relaxed strides. Monday is an easy swim and Friday rest/mobility only. No race-week strength or badminton. Warnings never prevent a move. Easy parkruns are not hard days; steady parkruns are. Light Wednesday evening badminton (about 90 minutes, no hard matches) is allowed before quality and long runs, but none is allowed from 12 April.
-
-Two long runs include marathon-pace finishes: 31 January (16 mi, last 4 at MP) and 14 February (18 mi, last 6 at MP). The 28 February long run is 14 easy miles and 7 March is 16 easy miles, without fast finishes. Cards' info tooltips and ICS exports show both portions; duration uses each portion's pace. Easy pace/HR/cap apply before the finish; the finish uses its saved MP pace and current MP HR zone. These remain long runs but count as hard days. Edit or clear the finish distance on the card.
-
-Three threshold slots retain variety: 17/31 December have 6 × 45-second controlled hill repeats, and 14 January has a progression. Hills use effort rather than a raw uphill pace target, with easy warm-up, downhill recovery and cool-down inside the total distance. Their moving-time estimate is approximate and excludes stopped recovery. Progression notes list easy/MP/threshold portions after the warm-up and before the cool-down; duration sums those portions. Older plans without that breakdown retain their original 40/30/20/10 split. Info tooltips and ICS show instructions/targets. These sessions remain in the threshold category for HR defaults, scheduling and hard-day warnings.
-
-Countdown and the Today marker use the device's current local date, rather than a hard-coded demonstration date. Phase labels follow the base/build/peak schedule and the three weeks ending on the configured race week.
-
-## Structure
-
-```text
-src/
-  model.ts                  Types, pace/duration/unit and calendar helpers
-  seed.ts                   Clones the validated v2 default
-  default-plan.json         Python-generated default (same schema as exports)
-  races.ts                  Additional-race form conversion and validation
-  schedule.ts               Default weekday suggestions and optional rescheduling
-  zones.ts                  HR targets, pace-zone matching and boundary validation
-  strength.ts               Twice-weekly strength scheduling and equipment routines
-  store.ts                  Zustand state, persistence, history and import validation
-  rules.ts                  Seven live planning rules
-  files.ts                  JSON download and RFC 5545 ICS export
-  App.tsx                   App shell, drag orchestration and planning actions
-  main.tsx                  React entry point
-  styles.css                Responsive light/dark theme and Tailwind entry
-  components/
-    WeekBoard.tsx
-    DayColumn.tsx
-    WorkoutCard.tsx
-    MonthOverview.tsx
-    MileageChart.tsx
-    RuleWarnings.tsx
-    SettingsPanel.tsx
-    AddWorkout.tsx
-    Modal.tsx
-  *.test.ts                 Calculation, seed, warning and export tests
-```
-
-Built with Vite, Tailwind CSS, dnd-kit core/sortable, Zustand, date-fns, Recharts, Lucide icons and Vitest.
+The app uses React, TypeScript, Vite, Tailwind CSS, dnd-kit, Zustand, date-fns, Recharts and Lucide. The Python tooling uses `argparse`, `datetime`, `json`, `pathlib`, `unittest` and other standard-library modules.
