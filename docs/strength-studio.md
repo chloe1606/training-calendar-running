@@ -8,6 +8,8 @@ Choose **Strength workouts** in the navigation (`#strength`). The page opens on 
 
 The 124-movement library includes running-focused calf/foot strength, single-leg control, band hip work, steps, carries, upper-body work and core control. Each movement has original two-position SVG diagrams and technique cues. Search by name, equipment, body area, category or difficulty.
 
+Only the first five library exercises are shown initially. Use **Show all 124 exercises** to expand the list, or search the full library directly. Generated and selected workouts show all their matching exercises.
+
 Collapsed movements show:
 
 - Pink primary-category badges: Strength, Mobility, Stretch, Balance & control, Warm-up or Pilates.

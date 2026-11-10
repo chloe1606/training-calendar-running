@@ -2,17 +2,23 @@
 
 **Python-validated training plans, with a local-first calendar to make them your own.**
 
+[Open the live app on Vercel](https://training-calendar-running.vercel.app)
+
 Python revises and checks the marathon plan; a React + TypeScript app lets you arrange sessions, track completion, inspect mileage and generate supporting workouts. The included plan targets the 18 April 2027 marathon.
 
 No backend, account, API key or external service is required. Your calendar is saved in your browser; export JSON backups to keep a portable copy.
 
 ## In pictures
 
-| Training calendar | Strength Studio |
-| --- | --- |
-| ![Responsive training calendar with weekly mileage, dated sessions and completion controls](docs/images/training-calendar.png) | ![Strength Studio generator with Mobility, Pilates and Strength choices and exercise-count controls](docs/images/strength-studio.png) |
+### Training calendar
 
-Screenshots show the responsive layout using the included plan.
+![Desktop training calendar showing all seven days across, weekly mileage and planning checks](docs/images/training-calendar.png)
+
+### Strength Studio
+
+![Desktop Strength Studio with planned sessions, workout generator, illustrated exercise library and stopwatch/rest-timer sidebar](docs/images/strength-studio.png)
+
+Screenshots show the included plan at a 1920-pixel desktop width. Click an image to view it at full size.
 
 ## The Python part
 

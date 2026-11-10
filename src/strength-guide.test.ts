@@ -284,6 +284,9 @@ describe('illustrated strength guide', () => {
     const html = renderToStaticMarkup(createElement(StrengthPage, { workouts: [], selectedWeek: '2026-10-26', onWeekChange: () => undefined }));
     expect(html).toContain('<h1>');
     expect(html).toContain('Strength studio');
+    expect(html.match(/class="move-guide"/g)).toHaveLength(5);
+    expect(html).toContain('5 of 124 moves');
+    expect(html).toContain('Show all 124 exercises');
     expect(html).toContain('Planned this week');
     expect(html).toContain('No strength, Pilates or mobility sessions planned for this week.');
     expect(html).not.toContain('Training week');

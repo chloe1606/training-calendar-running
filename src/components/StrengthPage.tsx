@@ -182,6 +182,7 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
   const scheduled = workouts.filter(w => guideActivities.includes(w.activity ?? ''));
   const [selection, setSelection] = useState('library');
   const [search, setSearch] = useState('');
+  const [showAllMoves, setShowAllMoves] = useState(false);
   const [category, setCategory] = useState<WorkoutCategory>('mobility');
   const [generated, setGenerated] = useState<GeneratedWorkout | null>(null);
   const [pool, setPool] = useState<Record<WorkoutCategory, string[]>>(() => ({
@@ -286,6 +287,8 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
     }
   }
   const moves = library ? MOVE_GUIDES.filter(move => `${move.name} ${move.equipment ?? ''} ${equipmentTags(move).map(tag => tag.label).join(' ')} ${bodyAreas(move).join(' ')} ${moveCategory(move)} ${moveDifficulty(move)} ${move.cue}`.toLowerCase().includes(search.trim().toLowerCase())) : guidesForNotes(notes);
+  const limitLibrary = library && !search.trim() && !showAllMoves;
+  const visibleMoves = limitLibrary ? moves.slice(0, 5) : moves;
   return <section className="strength-page" aria-label="Strength, Pilates and mobility workout guide">
     <header className="page-heading"><div><span className="eyebrow muted-eyebrow">STRONGER, ONE REP AT A TIME</span><h1><Dumbbell size={26} />Strength studio<span>.</span></h1><p>Build your own balanced workouts, browse the library and log what you complete.</p></div>
       <section className="strength-week-summary" aria-label="Planned strength, Pilates and mobility sessions">
@@ -361,7 +364,7 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
     </label>
     {library && <label className="strength-picker strength-search">Find a move
       <input type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="e.g. core, glutes, band" />
-      <span role="status">{moves.length} of {MOVE_GUIDES.length} moves</span>
+      <span role="status">{visibleMoves.length} of {MOVE_GUIDES.length} moves</span>
     </label>}
     <div className="strength-guide-content" key={`${selection}:${workouts.map(w => w.id).join(',')}`}>
       {!library && <>
@@ -385,9 +388,12 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
         {saveError && <p role="alert" className="form-error">{saveError}</p>}
       </section>}
       {library && <p className="field-help">A menu of alternatives, not a {MOVE_GUIDES.length}-exercise workout. Introduce one unfamiliar move at a time, use bodyweight or the lightest band/weight first, and leave 2-3 reps in reserve. Inspect bands for damage; no door anchors are needed for these moves. Use a low, non-slip step and stable support.</p>}
-      <div className="move-library">{moves.map((move, index) => <details className="move-guide" key={move.id} open={index === 0} ref={element => { if (element) movementRefs.current.set(move.id, element); else movementRefs.current.delete(move.id); }}>
+      <div className="move-library">{visibleMoves.map((move, index) => <details className="move-guide" key={move.id} open={index === 0} ref={element => { if (element) movementRefs.current.set(move.id, element); else movementRefs.current.delete(move.id); }}>
         <summary tabIndex={0}>{move.name}<span className="move-category" aria-label={`Category: ${moveCategory(move)}`}>{moveCategory(move)}</span><span className={`move-difficulty difficulty-${moveDifficulty(move).toLowerCase()}`} aria-label={`Difficulty: ${moveDifficulty(move)}`}>{moveDifficulty(move)}</span><EquipmentLabels move={move} /><span className="body-area-tags" aria-label="Body areas">{bodyAreas(move).map(area => <span className="body-area-tag" key={area}>{area}</span>)}</span></summary><ExerciseDiagram move={move} />
       </details>)}</div>
+      {library && !search.trim() && moves.length > 5 && <button type="button" className="secondary-button" aria-expanded={showAllMoves} onClick={() => setShowAllMoves(previous => !previous)}>
+        {showAllMoves ? 'Show first 5 exercises' : `Show all ${moves.length} exercises`}
+      </button>}
       {!moves.length && <p>{library ? 'No moves match your search. Try another name or equipment type.' : 'No matching illustrations for this custom workout. Choose All moves to browse the full library.'}</p>}
     </div>
     </div><aside className="strength-tools" aria-label="Workout tools"><Stopwatch /><RestTimer state={restState} dispatch={restDispatch} />
