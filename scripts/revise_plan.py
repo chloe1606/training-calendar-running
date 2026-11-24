@@ -90,7 +90,7 @@ def strength_notes(index, day):
     taper = day >= '2027-03-29'
     exercises = routine['exercises']
     if taper:
-        exercises = [text.replace('2 sets', '1 set').replace('2 x 8', '1 x 8') for text in exercises]
+        exercises = [re.sub(r'\b\d+ x 8', '1 x 8', re.sub(r'\b\d+ sets', '1 set', text)) for text in exercises]
     label = 'Tuesday main resistance session.' if group == 'heavy' else 'Friday light/mobility only.'
     parts = [routine['title'], f'Five-week rotation: {rotation + 1}/5. {label}', STRENGTH['guidance'], *exercises]
     if taper:

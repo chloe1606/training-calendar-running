@@ -6,9 +6,9 @@
 
 Choose **Strength workouts** in the navigation (`#strength`). The page opens on **All moves** rather than a preselected routine. A compact **Planned this week** summary shows Strength, Pilates and Mobility sessions for the calendar's selected week and highlights any scheduled today.
 
-The 124-movement library includes running-focused calf/foot strength, single-leg control, band hip work, steps, carries, upper-body work and core control. Each movement has original two-position SVG diagrams and technique cues. Search by name, equipment, body area, category or difficulty.
+The 126-movement library includes running-focused calf/foot strength, single-leg control, band hip work, steps, carries, plyometric hop/skip finishers, upper-body work and core control. Each movement has original two-position SVG diagrams and technique cues. Search by name, equipment, body area, category or difficulty.
 
-Only the first five library exercises are shown initially. Use **Show all 124 exercises** to expand the list, or search the full library directly. Generated and selected workouts show all their matching exercises.
+Only the first five library exercises are shown initially. Use **Show all 126 exercises** to expand the list, or search the full library directly. Generated and selected workouts show all their matching exercises.
 
 Collapsed movements show:
 
@@ -20,6 +20,8 @@ Collapsed movements show:
 Movement difficulty is not calendar hard-day status. Actual effort depends on load, resistance and experience. Diagrams are schematic guidance, not a technique assessment.
 
 ## Generate a workout
+
+In **Mix up your workout**, choose **Heavy 1–5** or **Light 1–5** from **Choose a reference routine** to view its prescribed workout below, or use the controls to generate a random workout. The routine selector and **Workout library** selector stay in sync.
 
 Choose a workout type:
 
@@ -58,9 +60,9 @@ A separate stopwatch counts elapsed hours/minutes/seconds. Both timers continue 
 
 ## Save and reopen
 
-After doing a generated workout, use **Save workout** beneath the summary. **Workout date** defaults to today; future/invalid completion dates are rejected.
+After doing a generated workout or reference routine, use **Save workout** beneath the summary. **Workout date** defaults to today; future/invalid completion dates are rejected.
 
-Saving adds a new completed Strength, Pilates or Mobility calendar entry with the generated notes. Existing planned/completed/custom sessions stay unchanged. An identical workout on the same date is not added again. Calendar info tooltips show the full saved notes without expanding the card; use the calendar to edit completion or delete entries.
+Saving adds a new completed Strength, Pilates or Mobility calendar entry with the workout notes. Reference routines are saved as Strength. Existing planned/completed/custom sessions stay unchanged. An identical workout on the same date is not added again. Calendar info tooltips show the full saved notes without expanding the card; use the calendar to edit completion or delete entries.
 
 Saves use normal localStorage persistence, undo/redo and JSON/ICS exports. A storage failure is reported rather than claiming persistence. Generating another preview does not delete saved sessions.
 
@@ -70,7 +72,7 @@ Calendar strength slots have no routine assigned in advance. Defaults/reset and 
 
 ## Reference routines and progression
 
-Ten reference routines (**Heavy 1-5**, **Light 1-5**) remain selectable but are not assigned to calendar days. Main references vary calf raises, split squats/steps, bridges, hinges and squats; light references vary core, hips, ankles, balance and mobility. "Heavy" means controlled resistance work, not maximal lifting.
+Ten reference routines (**Heavy 1-5**, **Light 1-5**) remain selectable but are not assigned to calendar days. Main references use three working sets of loaded single-leg variations — weighted calf raises, rear-foot-elevated/supported split squats, step-ups/step-downs, single-leg bridges and hinges — with slow lowering, pauses and small pogo-hop or skipping finishers, finishing the last set with 1-2 reps in reserve (about 40-55 min, never over 1 hour). Light references vary core, hips, ankles, balance and mobility with full side planks, longer holds and eyes-closed balance (about 15-25 min). "Heavy" means controlled resistance work, not maximal lifting; drop a set and halve the load for the first two weeks of any new exercise, and skip hop/skip finishers if calves or tendons are sore.
 
 Twelve movements offer expandable optional progressions: side plank from feet, single-leg bridge/deadlift options, light band/weight additions and slower pauses/holds. Progressions replace a variation instead of adding exercises/sets. Keep light/recovery and taper sessions easy; progress only when controlled, pain-free and leaving 2-3 reps in reserve.
 

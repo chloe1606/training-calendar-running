@@ -80,7 +80,7 @@ Fast-finish runs remain long runs but count as hard days. Duration sums easy/wor
 
 Monday swimming is optional easy recovery or complete rest. Light Wednesday evening badminton (about 90 minutes, no hard matches) is allowed, but none is allowed from 12 April.
 
-Strength defaults to Tuesday/Friday. Tuesday is main resistance work; Friday is light core, hips and mobility, not heavy leg work. Alternate Friday Pilates from the exported plan is retained until the strength cutoff. Start with one easy set, progressing to two as tolerated, leaving 2-3 reps in reserve. Use controlled light loads; reduce or skip if recovery suffers.
+Strength defaults to Tuesday/Friday. Tuesday is main resistance work; Friday is light core, hips and mobility, not heavy leg work. Alternate Friday Pilates from the exported plan is retained until the strength cutoff. Main sessions use three working sets of loaded single-leg variations with slow tempos, pauses and small hop/skip finishers, leaving 1-2 reps in reserve on the final set; drop a set and halve the load for the first two weeks of any new exercise. Most sessions take 15-45 minutes and never exceed 1 hour. Reduce or skip if recovery suffers.
 
 The three-week taper starts 29 March. No strength is scheduled after 6 April in the included plan; those slots become 15-minute mobility. Race-week Friday is rest/mobility only.
 

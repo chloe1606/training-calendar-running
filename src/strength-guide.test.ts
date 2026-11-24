@@ -46,7 +46,7 @@ describe('illustrated strength guide', () => {
     expect(html).toContain('Copy &amp; open Strava');
     expect(html).not.toContain('Open Strava manual activity form');
     expect(html).toContain('nothing is logged automatically');
-    expect(html).toContain('Single-leg calf raises: 2 sets x 12 reps per side.');
+    expect(html).toContain('Weighted single-leg calf raises: 3 sets x 12 reps per side, dumbbell in one hand.');
     const empty = renderToStaticMarkup(createElement(WorkoutSummary, { title: 'Empty', notes: '' }));
     expect(empty).not.toContain('Copy &amp; open Strava');
   });
@@ -61,11 +61,11 @@ describe('illustrated strength guide', () => {
   });
   it('summarises prescribed exercises once with sets, reps and alternatives', () => {
     const summary = strengthSummary(routines.routines[0].exercises.join('\n\n'));
-    expect(summary).toHaveLength(4);
-    expect(summary[0]).toBe('Single-leg calf raises: 2 sets x 12 reps per side.');
+    expect(summary).toHaveLength(5);
+    expect(summary[0]).toBe('Weighted single-leg calf raises: 3 sets x 12 reps per side, dumbbell in one hand.');
     expect(summary[1]).toContain('do not do both');
     expect(summary.some(line => /Warm-up|between sets|Allow about/.test(line))).toBe(false);
-    expect(strengthSummary(strengthNotes(0, '2027-03-29', '2027-04-18')).every(line => !line.includes('2 sets'))).toBe(true);
+    expect(strengthSummary(strengthNotes(0, '2027-03-29', '2027-04-18')).every(line => !/\d sets/.test(line))).toBe(true);
     expect(strengthSummary('Custom session with no prescription')).toEqual([]);
   });
   it('shows the exercise name only in its diagram link, retaining set instructions', () => {
@@ -98,11 +98,11 @@ describe('illustrated strength guide', () => {
     expect(bodyAreas(MOVE_GUIDES.find(move => move.id === 'biceps')!)).toEqual(['Arms']);
   });
   it('shows the prescribed total duration for all ten routines without confusing rest or warm-up time', () => {
-    const expected = ['30–40', '15–20', '30–40', '15–20', '30–40', '15', '35–40', '15', '30–40', '15'];
+    const expected = ['40–50', '20–25', '40–50', '20–25', '40–50', '15', '45–55', '15–20', '40–50', '15'];
     routines.routines.forEach((routine, index) => {
       expect(strengthDurationLabel(routine.exercises.join('\n\n'))).toBe(`Approx. ${expected[index]} min`);
     });
-    expect(strengthDurationLabel(strengthNotes(0, '2027-03-29', '2027-04-18'))).toBe('30–40 min standard; shorter with taper sets');
+    expect(strengthDurationLabel(strengthNotes(0, '2027-03-29', '2027-04-18'))).toBe('40–50 min standard; shorter with taper sets');
     expect(strengthDurationLabel(routines.mobility)).toBe('Approx. 15 min');
     expect(strengthDurationLabel('Warm-up: 5 min walking. Rest 30 s.')).toBe('Duration not specified');
   });
@@ -113,9 +113,10 @@ describe('illustrated strength guide', () => {
       expect(steps[0].text).toMatch(/^Warm-up:/);
       expect(steps.some(step => step.text.startsWith('Cool-down:'))).toBe(true);
       expect(steps.some(step => /^Rest \d+(?:-\d+)?s between sets/.test(step.text))).toBe(true);
-      for (const line of routine.exercises.filter(line => /2 sets x/.test(line))) {
+      for (const line of routine.exercises.filter(line => /\d sets x/.test(line))) {
         const name = line.split(':')[0];
-        expect(steps.filter(step => step.text.includes(name) && /^Set [12] of 2/.test(step.text))).toHaveLength(2);
+        const sets = Number(line.match(/(\d+) sets x/)![1]);
+        expect(steps.filter(step => step.text.includes(name) && new RegExp(`^Set \\d of ${sets} `).test(step.text))).toHaveLength(sets);
       }
       const html = renderToStaticMarkup(createElement(WorkoutFlow, { notes, onMovement: () => undefined }));
       expect(html).toContain('<ol>');
@@ -124,8 +125,8 @@ describe('illustrated strength guide', () => {
     }
     const heavy = workoutFlowSteps(routines.routines[0].exercises.join('\n\n'));
     expect(heavy.some(step => step.text.includes('compromises Thursday running'))).toBe(false);
-    const split = heavy.find(step => step.text.includes('Supported split squats'))!;
-    expect(split.moves.map(move => move.id)).toEqual(['split', 'step']);
+    const split = heavy.find(step => step.text.includes('Rear-foot-elevated split squat'))!;
+    expect(split.moves.map(move => move.id)).toEqual(['step', 'rear-elevated-split']);
     expect(split.text).toContain('do not do both');
   });
   it('renders step checkboxes, progress and explicit one-click rest choices', () => {
@@ -199,7 +200,7 @@ describe('illustrated strength guide', () => {
     expect(steps.map(step => step.text).join('\n')).not.toMatch(/Bodyweight only|No heavy leg work|With Pilates/);
   });
   it('covers every prescribed movement line across all ten routines and mobility', () => {
-    expect(MOVE_GUIDES).toHaveLength(124);
+    expect(MOVE_GUIDES).toHaveLength(126);
     expect(new Set(MOVE_GUIDES.map(m => m.id)).size).toBe(MOVE_GUIDES.length);
     expect(routines.routines).toHaveLength(10);
     for (const routine of routines.routines) {
@@ -214,7 +215,7 @@ describe('illustrated strength guide', () => {
   it('adds 32 distinct equipment-appropriate options with explicit starting doses', () => {
     const additions = MOVE_GUIDES.slice(29, 61);
     expect(additions).toHaveLength(32);
-    expect(new Set(MOVE_GUIDES.map(move => move.name)).size).toBe(124);
+    expect(new Set(MOVE_GUIDES.map(move => move.name)).size).toBe(126);
     for (const move of additions) {
       expect(move.equipment).toBeTruthy();
       expect(move.prescription).toMatch(/set|carr/);
@@ -227,8 +228,9 @@ describe('illustrated strength guide', () => {
     expect(additions.filter(move => /band/i.test(move.equipment ?? '')).length).toBeGreaterThanOrEqual(6);
     expect(additions.filter(move => /dumbbell/i.test(move.equipment ?? '')).length).toBeGreaterThanOrEqual(10);
   });
-  it('adds exactly 39 medium/hard running-focused alternatives without changing scheduled routines', () => {
+  it('adds exactly 39 medium/hard running-focused alternatives with only a promoted few in scheduled routines', () => {
     const additions = MOVE_GUIDES.slice(61, 100);
+    const promoted = ['rear-elevated-split', 'calf-hold', 'single-heel-bridge', 'single-chair-rise'];
     expect(additions).toHaveLength(39);
     expect(additions.filter(move => moveCategory(move) === 'Strength')).toHaveLength(38);
     expect(additions.some(move => moveDifficulty(move) === 'Medium')).toBe(true);
@@ -249,14 +251,20 @@ describe('illustrated strength guide', () => {
       expect(flow.filter(step => step.moves.some(item => item.id === move.id))).toHaveLength(2);
       expect(strengthSummary(`${move.name}: 2 sets x 5 reps; rest 75 s between sets.`)).toEqual([`${move.name}: 2 sets x 5 reps.`]);
       for (const routine of routines.routines) {
-        expect(guidesForNotes(routine.exercises.join('\n'))).not.toContain(move);
+        if (promoted.includes(move.id)) continue;
+        expect(guidesForNotes(routine.exercises.join('\n')), move.name).not.toContain(move);
       }
+    }
+    for (const id of promoted) {
+      const move = MOVE_GUIDES.find(item => item.id === id)!;
+      expect(routines.routines.some(routine => guidesForNotes(routine.exercises.join('\n')).includes(move)), id).toBe(true);
     }
     expect(MOVE_GUIDES.slice(100, 110)).toHaveLength(10);
     for (const move of MOVE_GUIDES.slice(100, 110)) expect(moveCategory(move)).toBe('Pilates');
-    expect(MOVE_GUIDES.slice(110)).toHaveLength(14);
+    expect(MOVE_GUIDES.slice(110)).toHaveLength(16);
     expect(MOVE_GUIDES.slice(110, 121).every(move => moveCategory(move) === 'Mobility')).toBe(true);
-    expect(MOVE_GUIDES.slice(121).every(move => moveCategory(move) === 'Pilates')).toBe(true);
+    expect(MOVE_GUIDES.slice(121, 124).every(move => moveCategory(move) === 'Pilates')).toBe(true);
+    expect(MOVE_GUIDES.slice(124).every(move => moveCategory(move) === 'Strength')).toBe(true);
   });
   it('renders two labelled original diagrams and a technique cue for every move', () => {
     for (const move of MOVE_GUIDES) {
@@ -278,15 +286,15 @@ describe('illustrated strength guide', () => {
     }
     expect(MOVE_PROGRESSIONS.plank.title).toBe('Side plank from feet');
     expect(MOVE_PROGRESSIONS.plank.pose).toBeDefined();
-    expect(MOVE_GUIDES).toHaveLength(124);
+    expect(MOVE_GUIDES).toHaveLength(126);
   });
   it('renders a dedicated page without requiring scheduled sessions', () => {
     const html = renderToStaticMarkup(createElement(StrengthPage, { workouts: [], selectedWeek: '2026-10-26', onWeekChange: () => undefined }));
     expect(html).toContain('<h1>');
     expect(html).toContain('Strength studio');
     expect(html.match(/class="move-guide"/g)).toHaveLength(5);
-    expect(html).toContain('5 of 124 moves');
-    expect(html).toContain('Show all 124 exercises');
+    expect(html).toContain('5 of 126 moves');
+    expect(html).toContain('Show all 126 exercises');
     expect(html).toContain('Planned this week');
     expect(html).toContain('No strength, Pilates or mobility sessions planned for this week.');
     expect(html).not.toContain('Training week');
@@ -295,6 +303,8 @@ describe('illustrated strength guide', () => {
     expect(html).toContain('Rest timer');
     expect(html).toContain(`All moves (${MOVE_GUIDES.length})`);
     expect(html).toContain('aria-label="Workout type"');
+    expect(html).toContain('Choose a reference routine');
+    for (const routine of routines.routines) expect(html).toContain(routine.title);
     expect(html).toContain('>Mobility</button>');
     expect(html).toContain('>Pilates</button>');
     expect(html).toContain('>Strength</button>');

@@ -62,6 +62,7 @@ const MOVE_CATEGORIES: Record<string, MoveCategory> = {
   'seated-hip-rotation': 'Mobility', 'toe-extension-rock': 'Mobility',
   'calf-wall-glide': 'Mobility', 'pilates-bridge-march': 'Pilates',
   'pilates-inner-thigh-lift': 'Pilates', 'supine-knee-fold': 'Pilates',
+  pogo: 'Strength', skip: 'Strength',
 };
 export function moveCategory(move: MoveGuide): MoveCategory {
   const category = MOVE_CATEGORIES[move.id];
@@ -107,7 +108,7 @@ const MOVE_DIFFICULTIES: Record<string, MoveDifficulty> = {
   'thoracic-reach-through': 'Easy', 'seated-hip-rotation': 'Easy',
   'toe-extension-rock': 'Easy', 'calf-wall-glide': 'Easy',
   'pilates-bridge-march': 'Medium', 'pilates-inner-thigh-lift': 'Easy',
-  'supine-knee-fold': 'Easy',
+  'supine-knee-fold': 'Easy', pogo: 'Hard', skip: 'Medium',
 };
 export function moveDifficulty(move: MoveGuide): MoveDifficulty {
   const difficulty = MOVE_DIFFICULTIES[move.id];
@@ -214,6 +215,8 @@ const BODY_AREAS: Record<string, BodyArea[]> = {
   'pilates-bridge-march': ['Core', 'Glutes', 'Hips'],
   'pilates-inner-thigh-lift': ['Hips', 'Legs'],
   'supine-knee-fold': ['Core', 'Hips'],
+  pogo: ['Calves', 'Feet & ankles'],
+  skip: ['Calves', 'Hips', 'Feet & ankles'],
 };
 export function bodyAreas(move: MoveGuide): BodyArea[] {
   const areas = BODY_AREAS[move.id];
@@ -937,6 +940,28 @@ export const MOVE_GUIDES: MoveGuide[] = [
     poses: [
       { ...back, legs: 'M102 104L125 76L147 116M102 104L145 88L174 116' },
       { ...back, legs: 'M102 104L125 76L147 116M102 104L104 72L139 72' },
+    ],
+  },
+  {
+    id: 'pogo', name: 'Pogo hops', match: /^pogo hops(?=:|$)/im,
+    equipment: 'Bodyweight, flat non-slip surface, supportive shoes',
+    prescription: '1-2 sets of 12-15 low hops; rest 60 s.',
+    cue: 'Stand tall with soft knees and hop low and quickly on both feet, bouncing from the ankles like a spring. Keep the hops small and the contacts quiet; height is not the goal, stiffness and rhythm are. Let the heels kiss the floor between hops and stay upright. Stop immediately for any calf or tendon pain, and avoid this finisher the day before key runs or if tendons are sore.',
+    labels: ['Tall, soft knees', 'Low springy hop from the ankles'],
+    poses: [
+      { head: [80, 20], body: 'M80 31L80 70', arms: 'M80 40L68 56L70 68M80 40L92 56L90 68', legs: 'M80 70L73 92L70 112M80 70L87 92L90 112', equipment: 'M45 116H115' },
+      { head: [80, 10], body: 'M80 21L80 60', arms: 'M80 30L68 46L70 58M80 30L92 46L90 58', legs: 'M80 60L74 82L72 102M80 60L86 82L88 102', equipment: 'M45 116H115' },
+    ],
+  },
+  {
+    id: 'skip', name: 'Skipping in place', match: /^skipping in place(?=:|$)/im,
+    equipment: 'Bodyweight, flat non-slip surface, supportive shoes',
+    prescription: '1-2 sets of 20 s light skips; rest 60 s.',
+    cue: 'Skip gently on the spot, lifting one knee as the other foot hops low, with a relaxed alternating arm swing. Land softly on the midfoot with quiet contacts and an upright posture. Keep the rhythm bouncy and easy; this is a springiness drill for running economy, not a workout to fatigue. Stop for any calf or tendon discomfort.',
+    labels: ['Hop and lift one knee', 'Switch sides rhythmically'],
+    poses: [
+      { head: [80, 15], body: 'M80 26L80 65', arms: 'M80 35L62 50L58 38M80 35L98 50L104 62', legs: 'M80 65L70 88L68 108M80 65L104 70L108 90', equipment: 'M45 116H115' },
+      { head: [80, 15], body: 'M80 26L80 65', arms: 'M80 35L62 50L56 62M80 35L98 50L102 38', legs: 'M80 65L56 70L52 90M80 65L90 88L92 108', equipment: 'M45 116H115' },
     ],
   },
 ];

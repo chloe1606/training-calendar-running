@@ -21,7 +21,7 @@ export function strengthNotes(index: number, week: string, raceDate: string): st
   const group = index % 2 === 0 ? 'heavy' : 'light';
   const routine = STRENGTH_ROUTINES.filter(item => item.group === group)[rotation];
   const taper = phaseForWeek(week, raceDate) === 'Taper';
-  const exercises = taper ? routine.exercises.map(text => text.replace(/2 sets/g, '1 set').replace(/2 x 8/g, '1 x 8')) : routine.exercises;
+  const exercises = taper ? routine.exercises.map(text => text.replace(/\b\d+ sets/g, '1 set').replace(/\b\d+ x 8/g, '1 x 8')) : routine.exercises;
   return [routine.title, `Five-week rotation: ${rotation + 1}/5. ${group === 'heavy' ? 'Tuesday main resistance session.' : 'Friday light/mobility only.'}`, STRENGTH_GUIDANCE, ...exercises,
     ...(taper ? ['Taper: 1 easy set with familiar exercises only; no progression. This overrides the normal two-set prescription. No strength after 6 April; use 15 min gentle mobility, not loaded strength. Skip if sore or tired.'] : []),
   ].join('\n\n');

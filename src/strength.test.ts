@@ -49,7 +49,7 @@ describe('twice weekly strength', () => {
     expect(light).toContain('No heavy leg work');
     const taper = strengthNotes(0, '2027-03-29', '2027-04-18');
     expect(taper).toContain('single-leg calf raises: 1 set x 12 reps');
-    expect(taper).not.toContain('2 sets');
+    expect(taper).not.toMatch(/\d sets/);
   });
   it('rotates five distinct main and five distinct light sessions and repeats after five weeks', () => {
     expect(STRENGTH_ROUTINES).toHaveLength(10);

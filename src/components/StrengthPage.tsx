@@ -221,6 +221,9 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
   const workout = selectedWorkout;
   const notes = selection === 'generated' && generated ? generated.notes : workout?.notes ?? (routine ? routine.exercises.join('\n\n') : '');
   const title = selection === 'generated' && generated ? generated.title : workout ? `${workout.date}: ${workout.notes.split('\n')[0] || 'Strength slot — no workout assigned'}` : routine?.title ?? 'Choose your strength workout';
+  const preview: GeneratedWorkout | null = selection === 'generated' ? generated : routine ? {
+    category: 'strength', title: routine.title, notes, movementIds: guidesForNotes(notes).map(move => move.id),
+  } : null;
   useEffect(() => {
     if (selection === 'generated' && generated) generatedHeading.current?.focus({ preventScroll: true });
   }, [selection, generated]);
@@ -235,7 +238,16 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
   }));
   const visiblePoolIds = filteredPoolGroups.flatMap(group => group.candidates.map(item => item.id));
   const emptyPool = pool[category].length === 0;
-  const savedWorkout = savedId ? allWorkouts.find(w => w.id === savedId) : undefined;
+  const savedWorkout = savedId && preview ? allWorkouts.find(w =>
+    w.id === savedId && w.activity === preview.category && w.notes === `${preview.title}\n\n${preview.notes}`) : undefined;
+  function selectRoutine(next: string) {
+    if (next !== selection) {
+      setSavedId(null);
+      setSaveMessage('');
+      setSaveError('');
+    }
+    setSelection(next);
+  }
   function swapExercise(id: string) {
     if (!generated) return;
     setSaveError('');
@@ -262,12 +274,12 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
       setGeneratorError(error instanceof Error ? error.message : 'Unable to generate workout. Review the exercise pool and try again.');
     }
   }
-  function saveGenerated() {
-    if (!generated || !onSaveWorkout) return;
+  function savePreview() {
+    if (!preview || !onSaveWorkout) return;
     setSaveError('');
     setSaveMessage('');
     try {
-      const completed = completedStrengthWorkout(generated, completionDate, dateKey(new Date()), savedId ?? `strength-log-${crypto.randomUUID()}`);
+      const completed = completedStrengthWorkout(preview, completionDate, dateKey(new Date()), savedWorkout?.id ?? `strength-log-${crypto.randomUUID()}`);
       const existing = allWorkouts.find(item => item.date === completed.date && item.activity === completed.activity && item.notes === completed.notes);
       if (existing) {
         setSavedId(existing.id);
@@ -305,6 +317,15 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
     </header>
     <section className="random-workout strength-generator" aria-label="Random workout generator">
       <h3><Dumbbell size={16} aria-hidden="true" />Mix up your workout</h3>
+      <label className="strength-picker">Choose a reference routine
+        <select value={routine ? selection : ''} onChange={event => {
+          if (event.target.value) selectRoutine(event.target.value);
+        }}>
+          <option value="" disabled>Select a routine</option>
+          {routines.routines.map((item, index) => <option key={item.title} value={`routine:${index}`}>{item.title} · {strengthDurationLabel(item.exercises.join('\n\n'))}</option>)}
+        </select>
+      </label>
+      <p className="field-help">Choose a routine to view it below, or generate a random workout.</p>
       <div className="strength-choice-group" role="group" aria-label="Workout type">
         <span>Workout type</span>
         <div>{(['mobility', 'pilates', 'strength'] as const).map(value => <button key={value} type="button" className="secondary-button" aria-pressed={category === value} onClick={() => {
@@ -353,7 +374,8 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
         const next = event.target.value;
         const selected = allWorkouts.find(item => `workout:${item.id}` === next);
         if (selected) onWeekChange(weekKey(selected.date));
-        setSelection(next);
+        if (next.startsWith('routine:')) selectRoutine(next);
+        else setSelection(next);
       }}>
         {generated && <option value="generated">{generated.title}</option>}
         <optgroup label="Completed workouts (last 30 days)">{history.filter(w => !scheduled.some(item => item.id === w.id)).map(w =>
@@ -369,20 +391,20 @@ export function StrengthPage({ workouts, allWorkouts = workouts, selectedWeek, o
     <div className="strength-guide-content" key={`${selection}:${workouts.map(w => w.id).join(',')}`}>
       {!library && <>
         <h3 ref={generatedHeading} tabIndex={-1}>{title}</h3>
-        {selection === 'generated' && <p>{savedWorkout ? `${savedWorkout.completed ? 'Logged as completed' : 'Saved (currently marked incomplete)'} on ${savedWorkout.date}.` : `Preview only until saved. Use this ${category} session instead of adding extra training; keep recovery and taper days light.`}</p>}
+        {preview && <p>{savedWorkout ? `${savedWorkout.completed ? 'Logged as completed' : 'Saved (currently marked incomplete)'} on ${savedWorkout.date}.` : `Preview only until saved. Use this ${preview.category} session instead of adding extra training; keep recovery and taper days light.`}</p>}
         {notes ? <>
           <p className="strength-duration"><Timer size={15} aria-hidden="true" />{strengthDurationLabel(notes)}</p>
           <WorkoutFlow key={`${selection}:${selectedWeek}:${notes}`} notes={notes} onMovement={showMovement} onRest={seconds => restDispatch({ type: 'restart', seconds, now: Date.now() })}
             onSwap={selection === 'generated' ? swapExercise : undefined} swappableIds={generated?.movementIds} />
-          {selection === 'generated' && saveError && <p role="alert" className="form-error">{saveError}</p>}
+          {preview && saveError && <p role="alert" className="form-error">{saveError}</p>}
         </> : <p>No specific workout assigned. Choose exercises in the generator or browse a reference routine. After doing your workout, save it with the date completed in Strength studio.</p>}
       </>}
       {!library && notes && <WorkoutSummary key={`summary:${selection}:${notes}`} notes={notes} title={title} />}
-      {selection === 'generated' && generated && onSaveWorkout &&       <section className="strength-log" aria-label={`Save completed ${generated.category} workout`}>
+      {preview && onSaveWorkout && <section className="strength-log" aria-label={`Save completed ${preview.category} workout`}>
         <h3>Save workout</h3>
-        <label>Workout date<input aria-label={`Date ${generated.category} workout`} type="date" min="2020-01-01" max={dateKey(new Date())}
+        <label>Workout date<input aria-label={`Date ${preview.category} workout`} type="date" min="2020-01-01" max={dateKey(new Date())}
           value={completionDate} disabled={!!savedWorkout} onChange={event => { setCompletionDate(event.target.value); setSaveError(''); }} /></label>
-        <button type="button" className="primary-button" disabled={!!savedWorkout} onClick={saveGenerated}>{savedWorkout ? 'Saved to calendar' : 'Save workout'}</button>
+        <button type="button" className="primary-button" disabled={!!savedWorkout} onClick={savePreview}>{savedWorkout ? 'Saved to calendar' : 'Save workout'}</button>
         <p className="field-help">Adds this completed workout as a new calendar entry. Existing sessions are kept; an identical workout already on this date will not be added again.</p>
         {saveMessage && savedWorkout?.completed && <p role="status">{saveMessage}</p>}
         {saveError && <p role="alert" className="form-error">{saveError}</p>}
